@@ -1,3 +1,5 @@
+[![barak](https://raw.githubusercontent.com/barak-framework/barak/master/app/assets/img/favicon.png)](https://raw.githubusercontent.com/barak-framework/barak/master/app/assets/img/favicon.png)
+
 # Barak
 
 [![Latest Stable Version](https://poser.pugx.org/gdemir/barak/v/stable)](https://packagist.org/packages/gdemir/barak)
