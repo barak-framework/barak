@@ -1,5 +1,3 @@
-![barak](https://raw.githubusercontent.com/barak-framework/barak/master/favicon.ico)
-
 # Barak
 
 [![Latest Stable Version](https://poser.pugx.org/gdemir/barak/v/stable)](https://packagist.org/packages/gdemir/barak)
