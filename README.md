@@ -1,4 +1,4 @@
-[![barak](https://raw.githubusercontent.com/barak-framework/barak/master/app/assets/img/favicon.png)](https://raw.githubusercontent.com/barak-framework/barak/master/app/assets/img/favicon.png)
+![barak](https://raw.githubusercontent.com/barak-framework/barak/master/app/assets/img/favicon.png)
 
 # Barak
 
