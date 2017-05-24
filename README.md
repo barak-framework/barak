@@ -1,4 +1,4 @@
-![barak](https://raw.githubusercontent.com/barak-framework/barak/master/app/assets/img/favicon.png = 250x250)
+![barak](https://raw.githubusercontent.com/barak-framework/barak/master/favicon.ico)
 
 # Barak
 
