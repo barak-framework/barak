@@ -1,0 +1,19 @@
+{
+    "name": "gdemir/barak",
+    "type": "project",
+    "description": "Barak MVC Framework",
+    "keywords": ["barak", "turkmen", "framework"],
+    "homepage": "https://github.com/gdemir/barak",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Gökhan DEMİR",
+            "email": "mail@gdemir.me",
+            "homepage": "http://gdemir.me",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0"
+    }
+}
