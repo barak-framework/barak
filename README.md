@@ -393,10 +393,6 @@ Her `config/routes.php` içerisinde tanımlanan `get` işlemi için `app/control
 
 > options : `layout`, `view`, `action`, `template`, `file`, `text`, `partial`, `locals`
 
-> layout : `app/views/layouts/VIEW.php`
-
-> view : `app/views/VIEW/ACTION.php`
-
 ```php
 class HomeController extends ApplicationController {
 
@@ -500,7 +496,7 @@ class HomeController extends ApplicationController {
 }
 ```
 
-- Redirect
+#### Redirect
 
 > request url [`/` or `/home`] redirect to `/home/index`
 
@@ -510,7 +506,7 @@ class HomeController extends ApplicationController {
 ApplicationRoutes::draw(
   get("/", "home#home"), // or root("home#home"),
   get("/home", "home#home"),
-  get("/home/index"),
+  get("/home/index")
 );
 ```
 
@@ -528,10 +524,10 @@ class HomeController extends ApplicationController {
 > `app/views/home/index.php`
 
 ```php
-<h1>Home#Index</h1>
+<h1> Home#Index </h1>
 ```
 
-- Before Action
+#### Before Action
 
 Before Action (`protected $before_actions`) özelliği, `app/controller/*.php` dosyası içerisinde her çalışacak get/post fonksiyonları için önceden çalışacak fonksiyonları belirtmeye yarayan özelliktir. Özelliğin etkisini ayarlamak için aşağıdaki 3 şekilde kullanılabilir:
 
@@ -569,7 +565,7 @@ class HomeController extends ApplicationController {
   }
 ```
 
-- After Action
+#### After Action
 
 After Action (`protected $after_actions`) özelliği, `app/controller/*.php` dosyası içerisinde her çalışacak get/post fonksiyonları için sonradan çalışacak fonksiyonları belirtmeye yarayan özelliktir. Özelliğin etkisini ayarlamak için aşağıdaki 3 şekilde kullanılabilir:
 
@@ -580,8 +576,6 @@ After Action (`protected $after_actions`) özelliği, `app/controller/*.php` dos
 2. `only` anahtarı ile nerelerde çalışacağını
 
 3. Anahtar yok ise her yerde çalışacağını
-
-`#TODO`
 
 - Simple
 
@@ -692,14 +686,10 @@ class AdminController extends ApplicationController {
 
 Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `action` adlarını alarak, `app/views/CONTROLLER/ACTION.php` html sayfası `app/views/layouts/CONTROLLER.php` içerisine `<?= $yield; ?>` değişken kısmına gömülür ve görüntülenir.
 
-- Functions
-
-> `render`
-
 > `app/views/DIRECTORY/*.php`
 
 ```html
-<h1>Hello World</h1>
+<h1> Hello World </h1>
 ```
 
 > `app/views/layouts/DIRECTORY.php`
@@ -719,7 +709,11 @@ Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `a
 </html>
 ```
 
-- Render
+- Functions
+
+> `render`
+
+#### Render
 
 Fonksiyonu Controller'daki gibi tüm özellikleri ile kullanılabilir. Yalnızca `*.php` dosyalarının içersinde kullanılırken `<?php render(); ?>` şeklinde kullanılmalıdır. Daha ayrıntılı bilgi için [Controller#render](https://github.com/barak-framework/barak/blob/master/README.md#controller-appcontrollerphp)
 
