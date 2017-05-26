@@ -59,6 +59,7 @@ and check homepage : [http://localhost:9090](http://localhost:9090) and thats al
 ## Guides
 
 ### Simple Usage
+
 ---
 
 > request url : `/`
@@ -109,6 +110,7 @@ class HomeController extends ApplicationController {
 ```
 
 ### Router (`config/routes.php`)
+
 ---
 
 - Functions
@@ -380,6 +382,7 @@ ApplicationRoutes::draw(
 ```
 
 ### Controller (`app/controller/*.php`)
+
 ---
 
 Her `config/routes.php` içerisinde tanımlanan `get` işlemi için `app/controller/*.php` dosyası içerisinde fonksiyon tanımlamak zorunlu değildir, fonksiyon tanımlanırsa ve değişken yükü/yükleri controller içinde `$this->KEY` şeklinde tanımlanırsa ilgili yönlenen sayfada `$KEY` şeklinde veriye erişebilir. Her `config/routes.php` içerisinde tanımlanan `post` için ilgili `app/controller/*.php` dosyası içerisinde fonksiyon tanımlamak zorunludur.
@@ -685,6 +688,7 @@ class AdminController extends ApplicationController {
 ```
 
 ### Views (`app/views/DIRECTORY/*.php`)
+
 ---
 
 Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `action` adlarını alarak, `app/views/CONTROLLER/ACTION.php` html sayfası `app/views/layouts/CONTROLLER.php` içerisine `<?= $yield; ?>` değişken kısmına gömülür ve görüntülenir.
@@ -721,6 +725,7 @@ Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `a
 Fonksiyonu Controller'daki gibi tüm özellikleri ile kullanılabilir. Yalnızca `*.php` dosyalarının içersinde kullanılırken `<?php render(); ?>` şeklinde kullanılmalıdır. Daha ayrıntılı bilgi için [Controller#render](https://github.com/barak-framework/barak/blob/master/README.md#render)
 
 ### Model (`app/models/TABLE.php`)
+
 ---
 
 Her tablonun bir modeli olmak zorundadır.
@@ -752,7 +757,6 @@ echo $user->full_name();
 > `draft`, `load`, `create`, `unique`, `find`, `find_all`, `all`, `first`, `last`, `exists`, `delete`, `update`
 
 #### CREATE ( `new`, `create` )
-
 
 > `new`
 
@@ -1127,6 +1131,7 @@ foreach ($books as $book)
 ```
 
 ### Configurations (`config/database.ini`, `config/application.ini`)
+
 ---
 
 > `config/database.ini` (database configuration file)
@@ -1148,6 +1153,8 @@ time_zone      = Europe/Istanbul
 ```
 
 ### Seeds (`db/seeds.php`)
+
+---
 
 Proje başlamadan önce ilk çalıştırılacak dosyadır.
 
