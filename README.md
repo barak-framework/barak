@@ -5,19 +5,23 @@
 [![Latest Unstable Version](https://poser.pugx.org/gdemir/barak/v/unstable)](https://packagist.org/packages/gdemir/barak)
 [![License](https://poser.pugx.org/gdemir/barak/license)](https://packagist.org/packages/gdemir/barak)
 
-##  Requirements Packages and Versions
+##  Requirements Packages and Configuration Server
 
-- MySQL
+> Programming Language : `Php`
 
-- Web Server : [apache2-settings](https://github.com/barak-framework/blob/master/.htaccess) or [nginx-settings](https://github.com/barak-framework/blob/master/nginx-settings) or [iss-settings](https://github.com/barak-framework/blob/master/web.config)
+*Php Database Access : [PDO](http://php.net/manual/tr/book.pdo.php)*
 
-- Php
+> Database Access : `MySQL`
 
-- Php Database Access : [PDO](http://php.net/manual/tr/book.pdo.php)
+> Web Server : `Apache`, `Nginx`, `ISS`
 
-- Package Mananger : [Composer](http://gdemir.me/categories/php/composer/)
+*Web Server Settings : [apache2-settings](https://github.com/barak-framework/blob/master/.htaccess) or [nginx-settings](https://github.com/barak-framework/blob/master/nginx-settings) or [iss-settings](https://github.com/barak-framework/blob/master/web.config)*
 
-- Install : [LAMP](http://gdemir.me/categories/linux/lamp/) or [LEMP](http://gdemir.me/categories/linux/lemp/)
+> Package Mananger : `Composer`
+
+*for install [Composer](http://gdemir.me/categories/php/composer/)*
+
+**Install** : [LAMP](http://gdemir.me/categories/linux/lamp/) or [LEMP](http://gdemir.me/categories/linux/lemp/)
 
 ## Install
 
