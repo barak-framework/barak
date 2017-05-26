@@ -108,6 +108,10 @@ class HomeController extends ApplicationController {
 ### Router (`config/routes.php`)
 ---
 
+- Functions
+
+> `get`, `post`, `resource`, `resources`, `scope`, `root`
+
 #### GET
 
 - Simple
@@ -274,7 +278,7 @@ ApplicationRoutes::draw(
 
 #### SCOPE
 
-Kodları daha derli toplu kullanmak için Route'in Gruplama özelliğidir. Bir PATH altında CONTROLLER ve VIEW dizininin çalışma imkanı sağlar. 
+Kodları daha derli toplu kullanmak için Route'in Gruplama özelliğidir. Bir `PATH` altında `CONTROLLER` ve `VIEW` dizininin çalışma imkanı sağlar. 
 
 > controller: `app/controllers/PATH/CONTROLLER.php`
 
@@ -375,11 +379,19 @@ ApplicationRoutes::draw(
 ### Controller (`app/controller/*.php`)
 ---
 
-Her `config/routes.php` içerisinde tanımlanan `get` işlemi için `app/controller/*.php` dosyası içerisinde fonksiyon tanımlamak zorunlu değildir, tanımlanırsa bir değişken yükü/yükleri controller içinde `$this->KEY` şeklinde tanımlanırsa ilgili yönlenen sayfada `$KEY` şeklinde veriye erişebilir. Her `config/routes.php` içerisinde tanımlanan `post` için ilgili `app/controller/*.php` dosyası içerisinde fonksiyon tanımlamak zorunludur.
+Her `config/routes.php` içerisinde tanımlanan `get` işlemi için `app/controller/*.php` dosyası içerisinde fonksiyon tanımlamak zorunlu değildir, fonksiyon tanımlanırsa ve değişken yükü/yükleri controller içinde `$this->KEY` şeklinde tanımlanırsa ilgili yönlenen sayfada `$KEY` şeklinde veriye erişebilir. Her `config/routes.php` içerisinde tanımlanan `post` için ilgili `app/controller/*.php` dosyası içerisinde fonksiyon tanımlamak zorunludur.
 
-- Render (Reference To View Private `render_file` Function)
+- Functions
 
-> OPTIONS : `layout`, `view`, `action`, `template`, `file`, `text`, `partial`, `locals`
+> `render`, `redirect_to`
+
+- Options
+
+> `before_actions`, `after_actions`
+
+#### Render
+
+> options : `layout`, `view`, `action`, `template`, `file`, `text`, `partial`, `locals`
 
 > layout : `app/views/layouts/VIEW.php`
 
@@ -523,6 +535,8 @@ class HomeController extends ApplicationController {
 
 Before Action (`protected $before_actions`) özelliği, `app/controller/*.php` dosyası içerisinde her çalışacak get/post fonksiyonları için önceden çalışacak fonksiyonları belirtmeye yarayan özelliktir. Özelliğin etkisini ayarlamak için aşağıdaki 3 şekilde kullanılabilir:
 
+> options : `except`, `only`
+
 1. `except` anahtarı ile nerelerde çalışmayacağını
 
 2. `only` anahtarı ile nerelerde çalışacağını
@@ -558,6 +572,8 @@ class HomeController extends ApplicationController {
 - After Action
 
 After Action (`protected $after_actions`) özelliği, `app/controller/*.php` dosyası içerisinde her çalışacak get/post fonksiyonları için sonradan çalışacak fonksiyonları belirtmeye yarayan özelliktir. Özelliğin etkisini ayarlamak için aşağıdaki 3 şekilde kullanılabilir:
+
+> options : `except`, `only`
 
 1. `except` anahtarı ile nerelerde çalışmayacağını
 
@@ -676,6 +692,10 @@ class AdminController extends ApplicationController {
 
 Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `action` adlarını alarak, `app/views/CONTROLLER/ACTION.php` html sayfası `app/views/layouts/CONTROLLER.php` içerisine `<?= $yield; ?>` değişken kısmına gömülür ve görüntülenir.
 
+- Functions
+
+> `render`
+
 > `app/views/DIRECTORY/*.php`
 
 ```html
@@ -705,6 +725,8 @@ Fonksiyonu Controller'daki gibi tüm özellikleri ile kullanılabilir. Yalnızca
 
 ### Model (`app/models/TABLE.php`)
 ---
+
+Her tablonun bir modeli olmak zorundadır.
 
 > `app/models/TABLE.php`
 `example: app/models/User.php`
@@ -762,7 +784,6 @@ print_r($user);
 
 > `load`
 
-
 ```php
 $users = User::load()->take();
 foreach ($users as $user)
@@ -771,9 +792,7 @@ foreach ($users as $user)
 
 > `where`
 
-
 operators: `=`, `!=`, `>`, `<`, `>=`, `<=`
-
 
 ```php
 $users = User::load()->where("first_name", "Gökhan")->take();
@@ -1027,13 +1046,11 @@ foreach ($users as $user)
 > `destroy`
 
 ```php
-
 $user = User::unique(["username" => "gdemir", "password" => "123456"]);
 $user = User::find(1);
 $user = User::first();
 $user = User::last();
 $user->destroy();
-
 ```
 
 > `delete`
@@ -1087,7 +1104,6 @@ print_r($book->user->department);
 
 echo "$book->user->department->name $book->user->first_name  $book->name";
 // "Bilgisayar Mühendisliği Gökhan Barak Türkmenlerinin Tarihi"
-
 ```
 
 > `$OWNER_TABLE->all_of_BELONG_TABLE`
@@ -1111,7 +1127,6 @@ $user = User::find(1);
 $books = $user->all_of_book;
 foreach ($books as $book)
   echo $book->name;
-
 ```
 
 ### Configurations (`config/database.ini`, `config/application.ini`)
