@@ -1,4 +1,4 @@
-# Barak
+# Barak Framework
 
 [![Latest Stable Version](https://poser.pugx.org/gdemir/barak/v/stable)](https://packagist.org/packages/gdemir/barak)
 [![Total Downloads](https://poser.pugx.org/gdemir/barak/downloads)](https://packagist.org/packages/gdemir/barak)
@@ -9,7 +9,7 @@
 
 - MySQL
 
-- Web server: [apache2-settings](https://github.com/gdemir/barak/blob/master/.htaccess) or [nginx-settings](https://github.com/gdemir/barak/blob/master/nginx-settings) or [iss-settings](https://github.com/gdemir/barak/blob/master/web.config)
+- Web server: [apache2-settings](https://github.com/barak-framework/blob/master/.htaccess) or [nginx-settings](https://github.com/barak-framework/blob/master/nginx-settings) or [iss-settings](https://github.com/barak-framework/blob/master/web.config)
 
 - Php Version : 7.0, - Php Database Access : [PDO](http://php.net/manual/tr/book.pdo.php)
 
@@ -185,7 +185,9 @@ class AdminController extends ApplicationController {
 
         $_SESSION["success"] = "Admin sayfasına hoş geldiniz";
         $_SESSION["full_name"] = "$user->first_name $user->last_name";
-        $_SESSION["admin"] = $user->id;
+        $_SESSION["admininfo"] = $user;
+        $_SESSION["admin"] = true;
+
         return $this->render("/admin/index");
 
       } else {
@@ -377,13 +379,11 @@ Her `config/routes.php` içerisinde tanımlanan `get` işlemi için `app/control
 
 - Render
 
-> OPTIONS : `partial`, `locals`, `file`, `text`, `layout`, `view`, `action`, `template`
+> OPTIONS : `layout`, `view`, `action`, `template`, `file`, `text`, `partial`, `locals`
 
 > layout : `app/views/layouts/VIEW.php`
 
 > view : `app/views/VIEW/ACTION.php`
-
-Example
 
 ```php
 class HomeController extends ApplicationController {
@@ -422,10 +422,10 @@ class HomeController extends ApplicationController {
 
     // DEFAULT LAYOUT: false, DEFAULT VIEW: home, ACTION: index
     $this->render(["action" => "index"]);
-    
+
     // DEFAULT LAYOUT: false, VIEW: home, DEFAULT ACTION: index
     $this->render(["view" => "home"]);
-    
+
     // DEFAULT LAYOUT: home, VIEW: home, ACTION: index
     $this->render(["template" => "/home/index"]);
 
@@ -444,14 +444,19 @@ class HomeController extends ApplicationController {
     /////////////////////////////////////////////////////////////////////////////////
     // option : file
     /////////////////////////////////////////////////////////////////////////////////
-    // only load controller params and get this file
+    // only load controller, params and this file ( DEFAULT LAYOUT : false )
 
     // LAYOUT: false, VIEW: false, ACTION: false
     $this->render(["file" => "/app/views/admin/login.php"]);
 
+    /////////////////////////////////////////////////////////////////////////////////
+    // option : partial
+    /////////////////////////////////////////////////////////////////////////////////
+    // only include file "_table.php" (no controller, no params, no layout)  
+
     // TODO partial, ayrıca sayfa üzerinde
     // $this->render(["partial" => "home/navbar"]);
-    $this->render(["partial" => "home/productpage/table", "locals" => ["products" => $products]]); ?>
+    $this->render(["partial" => "home/table", "locals" => ["products" => $products]]); ?>
 
   }
 
@@ -569,7 +574,9 @@ class AdminController extends ApplicationController {
 
         $_SESSION["success"] = "Admin sayfasına hoş geldiniz";
         $_SESSION["full_name"] = "$user->first_name $user->last_name";
-        $_SESSION["admin"] = $user->id;
+        $_SESSION["admininfo"] = $user;
+        $_SESSION["admin"] = true;
+
         return $this->render("/admin/index");
 
       } else {
