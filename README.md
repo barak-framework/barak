@@ -33,8 +33,6 @@
 composer create-project barak-framework/barak project_name
 ```
 
-*for [Composer Install](http://gdemir.me/categories/php/composer/)*
-
 ## Configuration Database File (`config/database.ini`)
 
 ```ini
