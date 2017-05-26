@@ -49,7 +49,7 @@ and check homepage : [http://localhost:9090](http://localhost:9090) and thats al
 
 ## Releases
 
-- [https://github.com/gdemir/barak/releases](https://github.com/gdemir/barak/releases)
+- [https://github.com/barak-framework/barak/releases](https://github.com/barak-framework/barak/releases)
 
 ---
 
