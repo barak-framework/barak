@@ -480,7 +480,7 @@ class HomeController extends ApplicationController {
     /////////////////////////////////////////////////////////////////////////////////
     // option : text ( LAYOUT : pass, VIEW : pass, ACTION : pass, LOCALS : pass )
     /////////////////////////////////////////////////////////////////////////////////
-    // this option, available in ajax functions
+    // this option, available in Ajax functions
     
     $this->render(["text" => "Hello World"]);
   }
@@ -698,6 +698,10 @@ Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `a
 </body>
 </html>
 ```
+
+- Render
+
+Fonksiyonu Controller'daki gibi tüm özellikleri ile kullanılabilir. Yalnızca `*.php` dosyalarının içersinde kullanılırken `<?php render(); ?>` şeklinde kullanılmalıdır. Daha ayrıntılı bilgi için [Controller#render](https://github.com/barak-framework/barak/blob/master/README.md#controller-appcontrollerphp)
 
 ### Model (`app/models/TABLE.php`)
 ---
@@ -1139,10 +1143,10 @@ Proje başlamadan önce ilk çalıştırılacak dosyadır.
 
 ```php
 if (User::load()->count() == 0) {
-User::create(["first_name" => "Gökhan", "last_name" => "Demir", "username" => "gdemir",  "password" => "123456"]);
-User::create(["first_name" => "Gökçe",  "last_name" => "Demir", "username" => "gcdemir", "password" => "123456"]);
-User::create(["first_name" => "Göktuğ", "last_name" => "Demir", "username" => "gtdemir", "password" => "123456"]);
-User::create(["first_name" => "Atilla", "last_name" => "Demir", "username" => "ademir",  "password" => "123456"]);
+  User::create(["first_name" => "Gökhan", "last_name" => "Demir", "username" => "gdemir",  "password" => "123456"]);
+  User::create(["first_name" => "Gökçe",  "last_name" => "Demir", "username" => "gcdemir", "password" => "123456"]);
+  User::create(["first_name" => "Göktuğ", "last_name" => "Demir", "username" => "gtdemir", "password" => "123456"]);
+  User::create(["first_name" => "Atilla", "last_name" => "Demir", "username" => "ademir",  "password" => "123456"]);
 }
 ```
 
