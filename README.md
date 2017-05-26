@@ -377,6 +377,8 @@ Her `config/routes.php` içerisinde tanımlanan `get` işlemi için `app/control
 
 - Render
 
+> OPTIONS : `partial`, `locals`, `file`, `text`, `layout`, `view`, `action`, `template`
+
 > layout : `app/views/layouts/VIEW.php`
 
 > view : `app/views/VIEW/ACTION.php`
@@ -388,26 +390,46 @@ class HomeController extends ApplicationController {
 
   public function index() {
     echo "HomeIndex sayfası öncesi çalışan fonksiyon";
+    
+    /////////////////////////////////////////////////////////////////////////////////
+    // default render for this functions examples
+    /////////////////////////////////////////////////////////////////////////////////
 
+    // LAYOUT: home, VIEW: home, ACTION: index
+    $this->render(["layout" => "home", "view" => "home", "action" => "index"]);
+    $this->render(["template" => "/home/index"]);
+    $this->render("/home/index");
+    
+    /////////////////////////////////////////////////////////////////////////////////
+    // no options
+    /////////////////////////////////////////////////////////////////////////////////
+    
     // DEFAULT LAYOUT: home, VIEW: home, ACTION: index
     $this->render("/home/index"); // like $this->render(["template" => "/home/index"]);
 
     // DEFAULT LAYOUT: home, VIEW: home, ACTION: show
-    $this->render("/home/show"); // like $this->render(["template" => "/home/show"]);
+    $this->render("/home/show");  // like $this->render(["template" => "/home/show"]);
 
     // DEFAULT LAYOUT: home, VIEW: admin, ACTION: show
     $this->render("/admin/show"); // like $this->render(["template" => "/admin/show"]);
 
-    // Default LAYOUT: home, VIEW: home, ACTION: index
-    $this->render(["layout" => "home", "view" => "home", "action" => "index"]); // default render
-
-    // LAYOUT: false, VIEW: home, ACTION: index
+    /////////////////////////////////////////////////////////////////////////////////
+    // option : layout, view, action, template
+    /////////////////////////////////////////////////////////////////////////////////
+    
+    // LAYOUT: false, DEFAULT VIEW: home, DEFAULT ACTION: index
     $this->render(["layout" => false]);
 
-    // LAYOUT: home, VIEW: admin, ACTION: index
-    $this->render(["view" => "admin", "action" => "index"]);
+    // DEFAULT LAYOUT: false, DEFAULT VIEW: home, ACTION: index
+    $this->render(["action" => "index"]);
+    
+    // DEFAULT LAYOUT: false, VIEW: home, DEFAULT ACTION: index
+    $this->render(["view" => "home"]);
+    
+    // DEFAULT LAYOUT: home, VIEW: home, ACTION: index
+    $this->render(["template" => "/home/index"]);
 
-    // LAYOUT: home, VIEW: admin, ACTION: index
+    // DEFAULT LAYOUT: home, VIEW: admin, ACTION: index
     $this->render(["view" => "admin", "action" => "index"]);
 
     // LAYOUT: admin, VIEW: home, ACTION: show
@@ -419,12 +441,18 @@ class HomeController extends ApplicationController {
     // LAYOUT: admin, VIEW: home, ACTION: show
     $this->render(["layout" => "admin", "template" => "home/show"]);
 
-    // LAYOUT: false, VIEW: false, ACTION: false
+    /////////////////////////////////////////////////////////////////////////////////
+    // option : file
+    /////////////////////////////////////////////////////////////////////////////////
     // only load controller params and get this file
+
+    // LAYOUT: false, VIEW: false, ACTION: false
     $this->render(["file" => "/app/views/admin/login.php"]);
 
     // TODO partial, ayrıca sayfa üzerinde
     // $this->render(["partial" => "home/navbar"]);
+    $this->render(["partial" => "home/productpage/table", "locals" => ["products" => $products]]); ?>
+
   }
 
 }
