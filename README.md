@@ -27,7 +27,7 @@
 - Barak
 
 ```sh
-composer create-project gdemir/barak project_name
+composer create-project barak-framework/barak project_name
 ```
 
 ## Configuration Database File (`config/database.ini`)
