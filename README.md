@@ -377,7 +377,7 @@ ApplicationRoutes::draw(
 
 Her `config/routes.php` içerisinde tanımlanan `get` işlemi için `app/controller/*.php` dosyası içerisinde fonksiyon tanımlamak zorunlu değildir, tanımlanırsa bir değişken yükü/yükleri controller içinde `$this->KEY` şeklinde tanımlanırsa ilgili yönlenen sayfada `$KEY` şeklinde veriye erişebilir. Her `config/routes.php` içerisinde tanımlanan `post` için ilgili `app/controller/*.php` dosyası içerisinde fonksiyon tanımlamak zorunludur.
 
-- Render
+- Render (Reference To View function)
 
 > OPTIONS : `layout`, `view`, `action`, `template`, `file`, `text`, `partial`, `locals`
 
@@ -444,17 +444,21 @@ class HomeController extends ApplicationController {
     /////////////////////////////////////////////////////////////////////////////////
     // option : file
     /////////////////////////////////////////////////////////////////////////////////
-    // only load controller, params and this file ( DEFAULT LAYOUT : false )
+    // include locals and this file ( LAYOUT : pass, VIEW : pass, ACTION : pass )
 
     // LAYOUT: false, VIEW: false, ACTION: false
     $this->render(["file" => "/app/views/admin/login.php"]);
 
-    /////////////////////////////////////////////////////////////////////////////////
-    // option : partial
-    /////////////////////////////////////////////////////////////////////////////////
-    // only include file "_table.php" (no controller, no params, no layout)  
+    // LAYOUT: false, VIEW: false, ACTION: false
+    // access to $username var on HTML
+    $this->render(["file" => "/app/views/admin/login.php", "locals" => ["username" => "gdemir"]);
 
-    // TODO partial, ayrıca sayfa üzerinde
+    /////////////////////////////////////////////////////////////////////////////////
+    // option : partial, locals
+    /////////////////////////////////////////////////////////////////////////////////
+    // only include file or script file "_table.php" (no controller, no params, no layout)
+
+    // TODO partial
     // $this->render(["partial" => "home/navbar"]);
     $this->render(["partial" => "home/table", "locals" => ["products" => $products]]); ?>
 
