@@ -150,7 +150,7 @@ class HomeController extends ApplicationController {
 
 ```php
 <h1> Home#Index </h1>;
-<?= "id" . $id; ?>
+<?= "id: $id"; ?>
 ```
 
 #### POST
@@ -377,7 +377,7 @@ ApplicationRoutes::draw(
 
 Her `config/routes.php` içerisinde tanımlanan `get` işlemi için `app/controller/*.php` dosyası içerisinde fonksiyon tanımlamak zorunlu değildir, tanımlanırsa bir değişken yükü/yükleri controller içinde `$this->KEY` şeklinde tanımlanırsa ilgili yönlenen sayfada `$KEY` şeklinde veriye erişebilir. Her `config/routes.php` içerisinde tanımlanan `post` için ilgili `app/controller/*.php` dosyası içerisinde fonksiyon tanımlamak zorunludur.
 
-- Render (Reference To View function)
+- Render (Reference To View Private `render_file` Function)
 
 > OPTIONS : `layout`, `view`, `action`, `template`, `file`, `text`, `partial`, `locals`
 
@@ -392,76 +392,97 @@ class HomeController extends ApplicationController {
     echo "HomeIndex sayfası öncesi çalışan fonksiyon";
     
     /////////////////////////////////////////////////////////////////////////////////
-    // default render for this functions examples
+    // default render for this functions examples : /home/index
     /////////////////////////////////////////////////////////////////////////////////
 
-    // LAYOUT: home, VIEW: home, ACTION: index
-    $this->render(["layout" => "home", "view" => "home", "action" => "index"]);
-    $this->render(["template" => "/home/index"]);
+    // LAYOUT: home, VIEW: home, ACTION: index, LOCALS: null
     $this->render("/home/index");
+    
+    $this->render(["template" => "/home/index"]);
+    $this->render(["template" => "/home/index", "locals" => null]);
+    $this->render(["template" => "/home/index", "layout" => "home"]);
+    $this->render(["template" => "/home/index", "layout" => "home", "locals" => null]);
+    
+    $this->render(["view" => "home"]);
+    $this->render(["action" => "index"]);
+    $this->render(["layout" => "home"]);
+ 
+    $this->render(["view" => "home", "action" => "index"]);
+    $this->render(["view" => "home", "action" => "index", "locals" => null]);
+    $this->render(["view" => "home", "action" => "index", "layout" => "home"]);
+    $this->render(["view" => "home", "action" => "index", "layout" => "home", "locals" = null]);
     
     /////////////////////////////////////////////////////////////////////////////////
     // no options
     /////////////////////////////////////////////////////////////////////////////////
     
-    // DEFAULT LAYOUT: home, VIEW: home, ACTION: index
+    // DEFAULT LAYOUT: home, VIEW: home, ACTION: index, DEFAULT LOCALS: null
     $this->render("/home/index"); // like $this->render(["template" => "/home/index"]);
 
-    // DEFAULT LAYOUT: home, VIEW: home, ACTION: show
+    // DEFAULT LAYOUT: home, VIEW: home, ACTION: show, DEFAULT LOCALS: null
     $this->render("/home/show");  // like $this->render(["template" => "/home/show"]);
 
-    // DEFAULT LAYOUT: home, VIEW: admin, ACTION: show
+    // DEFAULT LAYOUT: home, VIEW: admin, ACTION: show, DEFAULT LOCALS: null
     $this->render("/admin/show"); // like $this->render(["template" => "/admin/show"]);
 
     /////////////////////////////////////////////////////////////////////////////////
     // option : layout, view, action, template
     /////////////////////////////////////////////////////////////////////////////////
     
-    // LAYOUT: false, DEFAULT VIEW: home, DEFAULT ACTION: index
+    // LAYOUT: false, DEFAULT VIEW: home, DEFAULT ACTION: index, DEFAULT LOCALS: null
     $this->render(["layout" => false]);
 
-    // DEFAULT LAYOUT: false, DEFAULT VIEW: home, ACTION: index
+    // DEFAULT LAYOUT: false, DEFAULT VIEW: home, ACTION: index, DEFAULT LOCALS: null
     $this->render(["action" => "index"]);
 
-    // DEFAULT LAYOUT: false, VIEW: home, DEFAULT ACTION: index
+    // DEFAULT LAYOUT: false, VIEW: home, DEFAULT ACTION: index, DEFAULT LOCALS: null
     $this->render(["view" => "home"]);
 
-    // DEFAULT LAYOUT: home, VIEW: home, ACTION: index
+    // DEFAULT LAYOUT: home, VIEW: home, ACTION: index, DEFAULT LOCALS: null
     $this->render(["template" => "/home/index"]);
 
-    // DEFAULT LAYOUT: home, VIEW: admin, ACTION: index
+    // DEFAULT LAYOUT: home, VIEW: admin, ACTION: index, DEFAULT LOCALS: null
     $this->render(["view" => "admin", "action" => "index"]);
 
-    // LAYOUT: admin, VIEW: home, ACTION: show
+    // LAYOUT: admin, VIEW: home, ACTION: show, DEFAULT LOCALS: null
     $this->render(["layout" => "admin", "view" => "home", "action" => "show"]);
 
-    // LAYOUT: admin, VIEW: home, ACTION: index
+    // LAYOUT: admin, VIEW: home, ACTION: index, DEFAULT LOCALS: null
     $this->render(["layout" => "admin", "template" => "home/index"]);
 
-    // LAYOUT: admin, VIEW: home, ACTION: show
+    // LAYOUT: admin, VIEW: home, ACTION: show, DEFAULT LOCALS: null
     $this->render(["layout" => "admin", "template" => "home/show"]);
 
     /////////////////////////////////////////////////////////////////////////////////
-    // option : file
+    // option : file ( LAYOUT : pass, VIEW : pass, ACTION : pass )
     /////////////////////////////////////////////////////////////////////////////////
-    // include locals and this file ( LAYOUT : pass, VIEW : pass, ACTION : pass )
-
-    // LAYOUT: false, VIEW: false, ACTION: false
-    $this->render(["file" => "/app/views/admin/login.php"]);
-
-    // LAYOUT: false, VIEW: false, ACTION: false
-    // access to $username var on HTML
-    $this->render(["file" => "/app/views/admin/login.php", "locals" => ["username" => "gdemir"]);
+    // include locals and this file
+    // example file path = "/app/views/home/users/show.php"
+    
+    // DEFAULT LOCALS: null
+    $this->render(["file" => "/app/views/home/users/show.php"]);
+    
+    // LOCALS: ( $fist_name : "Gökhan", $last_name : "Demir" )
+    $this->render(["file" => "/app/views/home/users/show.php", "locals" => ["fist_name" => "Gökhan", "last_name" => "Demir"]);
 
     /////////////////////////////////////////////////////////////////////////////////
-    // option : partial, locals
+    // option : partial ( LAYOUT : pass, VIEW : pass, ACTION : pass )
     /////////////////////////////////////////////////////////////////////////////////
-    // only include file or script file "_table.php" (no controller, no params, no layout)
+    // include locals and this file "_show.php" on VIEW path
+    // example file : /app/views/home/users/_show.php
 
-    // TODO partial
-    // $this->render(["partial" => "home/navbar"]);
-    $this->render(["partial" => "home/table", "locals" => ["products" => $products]]); ?>
+    // DEFAULT LOCALS: null
+    $this->render(["partial" => "home/users/show"]);
 
+    // LOCALS: ( $fist_name : "Gökhan", $last_name : "Demir" )
+    $this->render(["partial" => "home/users/show", "locals" => "locals" => ["fist_name" => "Gökhan", "last_name" => "Demir"]]);
+
+    /////////////////////////////////////////////////////////////////////////////////
+    // option : text ( LAYOUT : pass, VIEW : pass, ACTION : pass, LOCALS : pass )
+    /////////////////////////////////////////////////////////////////////////////////
+    // this option, available in ajax functions
+    
+    $this->render(["text" => "Hello World"]);
   }
 
 }
@@ -658,7 +679,7 @@ Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `a
 > `app/views/DIRECTORY/*.php`
 
 ```html
-<h1> Hello World </h1>
+<h1>Hello World</h1>
 ```
 
 > `app/views/layouts/DIRECTORY.php`
