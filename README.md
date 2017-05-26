@@ -649,7 +649,7 @@ class AdminController extends ApplicationController {
 
 > `app/views/admin/login.php`
 
-```php
+```html
 <div class="row">
   <div class="col-xs-3">
     <img src="/app/assets/img/default.png" class="img-thumbnail" />
