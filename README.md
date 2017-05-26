@@ -9,14 +9,15 @@
 
 - MySQL
 
-- Web server: [apache2-settings](https://github.com/barak-framework/blob/master/.htaccess) or [nginx-settings](https://github.com/barak-framework/blob/master/nginx-settings) or [iss-settings](https://github.com/barak-framework/blob/master/web.config)
+- Web Server : [apache2-settings](https://github.com/barak-framework/blob/master/.htaccess) or [nginx-settings](https://github.com/barak-framework/blob/master/nginx-settings) or [iss-settings](https://github.com/barak-framework/blob/master/web.config)
 
-- Php Version : 7.0, - Php Database Access : [PDO](http://php.net/manual/tr/book.pdo.php)
+- Php
+
+- Php Database Access : [PDO](http://php.net/manual/tr/book.pdo.php)
+
+- Package Mananger : [Composer](http://gdemir.me/categories/php/composer/)
 
 - Install : [LAMP](http://gdemir.me/categories/linux/lamp/) or [LEMP](http://gdemir.me/categories/linux/lemp/)
-
-- [Composer](http://gdemir.me/categories/php/composer/)
-
 
 ## Install
 
