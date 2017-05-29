@@ -756,9 +756,9 @@ echo $user->full_name();
 
 > `draft`, `load`, `create`, `unique`, `find`, `find_all`, `all`, `first`, `last`, `exists`, `delete`, `update`
 
-#### CREATE ( `new`, `create` )
+#### CREATE ( `draft`, `create` )
 
-> `new`
+> `draft`
 
 ```php
 // Ör. 1:
