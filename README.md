@@ -19,7 +19,7 @@
 
 - Configuration
 
-> Web Server Settings : [apache2-settings](https://github.com/barak-framework/blob/master/.htaccess) or [nginx-settings](https://github.com/barak-framework/blob/master/nginx-settings) or [iss-settings](https://github.com/barak-framework/blob/master/web.config)
+> Web Server Settings : [apache2-settings](https://github.com/barak-framework/barak/blob/master/.htaccess) or [nginx-settings](https://github.com/barak-framework/barak/blob/master/nginx-settings) or [iss-settings](https://github.com/barak-framework/barak/blob/master/web.config)
 
 > Package Mananger Installation : [composer-installation](http://gdemir.me/categories/php/composer/)
 
