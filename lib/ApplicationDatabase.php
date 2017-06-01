@@ -2,7 +2,7 @@
 
 class ApplicationDatabase extends PDO {
 
-  const SEEDSFILE  = "db/seeds.php";
+  const SEEDSFILE = "db/seeds.php";
 
   public function __construct($host, $name, $user, $pass) {
 
