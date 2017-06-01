@@ -1,5 +1,5 @@
 <?php
-//
+
 class ApplicationModel {
 
   private $_select = [];  // list
@@ -221,8 +221,8 @@ class ApplicationModel {
   //   $this->_where = ($this->_where) ? array_merge($this->_where, $fields) : $fields;
   //   return $this;
   // }
+  
   // ok
-
   public function where($field, $value = null, $mark = "=", $logic = "AND") {
 
     /*
@@ -499,6 +499,11 @@ class ApplicationModel {
   public static function delete($primary_key) {
     ApplicationSql::delete(self::table_name(), static::field_to_where(["id" => intval($primary_key)]), null);
   }
+  
+  // ?
+  // public function field_exists($field) {
+  //   return in_array($field, ApplicationSql::fieldnames(self::table_name())) ? true : false;
+  // }
 
   //////////////////////////////////////////////////
   // Private Functions
@@ -574,9 +579,6 @@ class ApplicationModel {
         throw new FieldNotFoundException("Tabloda böyle bir anahtar mevcut değil", $table . "." . $field);
     }
   }
-
-  // private function field_exists($field) {
-  //   return in_array($field, ApplicationSql::fieldnames(self::table_name())) ? true : false;
-  // }
 }
+
 ?>
