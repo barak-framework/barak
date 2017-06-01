@@ -221,11 +221,8 @@ class ApplicationModel {
   //   $this->_where = ($this->_where) ? array_merge($this->_where, $fields) : $fields;
   //   return $this;
   // }
-  
-  // ok
-  public function where($field, $value = null, $mark = "=", $logic = "AND") {
 
-    /*
+  /*
     MARK
 
     field1 =  value1
@@ -242,11 +239,10 @@ class ApplicationModel {
     field1 IN (value1, value2)
     fiedl1 NOT IN (value1, value2)
 
-    */
+  */
 
-    // if (is_null($value))
-    //   $mark = $value;
-
+  // ok
+  public function where($field, $value = null, $mark = "=", $logic = "AND") {
     self::check_fieldname($field);
 
     // mark control
@@ -261,12 +257,8 @@ class ApplicationModel {
       if (!is_array($value))
         throw new BelongNotFoundException("WHERE IN, NOT IN için değer list olmalıdır", $value);
     } elseif (in_array($mark, ApplicationSql::$where_between_marks)) {
-      if (!is_array($value)) {
-        throw new BelongNotFoundException("WHERE BETWEEN, NOT BETWEEN için değer list olmalıdır", $value);
-      } elseif (is_array($value)) {
-        if (count($value) != 2)
-          throw new BelongNotFoundException("WHERE BETWEEN, NOT BETWEEN için değer list ve 2 değerli olmalıdır", $value);
-      }
+      if (!is_array($value) or (is_array($value) and count($value) != 2))
+        throw new BelongNotFoundException("WHERE BETWEEN, NOT BETWEEN için değer list ve 2 değerli olmalıdır", $value);
     } elseif (!in_array($mark, array_merge(ApplicationSql::$where_other_marks, ApplicationSql::$where_like_marks))) {
       throw new BelongNotFoundException("WHERE de tanımlı böyle bir işaretçi bulunamadı", $mark);
     }
@@ -321,7 +313,6 @@ class ApplicationModel {
 
   // ok
   public function order($field, $sort_type = "ASC") {
-
     self::check_fieldname($field);
 
     // sort_type control
@@ -380,8 +371,8 @@ class ApplicationModel {
     if ($record = ApplicationSql::read($table_name, null, static::field_to_where($fields))) {
 
       $object = $table_name::load();
-      foreach ($record as $fieldname => $value)
-        $object->$fieldname = $value;
+      foreach ($record as $field => $value)
+        $object->$field = $value;
 
       $object->_new_record_state = false;
       return $object;
@@ -414,6 +405,7 @@ class ApplicationModel {
     return $object;
   }
 
+  // ok
   public static function load() {
     return self::draft(null);
   }
@@ -541,25 +533,6 @@ class ApplicationModel {
 
       } else {
         $fields[$index] = $table_name . '.' .  $field;
-      }
-    }
-    return $fields;
-  }
-
-  public static function check_fields_of_table_hash($fields) {
-    $table_name = self::table_name();
-    foreach ($fields as $field => $value) {
-      if (strpos($field, '.') !== false) { // found TABLE
-        list($request_table, $request_field) = array_map('trim', explode('.', $field));
-
-        if ($request_table != $this->_table and ($this->_join and !array_key_exists($request_table, $this->_join)))
-          throw new TableNotFoundException("WHERE işleminde böyle bir tablo mevcut değil", $request_table);
-
-        self::check_fieldname($request_field, $request_table);
-
-      } else {
-        $fields[$table_name . '.' .  $field] = $value;
-        unset($fields[$field]);
       }
     }
     return $fields;
