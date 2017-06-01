@@ -50,8 +50,8 @@ class ApplicationRoutes {
     }
   }
 
-  public function get_route($request_route) { // __get($request_route) // is not support object, only string
-
+  // __get($request_route) // is not support object, only string
+  public function get_route($request_route) {
 
     if (array_key_exists($request_route["_method"], $this->_routes)) {
 
@@ -105,6 +105,7 @@ class ApplicationRoutes {
       throw new ConfigurationException("Bu yönlendirme daha önceden tanımlanmış", $route->_rule);
     $this->_routes[$route->_method][$route->_rule] = $route;
   }
+
 }
 
 ?>
