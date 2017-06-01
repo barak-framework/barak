@@ -1,9 +1,13 @@
-# Barak Framework
+<p align="center">
+<img src="https://raw.githubusercontent.com/barak-framework/barak/master/app/assets/img/default.png" height="64" />
+</p>
 
-[![Latest Stable Version](https://poser.pugx.org/gdemir/barak/v/stable)](https://packagist.org/packages/gdemir/barak)
-[![Total Downloads](https://poser.pugx.org/gdemir/barak/downloads)](https://packagist.org/packages/gdemir/barak)
-[![Latest Unstable Version](https://poser.pugx.org/gdemir/barak/v/unstable)](https://packagist.org/packages/gdemir/barak)
-[![License](https://poser.pugx.org/gdemir/barak/license)](https://packagist.org/packages/gdemir/barak)
+<h3 align="center">Barak Framework</h3>
+<p align="center">PHP MVC Framework Like ROR</p>
+<p align="center">
+  <img src="https://poser.pugx.org/barak-framework/barak/v/stable" />
+  <img src="https://poser.pugx.org/barak-framework/barak/license" />
+</p>
 
 ##  Requirements Packages and Configuration
 
