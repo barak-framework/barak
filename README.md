@@ -9,6 +9,8 @@
   <img src="https://poser.pugx.org/barak-framework/barak/license" />
 </p>
 
+<hr>
+
 ##  Requirements Packages and Configuration
 
 - Packages
