@@ -39,18 +39,18 @@ class ApplicationHelper {
         new ApplicationRoute("get",  "$table/edit/",   false,          false, $path),  // edit record
         new ApplicationRoute("post", "$table/update",  false,          false, $path),  // update record
         new ApplicationRoute("post", "$table/destroy", false,          false, $path)   // destroy record
-        ];
-      }
+      ];
+    }
 
-      function resources($table, $path = null) {
-        return [
-      new ApplicationRoute("get",  "$table",          "$table#index", false, $path), // all record
-      new ApplicationRoute("get",  "$table/create",   false,          false, $path), // new record form
-      new ApplicationRoute("post", "$table/save",     false,          false, $path), // new record create
-      new ApplicationRoute("get",  "$table/show/:id", "$table#show",  true,  $path), // display record
-      new ApplicationRoute("get",  "$table/edit/:id", "$table#edit",  true,  $path), // edit record
-      new ApplicationRoute("post", "$table/update",   false,          false, $path), // update record
-      new ApplicationRoute("post", "$table/destroy",  false,          false, $path)  // destroy record
+    function resources($table, $path = null) {
+      return [
+        new ApplicationRoute("get",  "$table",          "$table#index", false, $path), // all record
+        new ApplicationRoute("get",  "$table/create",   false,          false, $path), // new record form
+        new ApplicationRoute("post", "$table/save",     false,          false, $path), // new record create
+        new ApplicationRoute("get",  "$table/show/:id", "$table#show",  true,  $path), // display record
+        new ApplicationRoute("get",  "$table/edit/:id", "$table#edit",  true,  $path), // edit record
+        new ApplicationRoute("post", "$table/update",   false,          false, $path), // update record
+        new ApplicationRoute("post", "$table/destroy",  false,          false, $path)  // destroy record
       ];
     }
 
@@ -131,6 +131,7 @@ class ApplicationHelper {
     }
 
   }
+
 }
 
 ?>
