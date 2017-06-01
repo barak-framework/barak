@@ -136,16 +136,16 @@ class ApplicationModel {
   }
 
   // ok
-  public function pluck($fieldname) {
+  public function pluck($field) {
 
-    self::check_fieldname($fieldname);
+    self::check_fieldname($field);
 
-    $this->_select = [$fieldname];
+    $this->_select = [$field];
     $records = self::query();
 
     if ($records) {
       foreach ($records as $record)
-        $values[] = $record[$fieldname];
+        $values[] = $record[$field];
 
       return $values;
     }
