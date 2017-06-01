@@ -251,7 +251,7 @@ class ApplicationModel {
       $mark = "IS NULL";
       $value = NULL;
     } elseif (in_array($value, ApplicationSql::$where_null_marks)) {
-    	$mark = $value;
+      $mark = $value;
       $value = NULL;
     } elseif (in_array($mark, ApplicationSql::$where_in_marks)) {
       if (!is_array($value))
