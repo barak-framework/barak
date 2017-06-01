@@ -9,7 +9,6 @@ class ApplicationI18n {
   public $locale;
 
   public function __construct($_locale) {
-
     if (!file_exists(self::LOCALESDIR))
       throw new FileNotFoundException("Yerel ayar dizini mevcut değil", self::LOCALESDIR);
 
@@ -25,13 +24,12 @@ class ApplicationI18n {
   }
 
   public function run() {
-
     $localefile = self::LOCALESDIR . (($this->locale) ? $this->locale : $this->default_locale) . ".php";
-
     if (!file_exists($localefile))
       throw new I18nNotFoundException("Yerel ayar dosyası mevcut değil", $localefile);
 
     $this->_words = include $localefile;
   }
 }
+
 ?>
