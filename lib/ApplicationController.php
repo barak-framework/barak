@@ -1,4 +1,5 @@
 <?php
+
 class ApplicationController {
 
   public $_locals = [];
@@ -50,4 +51,5 @@ class ApplicationController {
     $this->_locals[$local] = $value;
   }
 }
+
 ?>
