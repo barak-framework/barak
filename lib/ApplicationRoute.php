@@ -81,7 +81,8 @@ class ApplicationRoute {
     $v = new ApplicationView();
 
     // render template
-    if ($this->_path) { // have scope or path of resouce/resouces
+    // have scope or path of resouce/resouces
+    if ($this->_path) {
 
       $v->set(["layout" => $this->_path]);
       $v->set(["view" => $this->_path . "/" . $this->_controller, "action" => $this->_action]);
@@ -102,6 +103,7 @@ class ApplicationRoute {
 
     $v->run();
   }
+
 }
 
 ?>
