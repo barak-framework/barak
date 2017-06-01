@@ -105,7 +105,6 @@ class ApplicationRoutes {
       throw new ConfigurationException("Bu yönlendirme daha önceden tanımlanmış", $route->_rule);
     $this->_routes[$route->_method][$route->_rule] = $route;
   }
-
 }
 
 ?>
