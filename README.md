@@ -906,10 +906,10 @@ print_r($user_firstnames);
 // Ör. 1:
 echo User::load()->count();
 // 12
+```
 
-
+```php
 // Ör. 2:
-
 echo User::load()->where("first_name", "Gökhan")->count();
 // 5
 ```
@@ -917,10 +917,32 @@ echo User::load()->where("first_name", "Gökhan")->count();
 > `joins`
 
 ```php
-// Department ["id", "name"], User ["id", "department_id", "first_name"], "Address" ["id", "user_id", "content"]
+// Ör. 1:
+
+// Category ["id", "name"]
+// Article ["id", "category_id"]
+// Like ["id", "article_id"]
+// Comment ["id", "article_id"]
+// Tag ["id", "comment_id"]
+
+  $categories = Category::load()->joins("article")->take();
+  $categories = Category::load()->joins(["article"])->take();
+  $categories = Category::load()->joins(["article" => "comment"])->take();
+  $categories = Category::load()->joins(["article" => ["comment" => ["tag"]]])->take();
+  $categories = Category::load()->joins(["article" => ["comment" => ["tag"], "like"]])->take();
+  $categories = Category::load()->joins(["article" => ["comment" => ["tag"], "like"], "document"])->take();
+  $categories = Category::load()->joins(["article", "document"])->take();
+```
+
+```php
+// Ör. 2:
+
+// Department ["id", "name"]
+// User ["id", "department_id", "first_name"]
+// Address ["id", "user_id", "content"]
 
 $department = Department::load()
-                ->joins(["User", "Address"])
+                ->joins(["user", "address"])
                 ->where("User.id", 1)
                 ->select("User.first_name, Department.name, Address.content")
                 ->limit(1)
