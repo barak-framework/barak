@@ -867,7 +867,7 @@ $users = User::load()->where("created_at", ["2016-12-01", "2016-13-01"], "NOT BE
 // SELECT * FROM user WHERE created_at NOT BETWEEN "2016-12-01" AND "2016-13-01";
 ```
 
-> `or_where`
+##### `or_where`
 
 only logic key: `OR`
 
