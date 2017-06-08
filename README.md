@@ -726,7 +726,7 @@ Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `a
 
 > `render`
 
-#### Render
+#### `render`
 
 Fonksiyonu Controller'daki gibi tüm özellikleri ile kullanılabilir. Yalnızca `*.php` dosyalarının içersinde kullanılırken `<?php render(); ?>` şeklinde kullanılmalıdır. Daha ayrıntılı bilgi için [Controller#render](https://github.com/barak-framework/barak/blob/master/README.md#render)
 
@@ -892,7 +892,7 @@ foreach ($users as $user)
   echo $user->first_name;
 ```
 
-> `pluck`
+##### `pluck`
 
 ```php
 // Ör. 1:
