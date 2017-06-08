@@ -11,7 +11,7 @@
 
 ---
 
-##  Requirements Packages and Configuration
+##  Requirements
 
 - Packages
 
