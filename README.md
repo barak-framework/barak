@@ -498,7 +498,7 @@ class HomeController extends ApplicationController {
 }
 ```
 
-#### `redirect`
+#### `redirect_to`
 
 > request url [`/` or `/home`] redirect to `/home/index`
 
