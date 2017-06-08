@@ -2,7 +2,7 @@
 <img src="https://raw.githubusercontent.com/barak-framework/barak/master/app/assets/img/default.png" height="64" />
 </p>
 
-<h3 align="center">Barak Framework</h3>
+<h4 align="center">Barak Framework</h4>
 <p align="center">PHP MVC Framework Like ROR</p>
 <p align="center">
   <img src="https://poser.pugx.org/barak-framework/barak/v/stable" />
