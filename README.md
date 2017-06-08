@@ -1113,7 +1113,7 @@ User::load()->where("first_name", "Gökhan")->limit(10)->delete_all();
 User::load()->limit(10)->delete_all();
 ```
 
-#### Dependencies (`$BELONG_TABLE->OWNER_TABLE`, `$OWNER_TABLE->all_of_BELONG_TABLE`)
+#### Dependencies
 
 > `$BELONG_TABLE->OWNER_TABLE`
 
