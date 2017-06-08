@@ -1174,7 +1174,7 @@ foreach ($books as $book)
   echo $book->name;
 ```
 
-### Configurations (`config/database.ini`, `config/application.ini`)
+### Configurations (`config/*`)
 
 ---
 
