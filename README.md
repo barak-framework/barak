@@ -123,7 +123,7 @@ class HomeController extends ApplicationController {
 
 > `get`, `post`, `resource`, `resources`, `scope`, `root`
 
-#### GET
+#### `get`
 
 - Simple
 
@@ -168,7 +168,7 @@ class HomeController extends ApplicationController {
 <?= "id: $id"; ?>
 ```
 
-#### POST
+#### `post`
 
 - Simple
 
@@ -239,7 +239,7 @@ class AdminController extends ApplicationController {
 <?= $_SESSION["full_name"]; ?>
 ```
 
-#### RESOURCE
+#### `resource`
 
 > `config/routes.php`
 
@@ -263,7 +263,7 @@ ApplicationRoutes::draw(
 );
 ```
 
-#### RESOURCES
+#### `resources`
 
 > `config/routes.php`
 
@@ -287,7 +287,7 @@ ApplicationRoutes::draw(
 );
 ```
 
-#### SCOPE
+#### `scope`
 
 Kodları daha derli toplu kullanmak için Route'in Gruplama özelliğidir. Bir `PATH` altında `CONTROLLER` ve `VIEW` dizininin çalışma imkanı sağlar. 
 
@@ -369,7 +369,7 @@ ApplicationRoutes::draw(
 );
 ```
 
-#### ROOT
+#### `root`
 
 > `config/routes.php`
 
@@ -401,7 +401,7 @@ Her `config/routes.php` içerisinde tanımlanan `get` işlemi için `app/control
 
 > `before_actions`, `after_actions`
 
-#### Render
+#### `render`
 
 > options : `layout`, `view`, `action`, `template`, `file`, `text`, `partial`, `locals`
 
@@ -508,7 +508,7 @@ class HomeController extends ApplicationController {
 }
 ```
 
-#### Redirect
+#### `redirect`
 
 > request url [`/` or `/home`] redirect to `/home/index`
 
@@ -539,7 +539,7 @@ class HomeController extends ApplicationController {
 <h1> Home#Index </h1>
 ```
 
-#### Before Action
+#### `before_actions`
 
 Before Action (`protected $before_actions`) özelliği, `app/controller/*.php` dosyası içerisinde her çalışacak get/post fonksiyonları için önceden çalışacak fonksiyonları belirtmeye yarayan özelliktir. Özelliğin etkisini ayarlamak için aşağıdaki 3 şekilde kullanılabilir:
 
@@ -577,7 +577,7 @@ class HomeController extends ApplicationController {
   }
 ```
 
-#### After Action
+#### `after_actions`
 
 After Action (`protected $after_actions`) özelliği, `app/controller/*.php` dosyası içerisinde her çalışacak get/post fonksiyonları için sonradan çalışacak fonksiyonları belirtmeye yarayan özelliktir. Özelliğin etkisini ayarlamak için aşağıdaki 3 şekilde kullanılabilir:
 
@@ -762,9 +762,13 @@ echo $user->full_name();
 
 > `draft`, `load`, `create`, `unique`, `find`, `find_all`, `all`, `first`, `last`, `exists`, `delete`, `update`
 
-#### CREATE ( `draft`, `create` )
+#### CREATE
 
-> `draft`
+- Functions
+
+>  `draft`, `create`
+
+##### `draft`
 
 ```php
 // Ör. 1:
@@ -780,16 +784,20 @@ $user = User::draft(["first_name" => "Gökhan"])->save();
 print_r($user); // otomatik id alır
 ```
 
-> `create`
+##### `create`
 
 ``` php
 $user = User::create(["first_name" => "Gökhan"]);
 print_r($user);
 ```
 
-#### READ ( `load`, `select`, `where`, `or_where`, `order`, `group`, `limit`, `take`, `pluck`, `count`, `joins`, `find`, `find_all`, `all`, `first`, `last` )
+#### READ 
 
-> `load`
+- Functions
+
+> `load`, `select`, `where`, `or_where`, `order`, `group`, `limit`, `take`, `pluck`, `count`, `joins`, `find`, `find_all`, `all`, `first`, `last`
+
+##### `load`
 
 ```php
 $users = User::load()->take();
@@ -797,7 +805,7 @@ foreach ($users as $user)
   echo $user->first_name;
 ```
 
-> `where`
+##### `where`
 
 operators: `=`, `!=`, `>`, `<`, `>=`, `<=`
 
@@ -900,7 +908,7 @@ print_r($user_firstnames);
 // ["Gökhan", "Göktuğ", "Gökçe", "Gökay", "Atilla", "Altay", "Tarkan", "Başbuğ", "Ülkü"]
 ```
 
-> `count`
+##### `count`
 
 ```php
 // Ör. 1:
@@ -914,7 +922,7 @@ echo User::load()->where("first_name", "Gökhan")->count();
 // 5
 ```
 
-> `joins`
+##### `joins`
 
 ```php
 // Ör. 1:
@@ -950,21 +958,21 @@ $department = Department::load()
 print_r($department);
 ```
 
-> `unique`
+##### `unique`
 
 ```php
 $user = User::unique(["username" => "gdemir", "password" => "123456"]);
 echo $user->first_name;
 ```
 
-> `find`
+##### `find`
 
 ```php
 $user = User::find(1);
 echo $user->first_name;
 ```
 
-> `find_all`
+##### `find_all`
 
 ```php
 $users = User::find_all([1, 2, 3]);
@@ -972,7 +980,7 @@ foreach ($users as $user)
   echo $user->first_name;
 ```
 
-> `all`
+##### `all`
 
 ```php
 $users = User::all();
@@ -980,7 +988,7 @@ foreach ($users as $user)
   echo $user->first_name;
 ```
 
-> `first`
+##### `first`
 
 ```php
 // Ör. 1:
@@ -994,7 +1002,7 @@ foreach ($users as $user)
   echo $user->first_name;
 ```
 
-> `last`
+##### `last`
 
 ```php
 // Ör. 1:
@@ -1009,15 +1017,19 @@ foreach ($users as $user)
   echo $user->first_name;
 ```
 
-> `exists`
+##### `exists`
 
 ```php
 echo User::exists(1) ? "kayit var" : "kayit yok";
 ```
 
-#### UPDATE ( `save`, `update` )
+#### UPDATE
 
-> `save`
+- Functions
+
+> `save`, `update`
+
+##### `save`
 
 ```php
 // Ör. 1:
@@ -1048,7 +1060,7 @@ foreach ($users as $user) {
 }
 ```
 
-> `update`
+##### `update`
 
 ```php
 // Ör. 1:
@@ -1070,9 +1082,13 @@ foreach ($users as $user)
   User::update($user->id, ["first_name" => "Göktuğ", "last_name" => "Demir"]);
 ```
 
-#### DELETE ( `destroy`, `delete`, `delete_all` )
+#### DELETE 
 
-> `destroy`
+- Functions
+
+> `destroy`, `delete`, `delete_all`
+
+##### `destroy`
 
 ```php
 $user = User::unique(["username" => "gdemir", "password" => "123456"]);
@@ -1082,13 +1098,13 @@ $user = User::last();
 $user->destroy();
 ```
 
-> `delete`
+##### `delete`
 
 ```php
 User::delete(1);
 ```
 
-> `delete_all`
+##### `delete_all`
 
 ```php
 User::load()->delete_all();
