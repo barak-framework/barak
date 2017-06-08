@@ -39,16 +39,6 @@
 composer create-project barak-framework/barak project_name
 ```
 
-## Configuration Database File (`config/database.ini`)
-
-```ini
-[database_configuration]
-host  = localhost
-user  = root
-pass  = barak
-name  = BARAK
-```
-
 ## Run
 
     cd project_name
