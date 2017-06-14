@@ -929,13 +929,13 @@ echo User::load()->where("first_name", "Gökhan")->count();
 // Comment ["id", "article_id"]
 // Tag ["id", "comment_id"]
 
-  $categories = Category::load()->joins("article")->take();
-  $categories = Category::load()->joins(["article"])->take();
-  $categories = Category::load()->joins(["article" => "comment"])->take();
-  $categories = Category::load()->joins(["article" => ["comment" => ["tag"]]])->take();
-  $categories = Category::load()->joins(["article" => ["comment" => ["tag"], "like"]])->take();
-  $categories = Category::load()->joins(["article" => ["comment" => ["tag"], "like"], "document"])->take();
-  $categories = Category::load()->joins(["article", "document"])->take();
+$categories = Category::load()->joins("article")->take();
+$categories = Category::load()->joins(["article"])->take();
+$categories = Category::load()->joins(["article" => "comment"])->take();
+$categories = Category::load()->joins(["article" => ["comment" => ["tag"]]])->take();
+$categories = Category::load()->joins(["article" => ["comment" => ["tag"], "like"]])->take();
+$categories = Category::load()->joins(["article" => ["comment" => ["tag"], "like"], "document"])->take();
+$categories = Category::load()->joins(["article", "document"])->take();
 ```
 
 ```php
