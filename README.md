@@ -767,7 +767,9 @@ $user = User::draft();
 $user->first_name = "Gökhan";
 $user->save();
 print_r($user); // otomatik id alır
+```
 
+```php
 // Ör. 2:
 
 $user = User::draft(["first_name" => "Gökhan"])->save();
@@ -886,11 +888,13 @@ foreach ($users as $user)
 
 ```php
 // Ör. 1:
+
 $user_ids = User::load()->pluck("id");
 print_r($user_ids);
 // [1, 2, 3, 4, 66, 677, 678]
+```
 
-
+```php
 // Ör. 2:
 
 $user_firstnames = User::load()->pluck("first_name");
@@ -902,12 +906,14 @@ print_r($user_firstnames);
 
 ```php
 // Ör. 1:
+
 echo User::load()->count();
 // 12
 ```
 
 ```php
 // Ör. 2:
+
 echo User::load()->where("first_name", "Gökhan")->count();
 // 5
 ```
@@ -985,8 +991,11 @@ foreach ($users as $user)
 
 $user = User::first();
 echo $user->first_name;
+```
 
+```php
 // Ör. 2:
+
 $users = User::first(10);
 foreach ($users as $user)
   echo $user->first_name;
@@ -999,7 +1008,9 @@ foreach ($users as $user)
 
 $user = User::last();
   echo $user->first_name;
+```
 
+```php
 // Ör. 2:
 
 $users = User::last(10);
@@ -1031,7 +1042,9 @@ $user = User::last();
 $user->first_name = "Gökhan";
 $user->save()
 print_r($user);
+```
 
+```php
 // Ör. 2:
 
 $users = User::find_all([1, 2, 3]);
@@ -1056,7 +1069,9 @@ foreach ($users as $user) {
 // Ör. 1:
 
 User::update(1, ["first_name" => "Gökhan", "last_name" => "Demir"]);
+```
 
+```php
 // Ör. 2:
 
 $users = User::find_all([1, 2, 3]);
@@ -1125,8 +1140,6 @@ User::load()->limit(10)->delete_all();
 // [1, 1, "Barak Türkmenlerinin Tarihi"]
 // [2, 1, "Oğuz Boyu"]
 // [3, 3, "Almila"]
-
-// Ör. 1:
 
 $book = Book::find(1);
 // [1, 1, "Barak Türkmenlerinin Tarihi"]
