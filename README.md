@@ -1226,8 +1226,7 @@ Günlük dosyalar açarak verilen mesajları loglamaya yarayan sınıf
 
 > `debug`, `info`, `warning`, `error`, `fatal`
 
-```
-php
+```php
 ApplicationLog::debug("sorunu buldum");
 ApplicationLog::info("bilmek iyidir");
 ApplicationLog::warning("olabilir?");
