@@ -44,10 +44,11 @@ class ApplicationModel {
   // }
 
   // ok v3
-  private function __construct() {
+  private function __construct($tablename) {
     $this->_new_record_state = true;
+    $this->_table = $tablename;
 
-    foreach (ApplicationSql::fieldnames(self::tablename()) as $fieldname)
+    foreach (ApplicationSql::fieldnames($this->_table) as $fieldname)
       $this->_fields[$fieldname] = null;
   }
 
@@ -124,11 +125,11 @@ class ApplicationModel {
         $object = self::clone($this->_table);
         $object->_fields = $record;
         $object->_new_record_state = false;
-
         $objects[] = $object;
       }
       return (count($records) == 1) ? $objects[0] : $objects;
     } else {
+
       return null;
     }
   }
@@ -173,7 +174,7 @@ class ApplicationModel {
 
   // FETCH Functions End
 
-  // $user = new User();
+  // $user = User::draft();
   // $user->first_name ="Gökhan";
   // $user->save(); // kayıt ettikten sonra otomatik id değeri alır.
 
@@ -403,10 +404,10 @@ class ApplicationModel {
   // no check tablename and clone
 
   // ok v3
-  public static function load($sets = null) {
+  public static function load() {
     $table = self::tablename();
     self::check_table($table);
-    return self::clone($table, $sets);
+    return self::clone($table);
   }
 
   // $users = User::all(); // return User objects array
@@ -543,9 +544,8 @@ class ApplicationModel {
   }
 
   // ok v3
-  private static function clone($modelname, $sets = null) {
-    $object = new $modelname($sets);
-    $object->_table = $modelname;
+  private static function clone($modelname) {
+    $object = new $modelname($modelname);
     return $object;
   }
 
