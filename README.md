@@ -1216,6 +1216,32 @@ if (User::load()->count() == 0) {
 }
 ```
 
+### Log (`log/*`)
+
+---
+
+Günlük dosyalar açarak verilen mesajları loglamaya yarayan sınıf
+
+- Functions
+
+> `debug`, `info`, `warning`, `error`, `fatal`
+
+```
+php
+ApplicationLog::debug("sorunu buldum");
+ApplicationLog::info("bilmek iyidir");
+ApplicationLog::warning("olabilir?");
+ApplicationLog::error("dikkat et");
+ApplicationLog::fatal("cevap vermiyor");
+
+// log/2017-06-18.txt
+// 2017-06-18 09:45:36 → debug : sorunu buldum
+// 2017-06-18 09:45:36 → info : bilmek iyidir
+// 2017-06-18 09:45:36 → warning : olabilir?
+// 2017-06-18 09:45:36 → error : dikkat et
+// 2017-06-18 09:45:36 → fatal : cevap vermiyor
+```
+
 ## Trailer
 
 [![BarakTurkmens](https://img.youtube.com/vi/cYNnHN5w1ok/2.jpg)](https://www.youtube.com/watch?v=cYNnHN5w1ok)
