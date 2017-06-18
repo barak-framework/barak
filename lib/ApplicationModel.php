@@ -2,14 +2,14 @@
 
 class ApplicationModel {
 
-  private $_select = [];   // list
-  private $_table  = "";   // string
-  private $_where  = [];   // hash
-  private $_join   = [];   // hash
-  private $_order  = [];   // list
-  private $_group  = [];   // list
-  private $_limit  = null;
-  private $_offset = null;
+  private $_select = [];     // list
+  private $_table  = "";     // string
+  private $_where  = [];     // hash
+  private $_join   = [];     // hash
+  private $_order  = [];     // list
+  private $_group  = [];     // list
+  private $_limit  = null;   // int
+  private $_offset = null;   // int
 
   private $_fields;
   private $_new_record_state;
