@@ -185,7 +185,7 @@ class ApplicationModel {
 
     if (!$this->_new_record_state) {
 
-      ApplicationSql::update($this->_table, $this->_fields, [self::set_to_where("id", intval($this->_fields["id"]))], null);
+      ApplicationSql::update($this->_table, $this->_fields, [self::set_to_where("id", intval($this->_fields["id"]))], $this->_limit);
 
     } else {
 
