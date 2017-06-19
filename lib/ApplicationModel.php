@@ -122,7 +122,7 @@ class ApplicationModel {
     if ($records) {
       $objects = [];
       foreach ($records as $record) {
-        $object = self::clone($this->_table);
+        $object = self::instance($this->_table);
         $object->_fields = $record;
         $object->_new_record_state = false;
         $objects[] = $object;
@@ -401,13 +401,13 @@ class ApplicationModel {
     return $object;
   }
 
-  // no check tablename and clone
+  // no check tablename and instance
 
   // ok v3
   public static function load() {
     $table = self::tablename();
     self::check_table($table);
-    return self::clone($table);
+    return self::instance($table);
   }
 
   // $users = User::all(); // return User objects array
@@ -544,7 +544,7 @@ class ApplicationModel {
   }
 
   // ok v3
-  private static function clone($modelname) {
+  private static function instance($modelname) {
     $object = new $modelname($modelname);
     return $object;
   }
