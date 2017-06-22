@@ -1181,6 +1181,14 @@ foreach ($books as $book)
 
 ---
 
+> `config/application.ini` (application configuration file)
+
+```ini
+[app_configuration]
+display_errors = true
+time_zone      = Europe/Istanbul
+```
+
 > `config/database.ini` (database configuration file)
 
 ```ini
@@ -1191,12 +1199,39 @@ pass  = barak
 name  = BARAK
 ```
 
-> `config/application.ini` (application configuration file)
+> `config/locales/LANGUAGE.php` (language configuration file)
 
-```ini
-[app_configuration]
-display_errors = true
-time_zone      = Europe/Istanbul
+Varsayılan dosyası `config/locales/tr.php` dosyasıdır, yeni bir dil eklenecekse aynı list kullanılıp değer kısımları değiştirilerek
+kaydedilmelidir. 
+
+`config/locales/tr.php`
+
+```php
+<?php
+return [
+
+"home" => [
+  "link" => "Anasayfa",
+  "about_us" => "Hakkımızda"
+  ]
+
+];
+?>
+```
+
+`config/locales/en.php`
+
+```php
+<?php
+return [
+
+"home" => [
+  "link" => "Homepage",
+  "about_us" => "About Us"
+  ]
+
+];
+?>
 ```
 
 ### Seeds (`db/seeds.php`)
@@ -1215,6 +1250,10 @@ if (User::load()->count() == 0) {
   User::create(["first_name" => "Atilla", "last_name" => "Demir", "username" => "ademir",  "password" => "123456"]);
 }
 ```
+
+### I18n
+
+#TODO
 
 ### Log (`log/*`)
 
