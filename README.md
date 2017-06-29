@@ -1184,9 +1184,11 @@ foreach ($books as $book)
 > `config/application.ini` (application configuration file)
 
 ```ini
-[app_configuration]
+[application_configuration]
 display_errors = true
 time_zone      = Europe/Istanbul
+locale         = tr
+log_size       = 5242880
 ```
 
 > `config/database.ini` (database configuration file)
@@ -1253,7 +1255,25 @@ if (User::load()->count() == 0) {
 
 ### I18n
 
-#TODO
+- Functions
+
+> `locale`, `translate`
+
+#### `locale`
+
+Çeviri kelimeleri (`config/locales/tr.php` veya `config/locales/en.php` gibi dosyalar dizi olarak $_SESSION["_i18n"] üzerine yüklenir.) proje başlangıcında `config/application.ini` dosyası içersinde `locale` değişkenine ile atanabilir veya projenin herhangi bir aşamasında aşağıdaki gibi atanabilir/değiştirilebilir.
+
+```php
+ApplicationI18n::locale("tr");
+```
+
+#### `translate`
+
+Çevirisi yapılacak bir kelime dizini o an hangi dil yüklü ise ona göre çeviri yapmak için aşağıdaki gibi kullanılır.
+
+```php
+ApplicationI18n::translate("home.about_us");
+```
 
 ### Log (`log/*`)
 
@@ -1263,7 +1283,7 @@ Günlük dosyalar açarak verilen mesajları loglamaya yarayan sınıf
 
 - Functions
 
-> `debug`, `info`, `warning`, `error`, `fatal`
+> `info`, `warning`, `error`, `fatal`
 
 ```php
 ApplicationLog::debug("sorunu buldum");
@@ -1273,7 +1293,6 @@ ApplicationLog::error("dikkat et");
 ApplicationLog::fatal("cevap vermiyor");
 
 // log/2017-06-18.txt
-// 2017-06-18 09:45:36 → debug : sorunu buldum
 // 2017-06-18 09:45:36 → info : bilmek iyidir
 // 2017-06-18 09:45:36 → warning : olabilir?
 // 2017-06-18 09:45:36 → error : dikkat et
