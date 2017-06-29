@@ -1253,7 +1253,7 @@ if (User::load()->count() == 0) {
 }
 ```
 
-### I18n
+### I18n (`config/locales/LOCALE.php`)
 
 ---
 
