@@ -1275,6 +1275,12 @@ ApplicationI18n::locale("tr");
 ApplicationI18n::translate("home.about_us");
 ```
 
+bu fonksiyonu daha kolay kullanmak için ApplicationHelper fonksiyonunda tanımlı olan `t` fonksiyonu ile erişilebilir.
+
+```php
+t("home.about_us");
+```
+
 ### Log (`log/*`)
 
 ---
