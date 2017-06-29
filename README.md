@@ -1255,6 +1255,8 @@ if (User::load()->count() == 0) {
 
 ### I18n
 
+---
+
 - Functions
 
 > `locale`, `translate`
@@ -1285,14 +1287,13 @@ t("home.about_us");
 
 ---
 
-Günlük dosyalar açarak verilen mesajları loglamaya yarayan sınıf
+Günlük olarak dosyalar açarak verilen mesajları loglamaya yarayan sınıf
 
 - Functions
 
 > `info`, `warning`, `error`, `fatal`
 
 ```php
-ApplicationLog::debug("sorunu buldum");
 ApplicationLog::info("bilmek iyidir");
 ApplicationLog::warning("olabilir?");
 ApplicationLog::error("dikkat et");
