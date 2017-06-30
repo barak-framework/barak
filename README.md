@@ -1204,7 +1204,7 @@ name  = BARAK
 > `config/locales/LANGUAGE.php` (language configuration file)
 
 Varsayılan dosyası `config/locales/tr.php` dosyasıdır, yeni bir dil eklenecekse aynı list kullanılıp değer kısımları değiştirilerek
-kaydedilmelidir. Bu çeviri dosyalarının yönetimi erişimi ve yönetimi için ApplicationI18n sınıfı kullanılmaktadır.
+kaydedilmelidir. Bu çeviri dosyalarının yönetimi erişimi ve yönetimi için I18n kısmında anlatılmaktadır.
 
 `config/locales/tr.php`
 
@@ -1277,7 +1277,7 @@ ApplicationI18n::locale("tr");
 ApplicationI18n::translate("home.about_us");
 ```
 
-bu fonksiyonu daha kolay kullanmak için ApplicationHelper fonksiyonunda tanımlı olan `t` fonksiyonu ile erişilebilir.
+bu fonksiyonu daha kolay kullanmak için alias olarak tanımlı `t` fonksiyonu ile erişilebilir.
 
 ```php
 t("home.about_us");
