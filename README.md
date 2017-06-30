@@ -1185,10 +1185,10 @@ foreach ($books as $book)
 
 ```ini
 [application_configuration]
-display_errors = true
-time_zone      = Europe/Istanbul
-locale         = tr
-log_size       = 5242880
+errors   = true
+timezone = Europe/Istanbul
+locale   = tr
+logsize  = 5242880
 ```
 
 > `config/database.ini` (database configuration file)
@@ -1204,7 +1204,7 @@ name  = BARAK
 > `config/locales/LANGUAGE.php` (language configuration file)
 
 Varsayılan dosyası `config/locales/tr.php` dosyasıdır, yeni bir dil eklenecekse aynı list kullanılıp değer kısımları değiştirilerek
-kaydedilmelidir. 
+kaydedilmelidir. Bu çeviri dosyalarının yönetimi erişimi ve yönetimi için ApplicationI18n sınıfı kullanılmaktadır.
 
 `config/locales/tr.php`
 
@@ -1263,7 +1263,7 @@ if (User::load()->count() == 0) {
 
 #### `locale`
 
-Çeviri kelimeleri (`config/locales/tr.php` veya `config/locales/en.php` gibi dosyalar dizi olarak $_SESSION["_i18n"] üzerine yüklenir.) proje başlangıcında `config/application.ini` dosyası içersinde `locale` değişkenine ile atanabilir veya projenin herhangi bir aşamasında aşağıdaki gibi atanabilir/değiştirilebilir.
+Çeviri kelimeleri (`config/locales/tr.php` veya `config/locales/en.php` gibi dosyalar dizi olarak $_SESSION["_i18n"] üzerine yüklenir.) proje başlangıcında `config/application.ini` dosyası içersinde `locale` değişkenine ile atanabilir veya projenin herhangi bir aşamasında aşağıdaki gibi atanabilir/değiştirilebilir. Varsayılan olarak `config/locales/tr.php` dosyası okunur.
 
 ```php
 ApplicationI18n::locale("tr");
@@ -1287,7 +1287,7 @@ t("home.about_us");
 
 ---
 
-Günlük olarak dosyalar açarak verilen mesajları loglamaya yarayan sınıf
+Günlük olarak dosyalar açarak verilen mesajları loglamaya yarayan sınıftır. Varsayılan dosya boyutu 5MB'dır.
 
 - Functions
 
