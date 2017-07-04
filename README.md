@@ -744,13 +744,25 @@ $user = User::find(1);
 echo $user->full_name();
 ```
 
-- Public Access Functions
+- Query Kick Function (static)
 
-> `save`, `destroy`, `delete_all`, `select`, `where`, `or_where`, `joins`, `order`, `group`, `limit`, `take`, `pluck`, `count`
+> `load`
 
-- Static Access Functions
+- Query Load Functions (public)
 
-> `draft`, `load`, `create`, `unique`, `find`, `find_all`, `all`, `first`, `last`, `exists`, `delete`, `update`
+> `select`, `where`, `or_where`, `joins`, `order`, `group`, `limit`, `offset`
+
+- Query Fetch Functions (public)
+
+> `get`, `get_all`, `pluck`, `count`, `update_all`, `delete_all`, `first`, `last`
+
+> Query Function Helpers (static) [alias]
+
+> `all`, `unique`, `find`, `find_all`, `exists`, `update`, `delete`
+
+- Model Functions
+
+> `draft`, `create`, `save`, `destroy`
 
 #### CREATE
 
