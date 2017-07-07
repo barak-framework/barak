@@ -3,8 +3,6 @@
 class ApplicationRoute {
 
   const dynamical_segment = "_dynamical_segment_"; // change name for :id/:action
-  const default_controller = "default";
-  const default_action = "index";
 
   public $_locals = [];
   public $_path;
@@ -58,15 +56,15 @@ class ApplicationRoute {
 
   public function run() {
 
-    // unset($GLOBALS["success"]); unset($GLOBALS["danger"]); // TODO
+    if ($this->_path) {
+      ApplicationController::load_file(trim($this->_path, "/")); // for superclass
+      ApplicationController::load_file($this->_controller, $this->_path);
+    } else {
+      ApplicationController::load_file($this->_controller);
+    }
 
     // run controller class and before_filter functions
     $controller_class = ucwords($this->_controller) . 'Controller';
-    if (!class_exists($controller_class))
-      throw new FileNotFoundException("Controller sınıfı/dosyası yüklenemedi", $controller_class);
-
-    // translate for i18n
-    if (isset($_SESSION["i18n"])) $_SESSION["i18n"]->run();
 
     $c = new $controller_class();
 
@@ -81,8 +79,7 @@ class ApplicationRoute {
     $v = new ApplicationView();
 
     // render template
-    // have scope or path of resouce/resouces
-    if ($this->_path) {
+    if ($this->_path) { // have scope or path of resouce/resouces
 
       $v->set(["layout" => $this->_path]);
       $v->set(["view" => $this->_path . "/" . $this->_controller, "action" => $this->_action]);
@@ -103,7 +100,6 @@ class ApplicationRoute {
 
     $v->run();
   }
-
 }
 
 ?>

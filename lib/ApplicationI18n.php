@@ -2,34 +2,45 @@
 
 class ApplicationI18n {
 
-  const LOCALESDIR = "config/locales/";
+  private $_locale;
+  private $_words;
 
-  public $_words;
-  public $default_locale;
-  public $locale;
-
-  public function __construct($_locale) {
-    if (!file_exists(self::LOCALESDIR))
-      throw new FileNotFoundException("Yerel ayar dizini mevcut değil", self::LOCALESDIR);
-
-    $this->locale = null;
-    $this->default_locale = $_locale;
+  private function __construct($default) {
+    $this->_locale  = null;
+    $this->_words   = ApplicationConfig::i18n($default);
+    return $this;
+  }
+  public static function default($default = "tr") {
+    if (isset($_SESSION[self::storage_key()])) {
+      if ($_SESSION[self::storage_key()]->_locale)
+        return;
+    }
+    $_SESSION[self::storage_key()] = new ApplicationI18n($default);
   }
 
-  public function __get($word) {
-    if (!isset($this->_words[$word]))
+  public static function locale($locale = "tr") {
+    $_SESSION[self::storage_key()]->_locale = $locale;
+    $_SESSION[self::storage_key()]->_words = ApplicationConfig::i18n($locale);
+  }
+
+  public static function translate($_word) {
+    $words = explode(".", $_word);
+    $current_words = [];
+    foreach ($words as $word)
+      $current_words = ($current_words == []) ? self::get_first_word($word) : $current_words[$word];
+    return $current_words;
+  }
+
+  private static function get_first_word($word) {
+    $words = $_SESSION[self::storage_key()]->_words;
+
+    if (!isset($words[$word]))
       throw new I18nNotFoundException("Yerel ayar dosyasında böyle bir kelime mevcut değil", $word);
-
-    return $this->_words[$word];
+    return $words[$word];
   }
 
-  public function run() {
-    $localefile = self::LOCALESDIR . (($this->locale) ? $this->locale : $this->default_locale) . ".php";
-    if (!file_exists($localefile))
-      throw new I18nNotFoundException("Yerel ayar dosyası mevcut değil", $localefile);
-
-    $this->_words = include $localefile;
+  private static function storage_key() {
+    return '_i18n';
   }
 }
-
 ?>

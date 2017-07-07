@@ -5,7 +5,7 @@
 
 // SQL injection protection http://stackoverflow.com/questions/60174/how-can-i-prevent-sql-injection-in-php
 
-class ApplicationSql {
+class ApplicationMySQL {
 
   public static $order_sort_type = ["ASC", "DESC"];
   public static $where_logics = ["AND", "OR"];
@@ -27,27 +27,33 @@ class ApplicationSql {
 
     list($field_keys, $field_symbols, $field_symbolvalues) = static::hash_to_key_symbol_symbolvalue($_fields);
 
-    try {
+    $_query = "INSERT INTO `$_table` ( $field_keys ) VALUES ( $field_symbols )";
 
-      $query = $GLOBALS['db']->prepare("INSERT INTO `$_table` ( $field_keys ) VALUES ( $field_symbols )");
+    $_symbolvalues = array_merge(
+      $field_symbolvalues
+      );
 
-      $symbolvalues = array_merge(
-        $field_symbolvalues
-        );
+    $query = self::query_execute($_query, $_symbolvalues, "CREATE fonksiyonu sorun oluştu");
 
-      foreach ($symbolvalues as $symbol => $value) {
-        $query->bindValue($symbol, $value, self::bindtype($value));
-      }
-
-      $query->execute();
-    } catch(PDOException $e) {
-      throw new SQLException("$_table : veri kayıt yazmada sorun oluştu", $e);
-    }
-
-    return intval($GLOBALS["db"]->lastInsertId());
+    return intval($GLOBALS['_db']->lastInsertId());
   }
 
-  public static function read($_select = [], $_table = "", $_join = [], $_where = [], $_order = [], $_group = [], $_limit = null, $_offset = null) {
+  public static function read($_select = [], $_table = "", $_where = []) {
+    $_select_fields = (!empty($_select)) ? implode(",", $_select) : "*";
+    list($where_commands, $where_symbols, $where_symbolvalues) = static::where_to_command_symbol_symbolvalue($_where);
+
+    $_symbolvalues = array_merge(
+      $where_symbolvalues
+      );
+
+    $_query = "SELECT $_select_fields FROM `$_table` $where_commands LIMIT 1";
+
+    $query = self::query_execute($_query, $_symbolvalues, "READ fonksiyonu sorun oluştu");
+
+    return $query->fetch(PDO::FETCH_ASSOC);
+  }
+
+  public static function read_all($_select = [], $_table = "", $_join = [], $_where = [], $_order = [], $_group = [], $_limit = null, $_offset = null) {
 
     $_select_fields = (!empty($_select)) ? implode(",", $_select) : "*";
     $_order_fields  = (!empty($_order))  ? "ORDER BY " . implode(",", $_order) : "";
@@ -66,36 +72,25 @@ class ApplicationSql {
     list($limit_command,  $limit_symbol,  $limit_symbolvalue)  = static::var_to_command_symbol_value($_limit,  "LIMIT");
     list($offset_command, $offset_symbol, $offset_symbolvalue) = static::var_to_command_symbol_value($_offset, "OFFSET");
 
-    try {
+    $_query = "
+    SELECT $_select_fields
+    FROM $_table
+    $_join_fields
+    $where_commands
+    $_order_fields
+    $_group_fields
+    $limit_command
+    $offset_command";
 
-      $query = $GLOBALS['db']->prepare("
-        SELECT $_select_fields
-        FROM $_table
-        $_join_fields
-        $where_commands
-        $_order_fields
-        $_group_fields
-        $limit_command
-        $offset_command"
-        );
+    $_symbolvalues = array_merge(
+      $where_symbolvalues,
+      $limit_symbolvalue,
+      $offset_symbolvalue
+      );
 
-      $symbolvalues = array_merge(
-        $where_symbolvalues,
-        $limit_symbolvalue,
-        $offset_symbolvalue
-        );
-
-      foreach ($symbolvalues as $symbol => $value) {
-        $query->bindValue($symbol, $value, self::bindtype($value));
-      }
-
-      $query->execute();
-    } catch(PDOException $e) {
-      throw new SQLException("$_table : veri okunmasında sorun oluştu", $e->getMessage());
-    }
+    $query = self::query_execute($_query, $_symbolvalues, "READ_ALL fonksiyonu sorun oluştu");
 
     return $query->fetchAll(PDO::FETCH_ASSOC);
-    //return ($_limit == 1) ? $query->fetch(PDO::FETCH_ASSOC) : $query->fetchAll(PDO::FETCH_ASSOC);
   }
 
   public static function update($_table = "", $_sets = [], $_where = [], $_limit = null) {
@@ -104,24 +99,15 @@ class ApplicationSql {
     list($where_commands, $where_symbols, $where_symbolvalues) = static::where_to_command_symbol_symbolvalue($_where);
     list($limit_command, $limit_symbol, $limit_symbolvalue)  = static::var_to_command_symbol_value($_limit, "LIMIT");
 
-    try {
+    $_query = "UPDATE `$_table` SET $set_keysymbols $where_commands $limit_command";
 
-      $query = $GLOBALS['db']->prepare("UPDATE `$_table` SET $set_keysymbols $where_commands");
+    $_symbolvalues = array_merge(
+      $set_symbolvalues,
+      $where_symbolvalues,
+      $limit_symbolvalue
+      );
 
-      $symbolvalues = array_merge(
-      	$set_symbolvalues,
-        $where_symbolvalues,
-        $limit_symbolvalue
-        );
-
-      foreach ($symbolvalues as $symbol => $value) {
-        $query->bindValue($symbol, $value, self::bindtype($value));
-      }
-
-      $query->execute();
-    } catch(SQLException $e) {
-      throw new SQLException("$_table : veri güncellemesinde sorun oluştu", $e->getMessage());
-    }
+    $query = self::query_execute($_query, $_symbolvalues, "UPDATE fonksiyonu sorun oluştu");
   }
 
   public static function delete($_table = "", $_where = [], $_limit = null) {
@@ -129,39 +115,49 @@ class ApplicationSql {
     list($where_commands, $where_symbols, $where_symbolvalues) = static::where_to_command_symbol_symbolvalue($_where);
     list($limit_command, $limit_symbol, $limit_symbolvalue)  = static::var_to_command_symbol_value($_limit, "LIMIT");
 
-    try {
+    $_query = "DELETE FROM `$_table` $where_commands $limit_command";
 
-      $query = $GLOBALS['db']->prepare("DELETE FROM `$_table` $where_commands $limit_command");
+    $_symbolvalues = array_merge(
+      $where_symbolvalues,
+      $limit_symbolvalue
+      );
 
-      $symbolvalues = array_merge(
-        $where_symbolvalues,
-        $limit_symbolvalue
-        );
-
-      foreach ($symbolvalues as $symbol => $value) {
-        $query->bindValue($symbol, $value, self::bindtype($value));
-      }
-
-      $query->execute();
-    } catch(SQLException $e) {
-      throw new SQLException("$_table : veri silmesinde sorun oluştu", $e->getMessage());
-    }
+    $query = self::query_execute($_query, $_symbolvalues, "DELETE fonksiyonu sorun oluştu");
   }
 
   public static function tablenames() {
-    $name = $GLOBALS['db']->query("select database()")->fetchColumn();
-    $result = $GLOBALS['db']->query("show tables");
+    $name = $GLOBALS['_db']->query("select database()")->fetchColumn();
+    $result = $GLOBALS['_db']->query("show tables");
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) $tablenames[] = $row["Tables_in_" . $name];
     return $tablenames;
   }
 
   public static function fieldnames($table) {
-    return $GLOBALS['db']->query("DESCRIBE $table")->fetchAll(PDO::FETCH_COLUMN);
+    return $GLOBALS['_db']->query("DESCRIBE $table")->fetchAll(PDO::FETCH_COLUMN);
   }
 
   //////////////////////////////////////////////////
   // Private Functions
   //////////////////////////////////////////////////
+
+  private static function query_execute($_query, $_symbolvalues, $_message) {
+    try {
+
+      $query = $GLOBALS['_db']->prepare($_query);
+
+      foreach ($_symbolvalues as $symbol => $value)
+        $query->bindValue($symbol, $value, self::bindtype($value));
+
+      $query->execute();
+
+    } catch(PDOException $e) {
+      ApplicationLogger::debug($_query);
+      ApplicationLogger::error($e->getMessage());
+      throw new SQLException($_message, $e->getMessage());
+    }
+
+    return $query;
+  }
 
   private static function bindtype($value) {
     if     (is_int($value))  return PDO::PARAM_INT;

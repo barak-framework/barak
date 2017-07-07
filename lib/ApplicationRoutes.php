@@ -7,7 +7,7 @@ class ApplicationRoutes {
 
   public static function draw() {
 
-    //$request_route = new ApplicationRoute($_SERVER["REQUEST_METHOD"], $_SERVER['REQUEST_URI'], false);
+    // $request_route = new ApplicationRoute($_SERVER["REQUEST_METHOD"], $_SERVER['REQUEST_URI'], false);
     $request_route = [ "_rule" => $_SERVER['REQUEST_URI'], "_method" => $_SERVER["REQUEST_METHOD"] ];
 
     $r = new ApplicationRoutes();
@@ -16,7 +16,7 @@ class ApplicationRoutes {
     $permitted_routes = func_get_args();
     foreach ($permitted_routes as $permitted_route) {
 
-      if (is_array($permitted_route)) { // for ApplicationRoutes::resource();
+      if (is_array($permitted_route)) { // for resource(), resources();
         foreach ($permitted_route as $permitted_r)
           $r->set_route($permitted_r);
       } else {
@@ -50,8 +50,7 @@ class ApplicationRoutes {
     }
   }
 
-  // __get($request_route) // is not support object, only string
-  public function get_route($request_route) {
+  public function get_route($request_route) { // __get($request_route) // is not support object, only string
 
     if (array_key_exists($request_route["_method"], $this->_routes)) {
 

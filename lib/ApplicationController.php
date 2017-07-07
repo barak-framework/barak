@@ -2,6 +2,8 @@
 
 class ApplicationController {
 
+  const CONTROLLERPATH = "app/controllers/";
+
   public $_locals = [];
   public $_render;
 
@@ -28,11 +30,14 @@ class ApplicationController {
   }
 
   public function run($action) {
-    if (isset($this->before_actions)) $this->_filter($action, $this->before_actions);
+
+    if (isset($this->helper)) foreach ($this->helper as $helper) include "app/helpers/" . $helper . "Helper.php";
+
+    if (isset($this->before_action)) $this->_filter($action, $this->before_action);
 
     if (method_exists($this, $action)) $this->$action();
 
-    if (isset($this->after_actions)) $this->_filter($action, $this->after_actions);
+    if (isset($this->after_action)) $this->_filter($action, $this->after_action);
   }
 
   public function render($options) {
@@ -50,6 +55,17 @@ class ApplicationController {
   public function __set($local, $value) {
     $this->_locals[$local] = $value;
   }
-}
 
+  public static function load_file($file, $path = "") {
+    $controller_class = ucwords($file) . "Controller";
+    $controller_path  = self::CONTROLLERPATH . trim($path,"/") . "/" . $controller_class . '.php';
+    if (!file_exists($controller_path))
+      throw new FileNotFoundException("Controller dosyası mevcut değil", $controller_path);
+
+    include $controller_path;
+
+    if (!class_exists($controller_class))
+      throw new FileNotFoundException("Controller sınıfı yüklenemedi", $controller_class);
+  }
+}
 ?>

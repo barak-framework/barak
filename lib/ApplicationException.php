@@ -13,13 +13,14 @@ class ApplicationException extends Exception {
       border: 6px solid #ddd;
       border-radius: 5px;
       box-shadow: 0px 0px 5px #ddd;
-      background: #F07746;
+      background: #30D5C8;
       '>
 
-      <b style = 'color:rgba(201, 2, 92, 0.5);'> %s </b> → %s [<i style = 'color:rgba(201, 2, 92, 0.5);'> %s </i>]
+      <b style = 'color:#31708f;'> %s </b> → %s [<i style = 'color:#31708f;'> %s </i>]
 
       </p>
-      ", get_class(), $message, $request
+      ",
+      get_called_class(), $message, $request
       ));
 
     parent::__construct("$request : $message");

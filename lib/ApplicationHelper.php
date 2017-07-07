@@ -4,6 +4,8 @@ class ApplicationHelper {
 
   public static function extract() {
 
+    // ROUTE
+
     function scope() {
 
       // İzin verilmiş route'ları routes'a yükle
@@ -32,32 +34,31 @@ class ApplicationHelper {
 
     function resource($table, $path = null) {
       return [
-        new ApplicationRoute("get",  "$table",         "$table#index", false, $path),  // all record
-        new ApplicationRoute("get",  "$table/create",  false,          false, $path),  // new record form
-        new ApplicationRoute("post", "$table/save",    false,          false, $path),  // new record create
-        new ApplicationRoute("get",  "$table/show/",   false,          false, $path),  // display record
-        new ApplicationRoute("get",  "$table/edit/",   false,          false, $path),  // edit record
-        new ApplicationRoute("post", "$table/update",  false,          false, $path),  // update record
-        new ApplicationRoute("post", "$table/destroy", false,          false, $path)   // destroy record
+      new ApplicationRoute("get",  "$table",         "$table#index", false, $path),
+      new ApplicationRoute("get",  "$table/create",  false,          false, $path),
+      new ApplicationRoute("post", "$table/save",    false,          false, $path),
+      new ApplicationRoute("get",  "$table/show/",   false,          false, $path),
+      new ApplicationRoute("get",  "$table/edit/",   false,          false, $path),
+      new ApplicationRoute("post", "$table/update",  false,          false, $path),
+      new ApplicationRoute("post", "$table/destroy", false,          false, $path)
       ];
     }
 
     function resources($table, $path = null) {
       return [
-        new ApplicationRoute("get",  "$table",          "$table#index", false, $path), // all record
-        new ApplicationRoute("get",  "$table/create",   false,          false, $path), // new record form
-        new ApplicationRoute("post", "$table/save",     false,          false, $path), // new record create
-        new ApplicationRoute("get",  "$table/show/:id", "$table#show",  true,  $path), // display record
-        new ApplicationRoute("get",  "$table/edit/:id", "$table#edit",  true,  $path), // edit record
-        new ApplicationRoute("post", "$table/update",   false,          false, $path), // update record
-        new ApplicationRoute("post", "$table/destroy",  false,          false, $path)  // destroy record
+      new ApplicationRoute("get",  "$table",          "$table#index", false, $path),
+      new ApplicationRoute("get",  "$table/create",   false,          false, $path),
+      new ApplicationRoute("post", "$table/save",     false,          false, $path),
+      new ApplicationRoute("get",  "$table/show/:id", "$table#show",  true,  $path),
+      new ApplicationRoute("get",  "$table/edit/:id", "$table#edit",  true,  $path),
+      new ApplicationRoute("post", "$table/update",   false,          false, $path),
+      new ApplicationRoute("post", "$table/destroy",  false,          false, $path)
       ];
     }
 
     function root($target = false, $path = null) {
       if (!$target)
         throw new ConfigurationException("Root route özelliğinde hedef (controlller#action) belirtilmek zorundadır!", "root");
-
       return new ApplicationRoute("get", "/", $target, false, $path);
     }
 
@@ -67,6 +68,52 @@ class ApplicationHelper {
 
     function get($rule, $target = false, $path = null) {
       return new ApplicationRoute("get",  $rule, $target, (strpos($rule, ":") ? true : false), $path);
+    }
+
+    // LOCALES
+
+    function t($words) {
+      return ApplicationI18n::translate($words);
+    }
+
+    /* source: http://stackoverflow.com/questions/7128856/strip-out-html-and-special-characters */
+    function h($content) { // html_escape()
+      // Strip HTML Tags
+      $clear = strip_tags($content);
+
+      // Clean up things like &amp;
+      $clear = html_entity_decode($clear);
+
+      // Strip out any url-encoded stuff
+      $clear = urldecode($clear);
+
+      // Replace non-AlNum characters with space
+      // $clear = preg_replace('/[^A-Za-z0-9]/', ' ', $clear);
+
+      // Replace Multiple spaces with single space
+      $clear = preg_replace('/ +/', ' ', $clear);
+
+      // Trim the string of leading/trailing space
+      $clear = trim($clear);
+
+      return $clear;
+    }
+
+    function get_real_ip_address() {
+      if (!empty($_SERVER['HTTP_CLIENT_IP'])) return $_SERVER['HTTP_CLIENT_IP'];
+      elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) return $_SERVER['HTTP_X_FORWARDED_FOR'];
+      else return $_SERVER['REMOTE_ADDR'];
+    }
+
+    // LAYOUT and TEMPLATE
+    // for app/views/VIEW/ACTION.php and app/views/layouts/VIEW_layout.php
+
+    function render($options = null) {
+      if ($options) {
+        $v = new ApplicationView();
+        $v->set($options);
+        $v->run();
+      }
     }
 
     function _404() {
@@ -107,31 +154,7 @@ class ApplicationHelper {
       ";
     }
 
-    // LOCALES
-
-    function t($_word) {
-      $words = explode(".", $_word);
-      $t_word = "";
-      foreach ($words as $word) {
-        $t_word = ($t_word == "") ? $_SESSION["i18n"]->$word : $t_word[$word];
-      }
-
-      return $t_word;
-    }
-
-    // LAYOUT and TEMPLATE
-    // for app/views/VIEW/ACTION.php and app/views/layouts/VIEW_layout.php
-
-    function render($options = null) {
-      if ($options) {
-        $v = new ApplicationView();
-        $v->set($options);
-        $v->run();
-      }
-    }
-
   }
-
 }
 
 ?>

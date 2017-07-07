@@ -1,44 +1,19 @@
 <?php
 
 // composer packages load
-
 require "vendor/autoload.php";
 
-// lib/*.php files load
-// app/controllers/*.php  files load
+// load application
+include "lib/Application.php";
 
-// system class files and controller class files
-$directories = ['lib/', 'app/controllers/','app/controllers/*/', 'app/models/', 'app/helpers/'];
+$time_start = microtime(true);
 
-foreach ($directories as $directory) {
+// kick application
+Application::run();
 
-  foreach(glob($directory . "*.php") as $class) {
-    include_once $class;
-  }
-}
+$time_end = microtime(true);
 
-// Configuration : sets
-ApplicationConfig::run();
+$time = $time_end - $time_start;
 
-// Database : connect and global share
-$db = ApplicationConfig::database();
-$GLOBALS['db'] = new ApplicationDatabase($db["host"], $db["name"], $db["user"], $db["pass"]);
-
-// model create auto
-// foreach (ApplicationSql::tablenames() as $tablename) {
-//   eval("class $tablename extends ApplicationModel {}");
-// }
-
-// Helper : get global functions
-ApplicationHelper::extract();
-
-// Database : seed // OPTIONAL
-ApplicationDatabase::seed();
-
-// I18n : locale get // OPTIONAL
-if (!isset($_SESSION['i18n']))
-  $_SESSION['i18n'] = new ApplicationI18n("tr");
-
-// Route : run configration of route
-ApplicationConfig::route();
+// ApplicationLogger::info("{$_SERVER['REQUEST_METHOD']} {$_SERVER['REQUEST_URI']} at strftime('%F %T') agent {$_SERVER['HTTP_USER_AGENT']} in {$time}");
 ?>

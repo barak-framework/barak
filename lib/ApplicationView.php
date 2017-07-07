@@ -93,7 +93,9 @@ class ApplicationView {
   }
 
   private function layout_file() {
+
     $layout_path = self::LAYOUTPATH . trim($this->_layout, "/") . ".php";
+
     if (!file_exists($layout_path))
       throw new FileNotFoundException("Layout dosyası mevcut değil", $layout_path);
 
@@ -101,7 +103,9 @@ class ApplicationView {
   }
 
   private function template_file($path = self::VIEWPATH) {
+
     $template_path = $path . trim($this->_template, "/") . ".php";
+
     if (!file_exists($template_path))
       throw new FileNotFoundException("Template dosyası mevcut değil", $template_path);
 
