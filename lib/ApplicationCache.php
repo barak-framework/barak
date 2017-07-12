@@ -1,5 +1,6 @@
 <?php
-// #TODO storage_key with $GLOBALS["cacheexpire"] check in get
+// #TODO must be test!!!
+// $GLOBALS["cacheexpire"] check in get
 class ApplicationCache {
 
   const CACHEDIR = "cache/";
