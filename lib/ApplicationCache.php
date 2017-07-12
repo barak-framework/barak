@@ -20,7 +20,7 @@ class ApplicationCache {
     file_put_contents($filename, json_encode($data));
     // or 
     if (!($fh = fopen($filename, 'a')))
-      throw new FileNotFoundException("Cache dosyası açılamadı", $filename);
+      throw new FileNotFoundException("Cache bellek açılamadı", $filename);
 
     fwrite($fh, json_encode($data));
 
@@ -47,10 +47,8 @@ class ApplicationCache {
     
     // get filename
     $filename = self::filename_format($key);
-    if (!file_exists($filename))
-      new throw Exception("cache bellekte anahtar bulunamadı", $key);
-
-    unlink($filename);
+    if (file_exists($filename))
+      unlink($filename);
   }
 
   public static function has($key) {
