@@ -8,10 +8,10 @@ class ApplicationCache {
 
     // struct of key
     $data = [
-			'time'	 => time(),
-			'expire' => $expiration,
-			'value'	 => serialize($value)
-		];
+      'time'   => time(),
+      'expire' => $expiration,
+      'value'  => serialize($value)
+    ];
 
     $filename = self::filename_format($key);
 
