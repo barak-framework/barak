@@ -1,5 +1,6 @@
 <?php
 // #TODO must be test!!!
+// $GLOBALS["cacheexpire"] check in get
 class ApplicationCache {
 
   const CACHEDIR = "cache/";
@@ -34,7 +35,7 @@ class ApplicationCache {
     if (file_exists($filename)) {
 
       // check expire time ? get or del
-      $data = json_decode(include $filename);       
+      $data = json_decode(include $filename);
       if ($data["expire"] > (time() - $data["time"]))
         return unserialize($data["value"]);
       else
@@ -63,6 +64,10 @@ class ApplicationCache {
   private static function filename_format($key) {
     $scriptname = preg_replace('/[^0-9a-z\.\_\-]/i', '', strtolower($_SERVER["SCRIPT_FILENAME"]));
     return self::CACHEDIR . md5($scriptname . $key);
+  }
+  
+  private static function storage_key() {
+    return "_cache";
   }
 }
 ?>
