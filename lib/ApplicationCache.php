@@ -51,8 +51,8 @@ class ApplicationCache {
   }
 
   private static function filename_format($key) {
-    $scriptname = preg_replace('/[^0-9a-z\.\_\-]/i', '', strtolower($_SERVER["REQUEST_URI"]));
-    return self::CACHEDIR . md5($scriptname . $key);
+    $requesturi = preg_replace('/[^0-9a-z\.\_\-]/i', '', strtolower($_SERVER["REQUEST_URI"]));
+    return self::CACHEDIR . md5($requesturi . $key);
   }
 }
 ?>
