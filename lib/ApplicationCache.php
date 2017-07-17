@@ -2,12 +2,18 @@
 
 class ApplicationCache {
 
-  const CACHEDIR = "cache/";
+  const CACHEDIR = "tmp/cache/";
 
-  public static function write($key, $value, $expiration = null) {
+  private static $_expiration = 604800;
+
+  public static function expiration($expiration) {
+    self::$_expiration = intval($expiration);
+  }
+
+  public static function write($key, $value) {
 
     // struct of key
-    $data = [ 'time' => time(), 'expire' => $expiration, 'value' => serialize($value) ];
+    $data = [ 'time' => time(), 'expire' => self::$_expiration, 'value' => serialize($value) ];
 
     $filename = self::filename_format($key);
 

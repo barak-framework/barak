@@ -126,14 +126,16 @@ class ApplicationMySQL {
   }
 
   public static function tablenames() {
-    $name = $GLOBALS['_db']->query("select database()")->fetchColumn();
-    $result = $GLOBALS['_db']->query("show tables");
+  	$connection = ApplicationDatabase::connect();
+    $name = $connection->query("select database()")->fetchColumn();
+    $result = $connection->query("show tables");
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) $tablenames[] = $row["Tables_in_" . $name];
     return $tablenames;
   }
 
   public static function fieldnames($table) {
-    return $GLOBALS['_db']->query("DESCRIBE $table")->fetchAll(PDO::FETCH_COLUMN);
+  	$connection = ApplicationDatabase::connect();
+    return $connection->query("DESCRIBE $table")->fetchAll(PDO::FETCH_COLUMN);
   }
 
   //////////////////////////////////////////////////
@@ -142,8 +144,8 @@ class ApplicationMySQL {
 
   private static function query_execute($_query, $_symbolvalues, $_message) {
     try {
-
-      $query = $GLOBALS['_db']->prepare($_query);
+      $connection = ApplicationDatabase::connect();
+      $query = $connection->prepare($_query);
 
       foreach ($_symbolvalues as $symbol => $value)
         $query->bindValue($symbol, $value, self::bindtype($value));
@@ -151,9 +153,10 @@ class ApplicationMySQL {
       $query->execute();
 
     } catch(PDOException $e) {
+      ApplicationLogger::debug(debug_backtrace());
       ApplicationLogger::debug($_query);
       ApplicationLogger::error($e->getMessage());
-      throw new SQLException($_message, $e->getMessage());
+      throw new CRUDException($_message, $e->getMessage());
     }
 
     return $query;

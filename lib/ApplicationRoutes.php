@@ -10,7 +10,7 @@ class ApplicationRoutes {
     // $request_route = new ApplicationRoute($_SERVER["REQUEST_METHOD"], $_SERVER['REQUEST_URI'], false);
     $request_route = [ "_rule" => $_SERVER['REQUEST_URI'], "_method" => $_SERVER["REQUEST_METHOD"] ];
 
-    $r = new ApplicationRoutes();
+    $routes = new ApplicationRoutes();
 
     // İzin verilmiş route'ları routes'a yükle
     $permitted_routes = func_get_args();
@@ -18,9 +18,9 @@ class ApplicationRoutes {
 
       if (is_array($permitted_route)) { // for resource(), resources();
         foreach ($permitted_route as $permitted_r)
-          $r->set_route($permitted_r);
+          $routes->set_route($permitted_r);
       } else {
-        $r->set_route($permitted_route);
+        $routes->set_route($permitted_route);
       }
 
     }
@@ -41,8 +41,27 @@ class ApplicationRoutes {
     // }
 
     // İstek url ile routes'ı içinden bul ve sevk et
-    if ($route = $r->get_route($request_route)) {
-      $route->run();
+    if ($route = $routes->get_route($request_route)) {
+
+      if ($route->path) {
+         // for superclass
+        ApplicationController::load_file(trim($route->path, "/"));
+        ApplicationController::load_file($route->controller, $route->path);
+      } else {
+        ApplicationController::load_file($route->controller);
+      }
+
+      // run controller class and before_filter functions
+      $controller_class = ucwords($route->controller) . 'Controller';
+
+    // $c = new $controller_class();
+    // router'in localslarını(sayfadan :id, çekmek için), controller'dan gelen localslara yükle
+      $c = new $controller_class($route);
+
+    // $c->_locals = $this->_locals;
+      $c->run();
+
+      // $route->run();
     } else {
       $v = new ApplicationView();
       $v->set(["text" => _404()]);
@@ -60,10 +79,10 @@ class ApplicationRoutes {
 
         foreach ($this->_routes[$request_route["_method"]] as $_route) {
 
-          if ($_route->_match) {
+          if ($_route->match) {
 
             $request_rule = explode("/", trim($request_route["_rule"], "/"));
-            $permit_rule = explode("/", trim($_route->_rule, "/"));
+            $permit_rule = explode("/", trim($_route->rule, "/"));
 
             if (count($request_rule) == count($permit_rule)) {
               $match = true;
@@ -76,14 +95,14 @@ class ApplicationRoutes {
               }
               if ($match) {
 
-                $permit_match_rule = explode("/", trim($_route->_match_rule, "/"));
-                preg_match_all('@:([\w]+)@', $_route->_match_rule, $segments, PREG_PATTERN_ORDER);
+                $permit_match_rule = explode("/", trim($_route->match_rule, "/"));
+                preg_match_all('@:([\w]+)@', $_route->match_rule, $segments, PREG_PATTERN_ORDER);
                 $segments = $segments[0];
 
                 // get methodları için locals'a yükle : değişkenler
                 foreach ($segments as $segment) {
                   if ($index = array_search($segment, $permit_match_rule)) {
-                    $_route->_locals[substr($segment, 1)] = $request_rule[$index];
+                    $_route->locals[substr($segment, 1)] = $request_rule[$index];
                   }
                 }
 
@@ -100,9 +119,9 @@ class ApplicationRoutes {
   }
 
   public function set_route(ApplicationRoute $route) {
-    if (array_key_exists($route->_rule, $this->_routes[$route->_method]))
-      throw new ConfigurationException("Bu yönlendirme daha önceden tanımlanmış", $route->_rule);
-    $this->_routes[$route->_method][$route->_rule] = $route;
+    if (array_key_exists($route->rule, $this->_routes[$route->method]))
+      throw new ConfigurationException("Bu yönlendirme daha önceden tanımlanmış", $route->rule);
+    $this->_routes[$route->method][$route->rule] = $route;
   }
 }
 

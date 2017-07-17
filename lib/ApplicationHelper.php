@@ -1,6 +1,6 @@
 <?php
 
-class ApplicationHelper {
+class ApplicationAlias {
 
   public static function extract() {
 
@@ -18,13 +18,13 @@ class ApplicationHelper {
       foreach ($permitted_packages as $permitted_package) {
         foreach ($permitted_package as $permitted_route) {
 
-          $permitted_route->_path = $path;
+          $permitted_route->path = $path;
 
-          if ($permitted_route->_match) {
-            $permitted_route->_match_rule = $path . $permitted_route->_match_rule;
+          if ($permitted_route->match) {
+            $permitted_route->match_rule = $path . $permitted_route->match_rule;
           }
 
-          $permitted_route->_rule = $path . $permitted_route->_rule;
+          $permitted_route->rule = $path . $permitted_route->rule;
           $routes[] = $permitted_route;
         }
       }
@@ -76,34 +76,21 @@ class ApplicationHelper {
       return ApplicationI18n::translate($words);
     }
 
-    /* source: http://stackoverflow.com/questions/7128856/strip-out-html-and-special-characters */
-    function h($content) { // html_escape()
-      // Strip HTML Tags
-      $clear = strip_tags($content);
+    // UTILS
 
-      // Clean up things like &amp;
-      $clear = html_entity_decode($clear);
-
-      // Strip out any url-encoded stuff
-      $clear = urldecode($clear);
-
-      // Replace non-AlNum characters with space
-      // $clear = preg_replace('/[^A-Za-z0-9]/', ' ', $clear);
-
-      // Replace Multiple spaces with single space
-      $clear = preg_replace('/ +/', ' ', $clear);
-
-      // Trim the string of leading/trailing space
-      $clear = trim($clear);
-
-      return $clear;
+    function h($content) {
+      return ApplicationUtil::html_escape($content);
     }
 
-    function get_real_ip_address() {
-      if (!empty($_SERVER['HTTP_CLIENT_IP'])) return $_SERVER['HTTP_CLIENT_IP'];
-      elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) return $_SERVER['HTTP_X_FORWARDED_FOR'];
-      else return $_SERVER['REMOTE_ADDR'];
+    function u($content) {
+      return ApplicationUtil::url_encode($content);
     }
+
+    // function get_real_ip_address() {
+    //   if (!empty($_SERVER['HTTP_CLIENT_IP'])) return $_SERVER['HTTP_CLIENT_IP'];
+    //   elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) return $_SERVER['HTTP_X_FORWARDED_FOR'];
+    //   else return $_SERVER['REMOTE_ADDR'];
+    // }
 
     // LAYOUT and TEMPLATE
     // for app/views/VIEW/ACTION.php and app/views/layouts/VIEW_layout.php
@@ -119,7 +106,6 @@ class ApplicationHelper {
     function _404() {
 
       return "
-
       <!DOCTYPE html>
       <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='tr' lang='tr'>
       <head>

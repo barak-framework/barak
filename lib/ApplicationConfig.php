@@ -2,12 +2,13 @@
 
 class ApplicationConfig {
 
-  const APPFILE         = "config/application.ini";
-  const DATABASEFILE    = "config/database.ini";
-  const ROUTESFILE      = "config/routes.php";
-  const LOCALESDIR      = "config/locales/";
+  const APPFILE      = "config/application.ini";
+  const DATABASEFILE = "config/database.ini";
+  const MAILERFILE   = "config/mailer.ini";
+  const ROUTESFILE   = "config/routes.php";
+  const LOCALESDIR   = "config/locales/";
 
-  // yapılandırma ayarlarını set et
+  // genel yapılandırma ayarlarını set et
   public static function sets() {
 
     if (!file_exists(self::APPFILE))
@@ -18,16 +19,20 @@ class ApplicationConfig {
 
     // default setting
     ApplicationI18n::default();
-    ApplicationLogger::size();
 
     // configuration setting
-    $app = parse_ini_file(self::APPFILE);
-    foreach ($app as $key => $value) {
+    $app_configuration = parse_ini_file(self::APPFILE);
+
+    foreach ($app_configuration as $key => $value) {
       switch ($key) {
-        case "timezone":  date_default_timezone_set($value); break;
-        case "errors":    ini_set("display_errors", $value); break;
-        case "locale":    ApplicationI18n::default($value);   break;
-        case "logsize":   ApplicationLogger::size($value);      break;
+        case "timezone":        date_default_timezone_set($value);    break;
+        case "errors":          ini_set("display_errors", $value);    break;
+          // #TODO
+          // ini_set('log_errors', 'On');
+          // ini_set('error_log', '/tmp/log/error.log');
+        case "locale":          ApplicationI18n::default($value);     break;
+        case "logsize":         ApplicationLogger::size($value);      break;
+        case "cacheexpiration": ApplicationCache::expiration($value); break;
         default:
         throw new ConfigurationException("Uygulamanın yapılandırma dosyasında bilinmeyen parametre", $key);
       }
@@ -41,6 +46,15 @@ class ApplicationConfig {
       throw new FileNotFoundException("Veritabanı ayar dosyası mevcut değil", self::DATABASEFILE);
 
     return parse_ini_file(self::DATABASEFILE);
+  }
+
+  // mail ayar dosyasını oku
+  public static function mailer() {
+
+    if (!file_exists(self::MAILERFILE))
+      throw new FileNotFoundException("Mailer ayar dosyası mevcut değil", self::MAILERFILE);
+
+    return parse_ini_file(self::MAILERFILE);
   }
 
   // router dosyasını oku

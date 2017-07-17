@@ -2,12 +2,14 @@
 
 class ApplicationLogger {
 
-  const LOGDIR = "log/";
+  const LOGDIR = "tmp/log/";
 
   private static $_levels = ["info", "warning", "error", "fatal", "debug"];
 
-  public static function size($size = 5242880) {
-    $GLOBALS[self::storage_key()] = intval($size);
+  private static $_size = 5242880;
+
+  public static function size($size) {
+    self::$_size = intval($size);
   }
 
   public static function __callStatic($level, $messages) {
@@ -22,15 +24,12 @@ class ApplicationLogger {
       throw new FileNotFoundException("Log dosyası açılamadı", $filename);
 
     $filesize = filesize($filename);
-    $logsize = $GLOBALS[self::storage_key()];
+    $logsize = self::$_size;
     if ($logsize >= $filesize)
       fwrite($fh, $message . "\n");
 
     fclose($fh);
   }
 
-  private static function storage_key() {
-    return '_log';
-  }
 }
 ?>

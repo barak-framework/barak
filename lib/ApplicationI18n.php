@@ -10,6 +10,7 @@ class ApplicationI18n {
     $this->_words   = ApplicationConfig::i18n($default);
     return $this;
   }
+
   public static function default($default = "tr") {
     if (isset($_SESSION[self::storage_key()])) {
       if ($_SESSION[self::storage_key()]->_locale)

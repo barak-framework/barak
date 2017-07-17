@@ -30,15 +30,15 @@ class ApplicationException extends Exception {
 
 // extends ApplicationException class define
 
-class FileNotFoundException extends ApplicationException {};
-class ConfigurationException extends ApplicationException {};
-class FieldNotFoundException extends ApplicationException {};
-class TableNotFoundException extends ApplicationException {};
 class BelongNotFoundException extends ApplicationException {};
-class SQLException extends ApplicationException {};
-class ViewNotFoundException extends ApplicationException {};
-class I18nNotFoundException extends ApplicationException {};
+class ConfigurationException extends ApplicationException {};
+class CRUDException extends ApplicationException {};
 class DatabaseException extends ApplicationException {};
+class FileNotFoundException extends ApplicationException {};
+class FieldNotFoundException extends ApplicationException {};
+class I18nNotFoundException extends ApplicationException {};
 class MethodNotFoundException extends ApplicationException {};
+class TableNotFoundException extends ApplicationException {};
+class ViewNotFoundException extends ApplicationException {};
 
 ?>
