@@ -14,6 +14,9 @@ class Application {
       }
     }
 
+    // Database : connection
+    ApplicationDatabase::connect();
+    
     // Database : seed
     ApplicationDatabase::seed();
 
@@ -26,7 +29,7 @@ class Application {
     // Route : run configration of route
     ApplicationConfig::route();
 
-    // connection close
+    // Database : connection close
     ApplicationDatabase::close();
   }
 }
