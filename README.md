@@ -1295,27 +1295,98 @@ bu fonksiyonu daha kolay kullanmak için alias olarak tanımlı `t` fonksiyonu i
 t("home.about_us");
 ```
 
-### Log (`log/*`)
+### Logger (`tmp/log/*`)
 
 ---
 
-Günlük olarak dosyalar açarak verilen mesajları loglamaya yarayan sınıftır. Varsayılan dosya boyutu 5MB'dır.
+Günlük olarak dosyalar açarak verilen mesajları loglamaya yarayan sınıftır. Log dosyaları varsayılan olarak 5242880 byte (5MB) ile sınırlıdır.
 
 - Functions
 
-> `info`, `warning`, `error`, `fatal`
+> `size`, `info`, `warning`, `error`, `fatal`, `debug`
+
+#### `size`
+
+Lop dosyasının maximum boyutunun ayarlanması
 
 ```php
-ApplicationLog::info("bilmek iyidir");
-ApplicationLog::warning("olabilir?");
-ApplicationLog::error("dikkat et");
-ApplicationLog::fatal("cevap vermiyor");
+ApplicationLogger::size(5000);
+```
+
+#### `info`, `warning`, `error`, `fatal`, `debug`
+
+```php
+ApplicationLogger::info("bilmek iyidir");
+ApplicationLogger::warning("olabilir?");
+ApplicationLogger::error("dikkat et");
+ApplicationLogger::fatal("cevap vermiyor");
+ApplicationLogger::debug("olaylar olaylar");
 
 // log/2017-06-18.txt
 // 2017-06-18 09:45:36 → info : bilmek iyidir
 // 2017-06-18 09:45:36 → warning : olabilir?
 // 2017-06-18 09:45:36 → error : dikkat et
 // 2017-06-18 09:45:36 → fatal : cevap vermiyor
+// 2017-06-18 09:45:36 → debug : olaylar olaylar
+```
+
+### Cache (`tmp/cache/*`)
+
+---
+
+Verilen anahtarlara göre  `request_url` + `key` (istek url ve verilen anahtar)'e göre md5 ile şifreleyip `tmp/cache/*` dizini üzerinde yazma, okuma, silme, var olduğunu bakma, tamamen silme gibi işlemleri yapan sınıftır. Veriler varsayılan olarak 604800 milisaniye (10 dakika) süre ile saklanır.
+
+- Functions
+
+> `expiration`, `write`, `read`, `delete`, `exist`, `reset`
+
+#### `expiration`
+
+Saklanacak verilerin genel olarak ne kadar süre ile tutulacağının ayarlanması
+
+```php
+ApplicationLogger::expiration(604800);
+```
+
+#### `write`
+
+Saklanacak verilerin  `request_url` + `key` (istek url ve verilen anahtar)'e göre md5 ile şifreleyip belleğe yazar. Bu şekilde farklı bir sayfada kaydettiğiniz aynı anahtar isimli veriler, farklı dosyalar olarak kaydedilmektedir.
+
+```php
+$users = User::all();
+ApplicationCache::write("users", $users);
+```
+
+#### `read`
+
+Bellekteki veriyi `request_url` + `key` mantığı ile okur, eğer dosyanın süresi geçmişse otomatik olarak siler.
+
+```php
+$users = ApplicationCache::read("users");
+```
+
+#### `delete`
+
+`request_url` + `key` mantığına göre bulunan ve var olan dosya süresine bakılmaksızın silinir.
+
+```php
+ApplicationCache::delete("users");
+```
+
+#### `exists`
+
+`request_url` + `key` mantığına göre var olmasına bakar.
+
+```php
+echo (ApplicationCache::exists("users")) ? "bellekte var" : "bellekte yok";
+```
+
+#### `reset`
+
+`tmp/cache/*` altındaki tüm saklanan verileri sürelerine bakılmaksızın siler.
+
+```php
+ApplicationCache::reset();
 ```
 
 ## Trailer
