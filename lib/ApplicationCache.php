@@ -47,7 +47,7 @@ class ApplicationCache {
       unlink($filename);
   }
 
-  public static function exist($key) {
+  public static function exists($key) {
     return (file_exists(self::filename_format($key))) ? true : false;
   }
 
