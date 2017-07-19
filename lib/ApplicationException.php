@@ -3,7 +3,7 @@
 class ApplicationException extends Exception {
 
   public function __construct($message, $request) {
-    echo(sprintf(
+  	$_format = sprintf(
       "
       <p style = '
       text-align: center;
@@ -21,7 +21,13 @@ class ApplicationException extends Exception {
       </p>
       ",
       get_called_class(), $message, $request
-      ));
+      );
+
+    // show on web
+    echo $_format;
+
+    // show on log
+    ApplicationLogger::debug("$message : |$request|");
 
     parent::__construct("$request : $message");
   }

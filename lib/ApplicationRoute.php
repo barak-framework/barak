@@ -52,6 +52,72 @@ class ApplicationRoute {
     $this->controller = $controller;
     $this->action = $action;
   }
+
+  // Helper Methods
+
+  public static function scope($permitted_packages) {
+
+    // İzin verilmiş route'ları routes'a yükle
+    $path = $permitted_packages[0];
+
+    $permitted_packages = array_slice($permitted_packages, 1);
+
+    $routes = [];
+    foreach ($permitted_packages as $permitted_package) {
+      foreach ($permitted_package as $permitted_route) {
+
+        $permitted_route->path = $path;
+
+        if ($permitted_route->match) {
+          $permitted_route->match_rule = $path . $permitted_route->match_rule;
+        }
+
+        $permitted_route->rule = $path . $permitted_route->rule;
+        $routes[] = $permitted_route;
+      }
+    }
+
+    return $routes;
+  }
+
+  public static function resource($table, $path = null) {
+    return [
+    new ApplicationRoute("get",  "$table",         "$table#index", false, $path),
+    new ApplicationRoute("get",  "$table/create",  false,          false, $path),
+    new ApplicationRoute("post", "$table/save",    false,          false, $path),
+    new ApplicationRoute("get",  "$table/show/",   false,          false, $path),
+    new ApplicationRoute("get",  "$table/edit/",   false,          false, $path),
+    new ApplicationRoute("post", "$table/update",  false,          false, $path),
+    new ApplicationRoute("post", "$table/destroy", false,          false, $path)
+    ];
+  }
+
+  public static function resources($table, $path = null) {
+    return [
+    new ApplicationRoute("get",  "$table",          "$table#index", false, $path),
+    new ApplicationRoute("get",  "$table/create",   false,          false, $path),
+    new ApplicationRoute("post", "$table/save",     false,          false, $path),
+    new ApplicationRoute("get",  "$table/show/:id", "$table#show",  true,  $path),
+    new ApplicationRoute("get",  "$table/edit/:id", "$table#edit",  true,  $path),
+    new ApplicationRoute("post", "$table/update",   false,          false, $path),
+    new ApplicationRoute("post", "$table/destroy",  false,          false, $path)
+    ];
+  }
+
+  public static function root($target = false, $path = null) {
+    if (!$target)
+      throw new ConfigurationException("Root route özelliğinde hedef (controlller#action) belirtilmek zorundadır!", "root");
+    return new ApplicationRoute("get", "/", $target, false, $path);
+  }
+
+  public static function post($rule, $target = false, $path = null) {
+    return new ApplicationRoute("post", $rule, $target, (strpos($rule, ":") ? true : false), $path);
+  }
+
+  public static function get($rule, $target = false, $path = null) {
+    return new ApplicationRoute("get",  $rule, $target, (strpos($rule, ":") ? true : false), $path);
+  }
+
 }
 
 ?>

@@ -1,73 +1,34 @@
 <?php
 
-class ApplicationAlias {
+class ApplicationHelper {
 
   public static function extract() {
 
     // ROUTE
 
     function scope() {
-
-      // İzin verilmiş route'ları routes'a yükle
       $permitted_packages = func_get_args();
-      $path = $permitted_packages[0];
-
-      $permitted_packages = array_slice($permitted_packages, 1);
-
-      $routes = [];
-      foreach ($permitted_packages as $permitted_package) {
-        foreach ($permitted_package as $permitted_route) {
-
-          $permitted_route->path = $path;
-
-          if ($permitted_route->match) {
-            $permitted_route->match_rule = $path . $permitted_route->match_rule;
-          }
-
-          $permitted_route->rule = $path . $permitted_route->rule;
-          $routes[] = $permitted_route;
-        }
-      }
-
-      return $routes;
+      return ApplicationRoute::scope($permitted_packages);
     }
 
     function resource($table, $path = null) {
-      return [
-      new ApplicationRoute("get",  "$table",         "$table#index", false, $path),
-      new ApplicationRoute("get",  "$table/create",  false,          false, $path),
-      new ApplicationRoute("post", "$table/save",    false,          false, $path),
-      new ApplicationRoute("get",  "$table/show/",   false,          false, $path),
-      new ApplicationRoute("get",  "$table/edit/",   false,          false, $path),
-      new ApplicationRoute("post", "$table/update",  false,          false, $path),
-      new ApplicationRoute("post", "$table/destroy", false,          false, $path)
-      ];
+      return ApplicationRoute::resource($table, $path);
     }
 
     function resources($table, $path = null) {
-      return [
-      new ApplicationRoute("get",  "$table",          "$table#index", false, $path),
-      new ApplicationRoute("get",  "$table/create",   false,          false, $path),
-      new ApplicationRoute("post", "$table/save",     false,          false, $path),
-      new ApplicationRoute("get",  "$table/show/:id", "$table#show",  true,  $path),
-      new ApplicationRoute("get",  "$table/edit/:id", "$table#edit",  true,  $path),
-      new ApplicationRoute("post", "$table/update",   false,          false, $path),
-      new ApplicationRoute("post", "$table/destroy",  false,          false, $path)
-      ];
+      return ApplicationRoute::resources($table, $path);
     }
 
     function root($target = false, $path = null) {
-      if (!$target)
-        throw new ConfigurationException("Root route özelliğinde hedef (controlller#action) belirtilmek zorundadır!", "root");
-      return new ApplicationRoute("get", "/", $target, false, $path);
+      return ApplicationRoute::root($target, $path);
     }
 
     function post($rule, $target = false, $path = null) {
-      return new ApplicationRoute("post", $rule, $target, (strpos($rule, ":") ? true : false), $path);
+      return ApplicationRoute::post($rule, $target, $path);
     }
 
     function get($rule, $target = false, $path = null) {
-      return new ApplicationRoute("get",  $rule, $target, (strpos($rule, ":") ? true : false), $path);
+      return ApplicationRoute::get($rule, $target, $path);
     }
 
     // LOCALES
@@ -99,7 +60,7 @@ class ApplicationAlias {
       if ($options) {
         $v = new ApplicationView();
         $v->set($options);
-        $v->run();
+        return $v->run();
       }
     }
 

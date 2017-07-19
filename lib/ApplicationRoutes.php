@@ -16,7 +16,7 @@ class ApplicationRoutes {
     $permitted_routes = func_get_args();
     foreach ($permitted_routes as $permitted_route) {
 
-      if (is_array($permitted_route)) { // for resource(), resources();
+      if (is_array($permitted_route)) { // for resource(), resources(), scope();
         foreach ($permitted_route as $permitted_r)
           $routes->set_route($permitted_r);
       } else {
@@ -25,17 +25,17 @@ class ApplicationRoutes {
 
     }
 
-    // // // TEST $route list
-    // print_r($r->_routes);
+    // TEST $route list
+    // print_r($routes->_routes);
 
-    // foreach ($r->_routes as $method => $routes) {
+    // foreach ($routes->_routes as $method => $_routes) {
     //   echo "<br/>";
     //   print_r($method);
     //   echo "<br/>";
 
-    //   foreach ($routes as $route) {
+    //   foreach ($_routes as $_route) {
     //    echo "<br/>";
-    //     print_r($route);
+    //     print_r($_route);
     //     echo "<br/>";
     //   }
     // }
@@ -44,8 +44,7 @@ class ApplicationRoutes {
     if ($route = $routes->get_route($request_route)) {
 
       if ($route->path) {
-         // for superclass
-        ApplicationController::load_file(trim($route->path, "/"));
+        ApplicationController::load_file(trim($route->path, "/")); // for superclass
         ApplicationController::load_file($route->controller, $route->path);
       } else {
         ApplicationController::load_file($route->controller);

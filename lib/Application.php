@@ -1,11 +1,10 @@
 <?php
 
-
 class Application {
 
   public static function run() {
 
-    // system class files and controller class files
+    // system class, models, mailers
     $directories = ['lib/', 'app/models/', 'app/mailers/'];
 
     foreach ($directories as $directory) {
@@ -14,9 +13,9 @@ class Application {
       }
     }
 
-    // Database : connection
+    // Database : connect
     ApplicationDatabase::connect();
-    
+
     // Database : seed
     ApplicationDatabase::seed();
 
@@ -29,7 +28,7 @@ class Application {
     // Route : run configration of route
     ApplicationConfig::route();
 
-    // Database : connection close
+    // Database : close
     ApplicationDatabase::close();
   }
 }

@@ -89,7 +89,7 @@ class ApplicationView {
     }
 
     // show content!
-    self::display($content, $this->_locals);
+    return $content;
   }
 
   private function layout_file() {
@@ -126,7 +126,7 @@ class ApplicationView {
       extract($locals, EXTR_OVERWRITE);
     }
 
-    include($file);
+    require_once $file;
     return ob_get_clean();
   }
 

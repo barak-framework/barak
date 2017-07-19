@@ -6,8 +6,8 @@ class ApplicationController {
   const HELPERPATH = "app/helpers/";
 
   private $_locals = [];
-  private $_render;
-  private $_redirect_to;
+  private $_render = null;
+  private $_redirect_to = null;
 
   private $_route;
 
@@ -21,6 +21,14 @@ class ApplicationController {
 
   final public function __set($local, $value) { // genişletilemez fonksyion
     $this->_locals[$local] = $value;
+  }
+
+  final public function render($options) { // genişletilemez fonksyion
+    $this->_render = $options;
+  }
+
+  final public function redirect_to($url) { // genişletilemez fonksyion
+    $this->_redirect_to = $url;
   }
 
   private function _filter($action, $filter_actions) {
@@ -39,8 +47,8 @@ class ApplicationController {
           } elseif (!array_key_exists("only", $filter_action) and !array_key_exists("except", $filter_action)) {
             $this->{$filter_action_name}();
           }
-          if (isset($this->_redirect_to)) exit($this->_redirect_to());
-          if (isset($this->_render))      exit($this->_render());
+          if ($this->_redirect_to) exit($this->_redirect_to());
+          if ($this->_render)      exit($this->_render());
         }
       }
 
@@ -55,8 +63,8 @@ class ApplicationController {
           throw new FileNotFoundException("Helper dosyası mevcut değil", $helper_path);
         include $helper_path;
       }
-    } elseif($this->helpers == "all") {
-      foreach(glob($self::HELPERPATH . "*.php") as $class) {
+    } elseif ($this->helpers == "all") {
+      foreach (glob($self::HELPERPATH . "*.php") as $class) {
         include_once $class;
       }
     } else {
@@ -69,7 +77,7 @@ class ApplicationController {
     $v = new ApplicationView();
 
     // render template
-    if ($this->_route->path) { // have scope or path of resouce/resouces
+    if ($this->_route->path) { // have path? for scope, resouce, resouces
 
       $v->set(["layout" => $this->_route->path]);
       $v->set(["view" => $this->_route->path . "/" . $this->_route->controller, "action" => $this->_route->action]);
@@ -80,15 +88,15 @@ class ApplicationController {
 
     }
 
-    // $vars["_locals"] : controllerin localsları
+    // controllerin localsları
     if ($this->_locals)
       $v->set(["locals" => $this->_locals]);
 
-    // vars["_render"] : controllerın renderi
+    // controllerin renderi
     if ($this->_render)
       $v->set($this->_render);
 
-    $v->run();
+    echo $v->run();
   }
 
   private function _redirect_to() {
@@ -102,30 +110,13 @@ class ApplicationController {
     if (isset($this->before_actions)) $this->_filter($this->_route->action, $this->before_actions);
 
     if (method_exists($this, $this->_route->action)) $this->{$this->_route->action}();
-    if (isset($this->_redirect_to)) $main_redirect_to = $this->_redirect_to;
-    if (isset($this->_render)) $main_redirect_to = $this->_render;
 
     if (isset($this->after_actions)) $this->_filter($this->_route->action, $this->after_actions);
 
-    if (isset($main_redirect_to)) {
-      $this->_redirect_to = $main_redirect_to;
-      return $this->_redirect_to();
-    }
-    if (isset($main_render)) {
-      $this->_render = $main_render;
-      return $this->_render();
-    }
+    if ($this->_redirect_to) $this->_redirect_to();
 
-    // default render
+    // default render must be!
     $this->_render();
-  }
-
-  final public function render($options) { // genişletilemez fonksyion
-    $this->_render = $options;
-  }
-
-  final public function redirect_to($url) { // genişletilemez fonksyion
-    $this->_redirect_to = $url;
   }
 
   final public static function load_file($file, $path = "") { // genişletilemez fonksyion
@@ -134,7 +125,7 @@ class ApplicationController {
     if (!file_exists($controller_path))
       throw new FileNotFoundException("Controller dosyası mevcut değil", $controller_path);
 
-    include $controller_path;
+    require_once $controller_path;
 
     if (!class_exists($controller_class))
       throw new FileNotFoundException("Controller sınıfı yüklenemedi", $controller_class);
