@@ -1189,6 +1189,34 @@ foreach ($books as $book)
   echo $book->name;
 ```
 
+### Mailer (`app/mailers/*.php`)
+
+# TODO content!
+
+```php
+class UserMailer extends ApplicationMailer {
+
+  protected $before_actions = [["ilk"]];
+  protected $helpers = ["Bootstrap"];
+
+  public function ilk() {
+    $this->mail([
+      "to" => ["email" => "gdemir@bil.omu.edu.tr", "name" => "Gökhan Demir"],
+      "subject" => "[Admin] Please reset your password"
+      ]);
+  }
+
+  public function test() {
+    $this->code = "asdasdasdas";
+    $this->site_url = "olt.com.tr";
+    $this->mail([
+      "to" => ["email" => "gdemir@bil.omu.edu.tr", "name" => "Gökhan Demir"],
+      "subject" => "[Admin] Please reset your password"
+      ]);
+  }
+}
+```
+
 ### Configurations (`config/*`)
 
 ---
