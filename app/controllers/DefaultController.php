@@ -6,6 +6,11 @@ class DefaultController extends ApplicationController {
     $this->description = "Read guides to learn!";
     $this->repo = "https://github.com/barak-framework/barak";
     $this->guide = "https://github.com/barak-framework/barak/blob/master/README.md";
+    $this->site = "http://gdemir.me/barak-framework";
+    if (UserMailer::delivery("password_reset"))
+    	echo "gönderildi";
+    else
+    	echo "gönderilmedi";
   }
 
 }

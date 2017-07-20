@@ -18,7 +18,7 @@ class ApplicationConfig {
     if (!strlen(session_id())) session_start();
 
     // default setting
-    ApplicationI18n::default();
+    ApplicationI18n::init();
 
     // configuration setting
     $app_configuration = parse_ini_file(self::APPFILE);
@@ -30,7 +30,7 @@ class ApplicationConfig {
           // #TODO
           // ini_set('log_errors', 'On');
           // ini_set('error_log', '/tmp/log/error.log');
-        case "locale":          ApplicationI18n::default($value);     break;
+        case "locale":          ApplicationI18n::init($value);     break;
         case "logsize":         ApplicationLogger::size($value);      break;
         case "cacheexpiration": ApplicationCache::expiration($value); break;
         default:

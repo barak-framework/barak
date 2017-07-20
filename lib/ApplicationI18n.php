@@ -11,7 +11,7 @@ class ApplicationI18n {
     return $this;
   }
 
-  public static function default($default = "tr") {
+  public static function init($default = "tr") {
     if (isset($_SESSION[self::storage_key()])) {
       if ($_SESSION[self::storage_key()]->_locale)
         return;
