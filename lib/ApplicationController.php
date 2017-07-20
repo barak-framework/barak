@@ -115,7 +115,8 @@ class ApplicationController {
     } else {
       self::_load($route->controller);
     }
-    // run controller class and before_filter functions
+
+    // run controller class and before_actions, before_afters, helper functions
     $controller_class = ucwords($route->controller) . 'Controller';
     $c = new $controller_class($route);
     $c->run();
