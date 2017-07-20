@@ -42,25 +42,7 @@ class ApplicationRoutes {
 
     // İstek url ile routes'ı içinden bul ve sevk et
     if ($route = $routes->get_route($request_route)) {
-
-      if ($route->path) {
-        ApplicationController::load_file(trim($route->path, "/")); // for superclass
-        ApplicationController::load_file($route->controller, $route->path);
-      } else {
-        ApplicationController::load_file($route->controller);
-      }
-
-      // run controller class and before_filter functions
-      $controller_class = ucwords($route->controller) . 'Controller';
-
-    // $c = new $controller_class();
-    // router'in localslarını(sayfadan :id, çekmek için), controller'dan gelen localslara yükle
-      $c = new $controller_class($route);
-
-    // $c->_locals = $this->_locals;
-      $c->run();
-
-      // $route->run();
+      ApplicationController::dispatch($route);
     } else {
       $v = new ApplicationView();
       $v->set(["text" => _404()]);
