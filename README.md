@@ -1203,6 +1203,7 @@ foreach ($books as $book)
 class HomeController extends ApplicationController {
   public function index() {
     UserMailer::delivery("password_reset");
+    UserMailer::delivery("password_reset2", ["m930fj039fj039j", "gdemir.me"]);
   }
 }
 ```
@@ -1223,7 +1224,16 @@ class UserMailer extends ApplicationMailer {
 
   public function password_reset() {
     $this->code = "ab234c2589de345fgAASD6";
-    $this->site_url = "olt.com.tr";
+    $this->site_url = "gdemir.me";
+    $this->mail([
+      "to" => ["email" => "gdemir@bil.omu.edu.tr", "name" => "Gökhan Demir"],
+      "subject" => "[Admin] Please reset your password"
+      ]);
+  }
+  
+  public function password_reset2($random_code, $site_url) {
+    $this->code = $random_code;
+    $this->site_url = $site_url;
     $this->mail([
       "to" => ["email" => "gdemir@bil.omu.edu.tr", "name" => "Gökhan Demir"],
       "subject" => "[Admin] Please reset your password"
@@ -1268,6 +1278,14 @@ class UserMailer extends ApplicationMailer {
 ```
 
 > `app/views/mail/user/password_reset.php`
+
+```html
+Sistem şifrenizi kaybettiğinizi duyduk. Üzgünüm!<br/><br/>
+Endişelenme! Parolanızı sıfırlamak için 1 saat içinde aşağıdaki bağlantıyı kullanabilirsiniz:<br/><br/>
+<a href='http://$_site_url/admin/password_reset/$code'>http://$_site_url/admin/password_reset/$code</a>
+```
+
+> `app/views/mail/user/password_reset2.php`
 
 ```html
 Sistem şifrenizi kaybettiğinizi duyduk. Üzgünüm!<br/><br/>
