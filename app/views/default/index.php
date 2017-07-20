@@ -17,20 +17,6 @@
       </center>
       <br/>
 
-      <div class="list-group">
-
-        <?php foreach ($guides as $guide) { ?>
-
-        <a href="<?= $guide['link']; ?>" target="_blank" class="list-group-item list-group-item-action">
-          <h5>
-            &#8594; <?= $guide["title"]; ?>
-            (<code><?= $guide["directory"]; ?></code>)
-          </h5>
-        </a>
-
-        <?php } ?>
-
-      </div>
     </div>
     <hr>
     <center>
