@@ -9,7 +9,7 @@ class Application {
 
     foreach ($directories as $directory) {
       foreach (glob($directory . "*.php") as $class) {
-        include_once $class;
+        require_once $class;
       }
     }
 
