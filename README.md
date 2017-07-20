@@ -1330,6 +1330,16 @@ pass  = barak
 name  = BARAK
 ```
 
+> `config/mailer.ini` (mailer configuration file)
+
+```ini
+[mailer_configuration]
+address = mail.gdemir.me
+port = 25
+username = gdemir@bil.omu.edu.tr
+password = 123456
+```
+
 > `config/locales/LANGUAGE.php` (language configuration file)
 
 Varsayılan dosyası `config/locales/tr.php` dosyasıdır, yeni bir dil eklenecekse aynı list kullanılıp değer kısımları değiştirilerek
