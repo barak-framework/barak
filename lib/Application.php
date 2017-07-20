@@ -20,7 +20,7 @@ class Application {
     ApplicationDatabase::seed();
 
     // Helper : get global functions
-    ApplicationHelper::extract();
+    ApplicationAlias::extract();
 
     // Configuration : sets
     ApplicationConfig::sets();
