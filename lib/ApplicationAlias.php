@@ -1,6 +1,6 @@
 <?php
 
-class ApplicationHelper {
+class ApplicationAlias {
 
   public static function extract() {
 
