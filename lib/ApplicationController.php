@@ -15,7 +15,7 @@ class ApplicationController {
     $this->_route = $route;
 
     // router'in localslarını(sayfadan :id, çekmek için), controller'dan gelen localslara yükle ki action içerisinden erişebilesin
-    $this->_locals = $route->_locals;
+    $this->_locals = $route->locals;
   }
 
   final public function __get($local) { // genişletilemez fonksyion
@@ -59,7 +59,7 @@ class ApplicationController {
   }
 
   private function _helpers() {
-    ApplicationHelper::load($this->_helpers);
+    ApplicationHelper::load($this->helpers);
   }
 
   private function _render() {
@@ -92,7 +92,20 @@ class ApplicationController {
     exit(header("Location: http://" . $_SERVER['SERVER_NAME'] . "/" . trim($this->_redirect_to, "/"), false, 303));
   }
 
-  final public function run() { // genişletilemez fonksyion
+  private static function _load($file, $path = "") {
+    $controller_class = ucwords($file) . "Controller";
+    $controller_path  = self::CONTROLLERPATH . trim($path,"/") . "/" . $controller_class . '.php';
+
+    if (!file_exists($controller_path))
+      throw new FileNotFoundException("Controller dosyası mevcut değil", $controller_path);
+
+    require_once $controller_path;
+
+    if (!class_exists($controller_class))
+      throw new FileNotFoundException("Controller sınıfı yüklenemedi", $controller_class);
+  }
+
+  private function _run() {
 
     if (isset($this->helpers)) $this->_helpers();
 
@@ -119,20 +132,7 @@ class ApplicationController {
     // run controller class and before_actions, before_afters, helper functions
     $controller_class = ucwords($route->controller) . 'Controller';
     $c = new $controller_class($route);
-    $c->run();
-  }
-
-  private static function _load($file, $path = "") {
-    $controller_class = ucwords($file) . "Controller";
-    $controller_path  = self::CONTROLLERPATH . trim($path,"/") . "/" . $controller_class . '.php';
-
-    if (!file_exists($controller_path))
-      throw new FileNotFoundException("Controller dosyası mevcut değil", $controller_path);
-
-    require_once $controller_path;
-
-    if (!class_exists($controller_class))
-      throw new FileNotFoundException("Controller sınıfı yüklenemedi", $controller_class);
+    $c->_run();
   }
 }
 ?>

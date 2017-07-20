@@ -36,6 +36,7 @@ class ApplicationException extends Exception {
 
 // extends ApplicationException class define
 
+class GeneralException extends ApplicationException {};
 class BelongNotFoundException extends ApplicationException {};
 class ConfigurationException extends ApplicationException {};
 class CRUDException extends ApplicationException {};

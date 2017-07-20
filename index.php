@@ -11,7 +11,7 @@ set_exception_handler(
     $message = $e->getMessage();
     ApplicationLogger::debug("$e kodundaki hata |$message|");
     // TODO Mailer içersinde sorun olunca buraya düşmüyor :-'(
-    throw new FileNotFoundException("Bir takım şeyler ters gitti :-(", $message);
+    throw new GeneralException("Birtakım şeyler ters gitti :-(", $message);
   });
 
 $time_start = microtime(true);

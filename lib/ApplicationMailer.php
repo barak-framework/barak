@@ -11,6 +11,7 @@ class ApplicationMailer {
 
   private $_view;
   private $_action;
+  private $_args;
 
   final public function __construct() {
     $this->_mailer = new PHPMailer();
@@ -66,23 +67,6 @@ class ApplicationMailer {
     $this->_mail[] = $options;
   }
 
-  // UserMailer::delivery("test");
-
-  final public static function delivery() {
-    $mailer_class = strtolower(get_called_class());
-    list($view) = explode("mailer", $mailer_class);
-
-    $args = func_get_args();
-
-    $action = $args[0];
-    $args = array_slice($args, 1);
-
-    $m = new $mailer_class();
-    $m->_view = $view;
-    $m->_action = $action;
-    $m->run();
-  }
-
   private function _filter($action, $filter_actions) {
 
     foreach ($filter_actions as $filter_action) {
@@ -107,7 +91,7 @@ class ApplicationMailer {
   }
 
   private function _helpers() {
-    ApplicationHelper::load($this->_helpers);
+    ApplicationHelper::load($this->helpers);
   }
 
   private function _mail($action) {
@@ -136,18 +120,36 @@ class ApplicationMailer {
     return ($this->_mailer->Send()) ? true : false;
   }
 
-  final public function run() {
+  private function _run() {
 
     if (isset($this->helpers)) $this->_helpers();
 
     if (isset($this->before_actions)) $this->_filter($this->_action, $this->before_actions);
 
-    if (method_exists($this, $this->_action)) $this->{$this->_action}();
+    if (method_exists($this, $this->_action)) call_user_func_array(array($this, $this->_action), $this->_args);
 
     if ($this->_mail) self::_mail($this->_action);
 
     if (isset($this->after_actions)) $this->_filter($this->_action, $this->after_actions);
 
+  }
+
+  // UserMailer::delivery("password_reset");
+  // UserMailer::delivery("password_reset", [$code]);
+  // UserMailer::delivery("password_reset", [$code, $site_url]);
+
+  final public static function delivery($action = null, $args = []) {
+    $mailer_class = strtolower(get_called_class());
+    list($view) = explode("mailer", $mailer_class);
+
+    if (!$action)
+    	throw new MethodNotFoundException("Mailler sınıfında ilgili fonksiyon belirtilmelidir", $mailer_class);
+
+    $m = new $mailer_class();
+    $m->_view = $view;
+    $m->_action = $action;
+    $m->_args = $args;
+    $m->_run();
   }
 }
 ?>
