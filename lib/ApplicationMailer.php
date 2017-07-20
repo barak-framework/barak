@@ -5,8 +5,6 @@ class ApplicationMailer {
 
   const MAILERPATH = "app/mailers/";
 
-  const HELPERPATH = "app/helpers/";
-
   private $_locals = [];
   private $_mail;
   private $_mailer;
@@ -108,21 +106,8 @@ class ApplicationMailer {
     }
   }
 
-  private function _helper($helper) {
-    if (is_array($this->helpers)) {
-      foreach ($this->helpers as $helper) {
-        $helper_path = self::HELPERPATH . $helper . "Helper.php";
-        if (!file_exists($helper_path))
-          throw new FileNotFoundException("Helper dosyası mevcut değil", $helper_path);
-        require_once $helper_path;
-      }
-    } elseif ($this->helpers == "all") {
-      foreach (glob($self::HELPERPATH . "*.php") as $class) {
-        require_once $class;
-      }
-    } else {
-      throw new Exception("Helper methodunda bilinmeyen parametre", $this->helper);
-    }
+  private function _helpers() {
+    ApplicationHelper::load($this->_helpers);
   }
 
   private function _mail($action) {
@@ -153,7 +138,7 @@ class ApplicationMailer {
 
   final public function run() {
 
-    if (isset($this->helpers)) $this->_helper($this->helpers);
+    if (isset($this->helpers)) $this->_helpers();
 
     if (isset($this->before_actions)) $this->_filter($this->_action, $this->before_actions);
 
