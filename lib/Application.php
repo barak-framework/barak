@@ -19,7 +19,7 @@ class Application {
     // Database : seed
     ApplicationDatabase::seed();
 
-    // Helper : get global functions
+    // Alias : get global functions
     ApplicationAlias::extract();
 
     // Configuration : sets
