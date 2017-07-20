@@ -11,7 +11,11 @@ class ApplicationController {
   private $_route;
 
   final public function __construct(ApplicationRoute $route) { // genişletilemez fonksyion
+
     $this->_route = $route;
+
+    // router'in localslarını(sayfadan :id, çekmek için), controller'dan gelen localslara yükle ki action içerisinden erişebilesin
+    $this->_locals = $route->_locals;
   }
 
   final public function __get($local) { // genişletilemez fonksyion
@@ -59,7 +63,6 @@ class ApplicationController {
   }
 
   private function _render() {
-    // render controller choice
     $v = new ApplicationView();
 
     // render template
@@ -105,9 +108,23 @@ class ApplicationController {
     $this->_render();
   }
 
-  final public static function load_file($file, $path = "") { // genişletilemez fonksyion
+  public static function dispatch(ApplicationRoute $route) {
+    if ($route->path) {
+      self::_load(trim($route->path, "/")); // for superclass
+      self::_load($route->controller, $route->path);
+    } else {
+      self::_load($route->controller);
+    }
+    // run controller class and before_filter functions
+    $controller_class = ucwords($route->controller) . 'Controller';
+    $c = new $controller_class($route);
+    $c->run();
+  }
+
+  private static function _load($file, $path = "") {
     $controller_class = ucwords($file) . "Controller";
     $controller_path  = self::CONTROLLERPATH . trim($path,"/") . "/" . $controller_class . '.php';
+
     if (!file_exists($controller_path))
       throw new FileNotFoundException("Controller dosyası mevcut değil", $controller_path);
 
