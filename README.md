@@ -683,7 +683,7 @@ class AdminController extends ApplicationController {
 </html>
 ```
 
-### Views (`app/views/DIRECTORY/*.php`)
+### View (`app/views/DIRECTORY/*.php`)
 
 ---
 
@@ -1191,23 +1191,38 @@ foreach ($books as $book)
 
 ### Mailer (`app/mailers/*.php`)
 
-# TODO content!
+- Functions
+
+> `delivery`
+
+#### TODO content! passing params on delivery function
+
+> `app/controllers/HomeController.php`
+
+```php
+class HomeController extends ApplicationController {
+  public function index() {
+    UserMailer::delivery("password_reset");
+  }
+}
+```
+
+> `app/mailers/UserMailer.php`
 
 ```php
 class UserMailer extends ApplicationMailer {
 
-  protected $before_actions = [["ilk"]];
-  protected $helpers = ["Bootstrap"];
+  protected $before_actions = [["password_info"]];
 
-  public function ilk() {
+  public function password_info() {
     $this->mail([
       "to" => ["email" => "gdemir@bil.omu.edu.tr", "name" => "Gökhan Demir"],
-      "subject" => "[Admin] Please reset your password"
+      "subject" => "Güçlü Şifre İçin Öneriler"
       ]);
   }
 
-  public function test() {
-    $this->code = "asdasdasdas";
+  public function password_reset() {
+    $this->code = "ab234c2589de345fgAASD6";
     $this->site_url = "olt.com.tr";
     $this->mail([
       "to" => ["email" => "gdemir@bil.omu.edu.tr", "name" => "Gökhan Demir"],
@@ -1215,6 +1230,62 @@ class UserMailer extends ApplicationMailer {
       ]);
   }
 }
+```
+
+// default layout TODO change?
+> `app/views/layouts/mailer.php`
+
+```html
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title></title>
+  <link href="" rel="alternate" title="" type="application/atom+xml" />
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/app/assets/css/syntax.css" type="text/css" />
+  <link href='http://fonts.googleapis.com/css?family=Monda' rel='stylesheet' type='text/css'>
+
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="/app/assets/js/html5shiv.min.js"></script>
+  <script src="/app/assets/js/respond.min.js"></script>
+  <![endif]-->
+
+  <script src="https://www.google.com/recaptcha/api.js"></script>
+  <script src="http://code.jquery.com/jquery.js"></script>
+  <script src="/app/assets/js/bootstrap.min.js"></script>
+</head>
+<body>
+  <div class="container" style="width:365px; min-height:200px; margin-top: 8%;">
+    <?= $yield; ?>
+  </div>
+</body>
+</html>
+```
+
+> `app/views/mail/user/password_reset.php`
+
+```html
+Sistem şifrenizi kaybettiğinizi duyduk. Üzgünüm!<br/><br/>
+Endişelenme! Parolanızı sıfırlamak için 1 saat içinde aşağıdaki bağlantıyı kullanabilirsiniz:<br/><br/>
+<a href='http://$_site_url/admin/password_reset/$code'>http://$_site_url/admin/password_reset/$code</a>
+```
+
+> `app/views/mail/user/password_info.php`
+
+```html
+<code>UYARI</code>:
+<i class="text-info">
+  <ul class="col-sm-offset-1">
+    <li>Şifreniz en az 8 karakterden oluşmalıdır</li>
+    <li>Büyük, küçük harfler ve rakamların her biri en az 1 defa kullanılmalıdır</li>
+    <li>"?, @, !, #, %, +, -, *, %" gibi özel karakterler en az 1 defa kullanılmalıdır</li>
+  </ul>
+</i>
 ```
 
 ### Configurations (`config/*`)
