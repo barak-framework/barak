@@ -98,13 +98,16 @@ class ApplicationMailer {
 
     foreach ($this->_mail as $option) {
 
-      if (isset($options["to"])) {
-        list($email, $name) = $options["to"];
-        $this->_mailer->AddAddress($email, $name);
+      if (!isset($option["to"]))
+        throw new Exception("Fonksiyounda bir alıcı belirtilmelidir", $action);
+
+      foreach ($option["to"] as $recipient) {
+        foreach ($recipient as $email => $name)
+          $this->_mailer->AddAddress($email, $name);
       }
 
-      if (isset($options["subject"]))
-        $this->_mailer->Subject = $options["subject"];
+      if (isset($option["subject"]))
+        $this->_mailer->Subject = $option["subject"];
     }
 
     $v = new ApplicationView();
@@ -143,7 +146,7 @@ class ApplicationMailer {
     list($view) = explode("mailer", $mailer_class);
 
     if (!$action)
-    	throw new MethodNotFoundException("Mailler sınıfında ilgili fonksiyon belirtilmelidir", $mailer_class);
+      throw new MethodNotFoundException("Mailler sınıfında ilgili fonksiyon belirtilmelidir", $mailer_class);
 
     $m = new $mailer_class();
     $m->_view = $view;
