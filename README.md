@@ -377,7 +377,7 @@ ApplicationRoutes::draw(
 );
 ```
 
-### Controller (`app/controller/*.php`)
+### Controllers (`app/controllers/*.php`)
 
 ---
 
@@ -591,7 +591,7 @@ ApplicationRoutes::draw(
 );
 ```
 
-> `app/controller/AdminController.php`
+> `app/controllers/AdminController.php`
 
 ```php
 class AdminController extends ApplicationController {
@@ -683,7 +683,7 @@ class AdminController extends ApplicationController {
 </html>
 ```
 
-### View (`app/views/DIRECTORY/*.php`)
+### Views (`app/views/DIRECTORY/*.php`)
 
 ---
 
