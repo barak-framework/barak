@@ -1227,7 +1227,7 @@ foreach ($books as $book)
 
 ### Mailer (`app/mailers/*.php`)
 
-Mailer sınıf olarak `PHPMailer`i kullanmaktadır ve yapı olarak Controllerin bir benzeri görev yapmaktadır. `helper`, `before_actions`, `after_actions` gibi ayarlamaları kullanabilme imkanı vermektedir. Her hazırlanan Mailer sınıfı içerisindeki fonksiyonda `mail` fonksyionu ve alıcı tanımlanmak *zorundadır*. Layout olarak *zorunlu* olarak `app/views/layouts/mailer.php` dosyasını kullanmaktadır.
+Mailer sınıf olarak `PHPMailer`i kullanmaktadır ve yapı olarak Controllerin bir benzeri görev yapmaktadır. `helper`, `before_actions`, `after_actions` gibi ayarlamaları kullanabilme imkanı vermektedir. Her hazırlanan Mailer sınıfı içerisindeki fonksiyonda `mail` fonksyionu ve alıcı tanımlanmak *zorundadır*. Layout olarak *zorunlu* olarak `app/views/layouts/mailer.php` dosyasını kullanmaktadır. View olarak ise istenilen actiona göre `app/views/mail/ACTION.php` dosyası tanımlanması gerekir, buradaki `app/views/mail` dizinini kullanmak *zorunludur*.
 
 - Mailer Kick Functions
 
