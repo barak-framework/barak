@@ -1217,7 +1217,7 @@ class UserMailer extends ApplicationMailer {
 
   public function password_info() {
     $this->mail([
-      "to" => ["email" => "gdemir@bil.omu.edu.tr", "name" => "Gökhan Demir"],
+      "to" => [["gdemir@bil.omu.edu.tr" => "Gökhan Demir"]],
       "subject" => "Güçlü Şifre İçin Öneriler"
       ]);
   }
@@ -1226,7 +1226,7 @@ class UserMailer extends ApplicationMailer {
     $this->code = "ab234c2589de345fgAASD6";
     $this->site_url = "gdemir.me";
     $this->mail([
-      "to" => ["email" => "gdemir@bil.omu.edu.tr", "name" => "Gökhan Demir"],
+      "to" => [["gdemir@bil.omu.edu.tr" => "Gökhan Demir"]],
       "subject" => "[Admin] Please reset your password"
       ]);
   }
@@ -1235,7 +1235,7 @@ class UserMailer extends ApplicationMailer {
     $this->code = $random_code;
     $this->site_url = $site_url;
     $this->mail([
-      "to" => ["email" => "gdemir@bil.omu.edu.tr", "name" => "Gökhan Demir"],
+      "to" => [["gdemir@bil.omu.edu.tr" => "Gökhan Demir"]],
       "subject" => "[Admin] Please reset your password"
       ]);
   }
