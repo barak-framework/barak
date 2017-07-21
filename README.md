@@ -617,8 +617,6 @@ After Action (`protected $after_actions`) özelliği, `app/controller/*.php` dos
 
 3. Anahtar yok ise her yerde çalışacağını
 
-- Simple
-
 > `config/routes.php`
 
 ```php
@@ -1243,7 +1241,7 @@ Mailer sınıf olarak `PHPMailer`i kullanmaktadır ve yapı olarak Controllerin 
 
 > `helpers`, `before_actions`, `after_actions`
 
-#### `delivery` (`$ACTION`, [$param1, $param2, ...])
+#### `delivery` ($action, [$param1, $param2, ...])
 
 1. parametre olarak kullanılacak Mailer içersindeki method ismi yazılır.
 2. parametre eğer method bir veri alacak şekilde tanımlandıysa bu veriler liste içersinde gönderilir. 
@@ -1427,7 +1425,7 @@ name  = BARAK
 [mailer_configuration]
 address = mail.gdemir.me
 port = 25
-username = gdemir@bil.omu.edu.tr
+username = mail@gdemir.me
 password = 123456
 ```
 
