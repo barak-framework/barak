@@ -1,58 +1,65 @@
-
 <?php
 
 class ApplicationMailer {
 
   const MAILERPATH = "app/mailers/";
 
+  private $_mailer;
+
   private $_locals = [];
   private $_mail;
-  private $_mailer;
 
   private $_view;
   private $_action;
   private $_args;
 
-  final public function __construct() {
-    $this->_mailer = new PHPMailer();
+  private static function _mailer() {
+    $mailer = new PHPMailer();
 
     // Enables SMTP debug information (for testing)
+    //    0 = diasabled
     //    1 = errors and messages
     //    2 = messages only
-    $this->_mailer->SMTPDebug = 1;
+    //
+    $mailer->SMTPDebug = 0;
 
     // Setting SMTP Protocol
     // telling the class to use SMTP
-    $this->_mailer->isSMTP();
+    $mailer->isSMTP();
 
     // Default Charset
-    $this->_mailer->CharSet  = 'UTF-8';
-    $this->_mailer->Encoding = "base64";
+    $mailer->CharSet  = 'UTF-8';
+    $mailer->Encoding = "base64";
 
     // Default SMTP Auth
     // Enable SMTP authentication
-    $this->_mailer->SMTPAuth = true;
+    $mailer->SMTPAuth = true;
 
     // Default HTML Format
-    $this->_mailer->isHTML(true);
+    $mailer->isHTML(true);
+
+    // https://stackoverflow.com/questions/2333930/persistent-smtp-connection-in-phpmailer
+//    $mailer->SMTPKeepAlive = true;
 
     $mailer_configuration = ApplicationConfig::mailer();
     foreach ($mailer_configuration as $key => $value) {
       switch ($key) {
         // set host like 'mail.website.com'
-        case "address":  $this->_mailer->Host = $value; break;
+        case "address":  $mailer->Host = $value; break;
         // Setting Default Port
         // set the SMTP port for the outMail server
         //    use either 25, 587, 2525 or 8025
-        case "port":     $this->_mailer->Port = $value; break;
+        case "port":     $mailer->Port = $value; break;
         // nerden ?
         // set username like mail@gdemir.me
-        case "username": $this->_mailer->Username = $value; $this->_mailer->SetFrom($value, 'Admin'); break;
-        case "password": $this->_mailer->Password = $value; break;
+        case "username": $mailer->Username = $value; $mailer->SetFrom($value, 'Admin'); break;
+        case "password": $mailer->Password = $value; break;
         default:
         throw new ConfigurationException("Uygulamanın yapılandırma dosyasında bilinmeyen parametre", $key);
       }
     }
+
+    return $mailer;
   }
 
   final public function __get($local) { // genişletilemez fonksyion
@@ -64,7 +71,7 @@ class ApplicationMailer {
   }
 
   final public function mail($options) { // genişletilemez fonksyion
-    $this->_mail[] = $options;
+    $this->_mail = $options;
   }
 
   private function _filter($action, $filter_actions) {
@@ -95,20 +102,20 @@ class ApplicationMailer {
   }
 
   private function _mail($action) {
+    $main_mailer = $this->_mailer;
 
-    foreach ($this->_mail as $option) {
+    $mailer = clone $main_mailer;
 
-      if (!isset($option["to"]))
-        throw new Exception("Fonksiyounda bir alıcı belirtilmelidir", $action);
+    if (!isset($this->_mail["to"]))
+      throw new Exception("Fonksiyounda bir alıcı belirtilmelidir", $action);
 
-      foreach ($option["to"] as $recipient) {
-        foreach ($recipient as $email => $name)
-          $this->_mailer->AddAddress($email, $name);
-      }
-
-      if (isset($option["subject"]))
-        $this->_mailer->Subject = $option["subject"];
+    foreach ($this->_mail["to"] as $recipient) {
+      foreach ($recipient as $email => $name)
+        $mailer->AddAddress($email, $name);
     }
+
+    if (isset($this->_mail["subject"]))
+      $mailer->Subject = $this->_mail["subject"];
 
     $v = new ApplicationView();
 
@@ -118,9 +125,12 @@ class ApplicationMailer {
     if ($this->_locals)
       $v->set(["locals" => $this->_locals]);
 
-    $this->_mailer->Body = $v->run();
+    $mailer->Body = $v->run();
 
-    return ($this->_mailer->Send()) ? true : false;
+    if ($mailer->send())
+      ApplicationLogger::info("Mail gönderildi");
+    else
+      ApplicationLogger::error("Mail gönderiminde sorun oluştu");
   }
 
   private function _run() {
@@ -149,10 +159,12 @@ class ApplicationMailer {
       throw new MethodNotFoundException("Mailler sınıfında ilgili fonksiyon belirtilmelidir", $mailer_class);
 
     $m = new $mailer_class();
+    $m->_mailer = self::_mailer();
     $m->_view = $view;
     $m->_action = $action;
     $m->_args = $args;
     $m->_run();
+
   }
 }
 ?>
