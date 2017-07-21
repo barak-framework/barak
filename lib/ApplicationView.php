@@ -126,12 +126,9 @@ class ApplicationView {
       extract($locals, EXTR_OVERWRITE);
     }
 
-    require_once $file;
-    return ob_get_clean();
-  }
+    include $file;
 
-  private function display($content) {
-    echo $content;
+    return ob_get_clean();
   }
 }
 
