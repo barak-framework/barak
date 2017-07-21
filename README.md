@@ -531,7 +531,7 @@ class HomeController extends ApplicationController {
 
 #### `helpers`
 
-Helpers `app/helpers/*Helper.php` şeklinde tanımlanan her controller ya da proje için gerekli görüldüğü yerlerde çağrılması gereken dosyaları projeye dahil eder.
+Helpers `app/helpers/*Helper.php` şeklinde tanımlanan her controller ya da proje için gerekli görüldüğü yerlerde çağrılması gereken sınıfları projeye dahil eder.
 
 > keys : `$FILE`, `all`
 
