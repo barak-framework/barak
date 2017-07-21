@@ -389,7 +389,7 @@ Her `config/routes.php` içerisinde tanımlanan `get` işlemi için `app/control
 
 - Options
 
-> `before_actions`, `after_actions`
+> `helpers`, `before_actions`, `after_actions`
 
 #### `render`
 
@@ -528,6 +528,44 @@ class HomeController extends ApplicationController {
 ```php
 <h1> Home#Index </h1>
 ```
+
+#### `helpers`
+
+Helpers `app/helpers/*Helper.php` şeklinde tanımlanan her controller ya da proje için gerekli görüldüğü yerlerde çağrılması gereken dosyaları projeye dahil eder.
+
+> keys : `$FILE`, `all`
+
+> `$FILE`
+
+İstenilen helper sınıflarını projeye dahil eder.
+
+```php
+class HomeController extends ApplicationController {
+
+  protected $helpers = ["Password"];
+
+  public function index() {
+    echo "random password : " . PasswordHelper::generate(10);
+  }
+}
+```
+
+> `all`
+
+`app/helpers/*` altındaki tüm helper sınıflarını projeye dahil eder. #TODO anahtar ismi daha özel olabilir ?
+
+```php
+class HomeController extends ApplicationController {
+
+  protected $helpers = ["all"];
+
+  public function index() {
+    echo "random string   : " . StringHelper::generate(10);
+    echo "random password : " . PasswordHelper::generate(10);
+  }
+}
+```
+
 
 #### `before_actions`
 
@@ -1191,11 +1229,64 @@ foreach ($books as $book)
 
 ### Mailer (`app/mailers/*.php`)
 
-- Functions
+Mailer sınıf olarak `PHPMailer`i kullanmaktadır ve yapı olarak Controllerin bir benzeri görev yapmaktadır. `helper`, `before_actions`, `after_actions` gibi ayarlamaları kullanabilme imkanı vermektedir. Her hazırlanan Mailer sınıfı içerisindeki fonksiyonda `mail` fonksyionu ve alıcı tanımlanmak *zorundadır*.
+
+- Mailer Kick Functions
 
 > `delivery`
 
-#### TODO content! passing params on delivery function
+- Functions
+
+> `mail`
+
+- Options
+
+> `helpers`, `before_actions`, `after_actions`
+
+#### `delivery` (`$ACTION`, [$param1, $param2, ...])
+
+1. parametre olarak kullanılacak Mailer içersindeki method ismi yazılır.
+2. parametre eğer method bir veri alacak şekilde tanımlandıysa bu veriler liste içersinde gönderilir. 
+
+> `app/controllers/HomeController.php`
+
+```php
+class HomeController extends ApplicationController {
+  public function index() {
+    UserMailer::delivery("password_reset");
+    UserMailer::delivery("password_reset2", ["m930fj039fj039j", "gdemir.me"]);
+  }
+}
+```
+
+> `app/mailers/UserMailer.php`
+
+```php
+class UserMailer extends ApplicationMailer {
+
+  public function password_reset() {
+    $this->code = "ab234c2589de345fgAASD6";
+    $this->site_url = "gdemir.me";
+    $this->mail([
+      "to" => [["gdemir@bil.omu.edu.tr" => "Gökhan Demir"]],
+      "subject" => "[Admin] Please reset your password"
+      ]);
+  }
+  
+  public function password_reset2($random_code, $site_url) {
+    $this->code = $random_code;
+    $this->site_url = $site_url;
+    $this->mail([
+      "to" => [["gdemir@bil.omu.edu.tr" => "Gökhan Demir"]],
+      "subject" => "[Admin] Please reset your password"
+      ]);
+  }
+}
+```
+
+#### `mail`
+
+> options : `to`, `subject`
 
 > `app/controllers/HomeController.php`
 
