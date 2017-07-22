@@ -38,9 +38,6 @@ class ApplicationMailer {
     // Default HTML Format
     $mailer->isHTML(true);
 
-    // https://stackoverflow.com/questions/2333930/persistent-smtp-connection-in-phpmailer
-//    $mailer->SMTPKeepAlive = true;
-
     $mailer_configuration = ApplicationConfig::mailer();
     foreach ($mailer_configuration as $key => $value) {
       switch ($key) {

@@ -15,7 +15,10 @@ class ApplicationConfig {
       throw new FileNotFoundException("Yapılandırma ayar dosyası mevcut değil", self::APPFILE);
 
     // for $_SESSION hash kick!
-    if (!strlen(session_id())) session_start();
+    if (!strlen(session_id())) {
+    	session_save_path("/tmp");
+    	session_start();
+    }
 
     // default setting
     ApplicationI18n::init();
