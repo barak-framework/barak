@@ -113,9 +113,23 @@ class ApplicationController {
 
     if (method_exists($this, $this->_route->action)) $this->{$this->_route->action}();
 
+    if (!isset($this->_redirect_to)) {
+      $main_redirect_to = $this->_redirect_to;
+      $this->_redirect_to = null;
+    }
+
+    if (!isset($this->_render)) {
+      $main_render = $this->_render;
+      $this->_render = null;
+    }
+
     if (isset($this->after_actions)) $this->_filter($this->_route->action, $this->after_actions);
 
-    if ($this->_redirect_to) $this->_redirect_to();
+    if (isset($main_redirect_to)) $this->_redirect_to = $main_redirect_to;
+
+    if (isset($main_render)) $this->_render = $main_render;
+
+    if (isset($this->_redirect_to)) $this->_redirect_to();
 
     // default render must be!
     $this->_render();

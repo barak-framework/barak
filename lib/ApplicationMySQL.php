@@ -35,7 +35,8 @@ class ApplicationMySQL {
 
     $query = self::query_execute($_query, $_symbolvalues, "CREATE fonksiyonu sorun oluştu");
 
-    return intval($GLOBALS['_db']->lastInsertId());
+    $connection = ApplicationDatabase::connect();
+    return intval($connection->lastInsertId());
   }
 
   public static function read($_select = [], $_table = "", $_where = []) {
