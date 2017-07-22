@@ -26,6 +26,14 @@ class ApplicationController {
     $this->_locals[$local] = $value;
   }
 
+  final public function __isset($local) { // genişletilemez fonksyion
+    return isset($this->_locals[$local]);
+  }
+
+  final public function __unset($local) { // genişletilemez fonksyion
+    unset($this->_locals[$local]);
+  }
+
   final public function render($options) { // genişletilemez fonksyion
     $this->_render = $options;
   }
