@@ -1251,18 +1251,29 @@ Mailer sınıf olarak `PHPMailer`i kullanmaktadır ve yapı olarak Controllerin 
 ```php
 class HomeController extends ApplicationController {
   public function index() {
-    UserMailer::delivery("password_reset");
-    UserMailer::delivery("password_reset2", ["m930fj039fj039j", "gdemir.me"]);
+    PasswordMailer::delivery("reset");
+    PasswordMailer::delivery("reset2", ["m930fj039fj039j", "gdemir.me", "mail@gdemir.me", "Gökhan Demir"]);
   }
 }
 ```
 
-> `app/mailers/UserMailer.php`
+> `app/mailers/PasswordMailer.php`
 
 ```php
-class UserMailer extends ApplicationMailer {
+class PasswordMailer extends ApplicationMailer {
 
-  public function password_reset() {
+  protected $after_actions = [["info"]];
+
+  public function info() {
+    if (isset($this->email) && isset($this->fullname)) {
+      $this->mail([
+        "to" => [[$this->email => $this->fullname]],
+        "subject" => "Güçlü Şifre İçin Öneriler"
+      ]);
+    }
+  }
+
+  public function reset() {
     $this->code = "ab234c2589de345fgAASD6";
     $this->site_url = "gdemir.me";
     $this->mail([
@@ -1271,11 +1282,11 @@ class UserMailer extends ApplicationMailer {
       ]);
   }
   
-  public function password_reset2($random_code, $site_url) {
+  public function reset2($random_code, $site_url, $email, $fullname) {
     $this->code = $random_code;
     $this->site_url = $site_url;
     $this->mail([
-      "to" => [["gdemir@bil.omu.edu.tr" => "Gökhan Demir"]],
+      "to" => [[$email => $fullname]],
       "subject" => "[Admin] Please reset your password"
       ]);
   }
@@ -1291,8 +1302,8 @@ class UserMailer extends ApplicationMailer {
 ```php
 class HomeController extends ApplicationController {
   public function index() {
-    UserMailer::delivery("password_reset");
-    UserMailer::delivery("password_reset2", ["m930fj039fj039j", "gdemir.me"]);
+    PasswordMailer::delivery("reset");
+    PasswordMailer::delivery("reset2", ["m930fj039fj039j", "gdemir.me"]);
   }
 }
 ```
@@ -1302,29 +1313,42 @@ class HomeController extends ApplicationController {
 ```php
 class UserMailer extends ApplicationMailer {
 
-  protected $before_actions = [["password_info"]];
+  protected $after_actions = [["info"]];
+  
+  protected $before_actions = [["notice"]];
 
-  public function password_info() {
+  public function notice() {
     $this->mail([
       "to" => [["gdemir@bil.omu.edu.tr" => "Gökhan Demir"]],
-      "subject" => "Güçlü Şifre İçin Öneriler"
+      "subject" => "1 Kullanıcı Şifre Sıfırlama Talebinde Bulundu"
       ]);
   }
 
-  public function password_reset() {
+  public function info() {
+    if (isset($this->email) && isset($this->fullname)) {
+      $this->mail([
+        "to" => [[$this->email => $this->fullname]],
+        "subject" => "Güçlü Şifre İçin Öneriler"
+      ]);
+    }
+  }
+
+  public function reset() {
     $this->code = "ab234c2589de345fgAASD6";
     $this->site_url = "gdemir.me";
     $this->mail([
-      "to" => [["gdemir@bil.omu.edu.tr" => "Gökhan Demir"]],
+      "to" => [["mail@gdemir.me" => "Gökhan Demir"]],
       "subject" => "[Admin] Please reset your password"
       ]);
   }
   
-  public function password_reset2($random_code, $site_url) {
+  public function reset2($random_code, $site_url, $email, $fullname) {
     $this->code = $random_code;
     $this->site_url = $site_url;
+    $this->email = $email;
+    $this->fullname = $fullname;
     $this->mail([
-      "to" => [["gdemir@bil.omu.edu.tr" => "Gökhan Demir"]],
+      "to" => [[$this->email => $this->fullname]],
       "subject" => "[Admin] Please reset your password"
       ]);
   }
@@ -1354,7 +1378,6 @@ class UserMailer extends ApplicationMailer {
   <script src="/app/assets/js/respond.min.js"></script>
   <![endif]-->
 
-  <script src="https://www.google.com/recaptcha/api.js"></script>
   <script src="http://code.jquery.com/jquery.js"></script>
   <script src="/app/assets/js/bootstrap.min.js"></script>
 </head>
@@ -1366,7 +1389,7 @@ class UserMailer extends ApplicationMailer {
 </html>
 ```
 
-> `app/views/mail/user/password_reset.php`
+> `app/views/mail/password/reset.php`
 
 ```html
 Sistem şifrenizi kaybettiğinizi duyduk. Üzgünüm!<br/><br/>
@@ -1374,7 +1397,7 @@ Endişelenme! Parolanızı sıfırlamak için 1 saat içinde aşağıdaki bağla
 <a href='http://$_site_url/admin/password_reset/$code'>http://$_site_url/admin/password_reset/$code</a>
 ```
 
-> `app/views/mail/user/password_reset2.php`
+> `app/views/mail/password/reset2.php`
 
 ```html
 Sistem şifrenizi kaybettiğinizi duyduk. Üzgünüm!<br/><br/>
@@ -1382,7 +1405,7 @@ Endişelenme! Parolanızı sıfırlamak için 1 saat içinde aşağıdaki bağla
 <a href='http://$_site_url/admin/password_reset/$code'>http://$_site_url/admin/password_reset/$code</a>
 ```
 
-> `app/views/mail/user/password_info.php`
+> `app/views/mail/password/info.php`
 
 ```html
 <code>UYARI</code>:
@@ -1393,6 +1416,15 @@ Endişelenme! Parolanızı sıfırlamak için 1 saat içinde aşağıdaki bağla
     <li>"?, @, !, #, %, +, -, *, %" gibi özel karakterler en az 1 defa kullanılmalıdır</li>
   </ul>
 </i>
+```
+
+> `app/views/mail/password/notice.php`
+
+```html
+<code>BILDIRIM</code>:
+<hr>
+Web sayfasında 1 kişi şifre değişikliği talebinde bulundu. <br/>
+<b>Tarih :</b> <?= date("Y-m-d H:i:s"); ?>
 ```
 
 ### Configurations (`config/*`)
