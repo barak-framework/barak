@@ -1277,7 +1277,7 @@ class PasswordMailer extends ApplicationMailer {
     $this->code = "ab234c2589de345fgAASD6";
     $this->site_url = "gdemir.me";
     $this->mail([
-      "to" => [["gdemir@bil.omu.edu.tr" => "Gökhan Demir"]],
+      "to" => [["mail@gdemir.me" => "Gökhan Demir"]],
       "subject" => "[Admin] Please reset your password"
       ]);
   }
