@@ -13,6 +13,26 @@ class ApplicationMailer {
   private $_action;
   private $_args;
 
+  final public function __get($local) { // genişletilemez fonksyion
+    return $this->_locals[$local];
+  }
+
+  final public function __set($local, $value) { // genişletilemez fonksyion
+    $this->_locals[$local] = $value;
+  }
+
+  final public function __isset($local) { // genişletilemez fonksyion
+    return isset($this->_locals[$local]);
+  }
+
+  final public function __unset($local) { // genişletilemez fonksyion
+    unset($this->_locals[$local]);
+  }
+
+  final public function mail($options) { // genişletilemez fonksyion
+    $this->_mail = $options;
+  }
+
   private static function _mailer() {
     $mailer = new PHPMailer();
 
@@ -57,26 +77,6 @@ class ApplicationMailer {
     }
 
     return $mailer;
-  }
-
-  final public function __get($local) { // genişletilemez fonksyion
-    return $this->_locals[$local];
-  }
-
-  final public function __set($local, $value) { // genişletilemez fonksyion
-    $this->_locals[$local] = $value;
-  }
-
-  final public function __isset($local) { // genişletilemez fonksyion
-    return isset($this->_locals[$local]);
-  }
-
-  final public function __unset($local) { // genişletilemez fonksyion
-    unset($this->_locals[$local]);
-  }
-
-  final public function mail($options) { // genişletilemez fonksyion
-    $this->_mail = $options;
   }
 
   private function _filter($action, $filter_actions) {
@@ -156,7 +156,7 @@ class ApplicationMailer {
   // UserMailer::delivery("password_reset", [$code]);
   // UserMailer::delivery("password_reset", [$code, $site_url]);
 
-  final public static function delivery($action = null, $args = []) {
+  final public static function delivery($action = null, $args = []) { // genişletilemez fonksyion
     $mailer_class = strtolower(get_called_class());
     list($view) = explode("mailer", $mailer_class);
 
