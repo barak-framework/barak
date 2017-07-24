@@ -46,7 +46,7 @@ class ApplicationRoutes {
     } else {
       $v = new ApplicationView();
       $v->set(["text" => _404()]);
-      $v->run();
+      echo $v->run();
     }
   }
 
