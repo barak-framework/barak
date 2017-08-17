@@ -1455,8 +1455,8 @@ name  = BARAK
 
 ```ini
 [mailer_configuration]
-address = mail.gdemir.me
-port = 25
+port     = 25
+address  = mail.gdemir.me
 username = mail@gdemir.me
 password = 123456
 ```
