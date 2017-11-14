@@ -127,7 +127,7 @@ class ApplicationMySQL {
   }
 
   public static function tablenames() {
-  	$connection = ApplicationDatabase::connect();
+    $connection = ApplicationDatabase::connect();
     $name = $connection->query("select database()")->fetchColumn();
     $result = $connection->query("show tables");
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) $tablenames[] = $row["Tables_in_" . $name];
@@ -135,7 +135,7 @@ class ApplicationMySQL {
   }
 
   public static function fieldnames($table) {
-  	$connection = ApplicationDatabase::connect();
+    $connection = ApplicationDatabase::connect();
     return $connection->query("DESCRIBE $table")->fetchAll(PDO::FETCH_COLUMN);
   }
 
