@@ -12,7 +12,7 @@ class ApplicationConfig {
   public static function sets() {
 
     if (!file_exists(self::APPFILE))
-      throw new FileNotFoundException("Yapılandırma ayar dosyası mevcut değil", self::APPFILE);
+      throw new Exception("Yapılandırma ayar dosyası mevcut değil → " . self::APPFILE);
 
     // for $_SESSION hash kick!
     if (!strlen(session_id())) session_start();
@@ -34,7 +34,7 @@ class ApplicationConfig {
         case "logsize":         ApplicationLogger::size($value);      break;
         case "cacheexpiration": ApplicationCache::expiration($value); break;
         default:
-        throw new ConfigurationException("Uygulamanın yapılandırma dosyasında bilinmeyen parametre", $key);
+        throw new Exception("Uygulamanın yapılandırma dosyasında bilinmeyen parametre → " . $key);
       }
     }
   }
@@ -43,7 +43,7 @@ class ApplicationConfig {
   public static function database() {
 
     if (!file_exists(self::DATABASEFILE))
-      throw new FileNotFoundException("Veritabanı ayar dosyası mevcut değil", self::DATABASEFILE);
+      throw new Exception("Veritabanı ayar dosyası mevcut değil → " . self::DATABASEFILE);
 
     return parse_ini_file(self::DATABASEFILE);
   }
@@ -52,7 +52,7 @@ class ApplicationConfig {
   public static function mailer() {
 
     if (!file_exists(self::MAILERFILE))
-      throw new FileNotFoundException("Mailer ayar dosyası mevcut değil", self::MAILERFILE);
+      throw new Exception("Mailer ayar dosyası mevcut değil → " . self::MAILERFILE);
 
     return parse_ini_file(self::MAILERFILE);
   }
@@ -61,7 +61,7 @@ class ApplicationConfig {
   public static function route() {
 
     if (!file_exists(self::ROUTESFILE))
-      throw new FileNotFoundException("Yönlendirme ayar dosyası mevcut değil", self::ROUTESFILE);
+      throw new Exception("Yönlendirme ayar dosyası mevcut değil → " . self::ROUTESFILE);
 
     // configuration routes load and route action dispatch
     include self::ROUTESFILE;
@@ -72,7 +72,7 @@ class ApplicationConfig {
 
     $localefile = self::LOCALESDIR . $locale . ".php";
     if (!file_exists($localefile))
-      throw new FileNotFoundException("Yerel ayar dosyası mevcut değil", $localefile);
+      throw new Exception("Yerel ayar dosyası mevcut değil → " . $localefile);
 
     $words = include $localefile;
     return $words;

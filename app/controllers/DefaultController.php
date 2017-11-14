@@ -1,6 +1,5 @@
 <?php
 class DefaultController extends ApplicationController {
-
   public function index() {
     $this->title = "Browse the Guide";
     $this->description = "Read guides to learn!";
@@ -8,6 +7,5 @@ class DefaultController extends ApplicationController {
     $this->guide = "https://github.com/barak-framework/barak/blob/master/README.md";
     $this->site = "http://gdemir.me/barak-framework";
   }
-
 }
 ?>

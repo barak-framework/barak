@@ -23,7 +23,7 @@ class ApplicationDatabase {
         self::$_connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
       }
     } catch (PDOException $e) {
-      throw new DatabaseException("Veritabanına bağlantısı başarılı değil!", $e->getMessage());
+      throw new Exception("Veritabanı bağlantısı başarılı değil! → " . $e->getMessage());
     }
     return self::$_connection;
   }

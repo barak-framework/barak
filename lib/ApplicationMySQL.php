@@ -78,8 +78,8 @@ class ApplicationMySQL {
     FROM $_table
     $_join_fields
     $where_commands
-    $_order_fields
     $_group_fields
+    $_order_fields
     $limit_command
     $offset_command";
 
@@ -157,7 +157,7 @@ class ApplicationMySQL {
       ApplicationLogger::debug(debug_backtrace());
       ApplicationLogger::debug($_query);
       ApplicationLogger::error($e->getMessage());
-      throw new CRUDException($_message, $e->getMessage());
+      throw new Exception($_message . " → " . $e->getMessage());
     }
 
     return $query;

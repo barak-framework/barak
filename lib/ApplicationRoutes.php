@@ -96,12 +96,12 @@ class ApplicationRoutes {
       return null;
       //throw new ConfigurationException("Böyle bir yönlendirme mevcut değil", $request_route["_method"] . ":" . $request_route["_rule"]);
     }
-    throw new ConfigurationException("Uzay çağında bizim henüz desteklemediğimiz bir method", $request_route["_method"]);
+    throw new Exception("Uzay çağında bizim henüz desteklemediğimiz bir method → " . $request_route["_method"]);
   }
 
   public function set_route(ApplicationRoute $route) {
     if (array_key_exists($route->rule, $this->_routes[$route->method]))
-      throw new ConfigurationException("Bu yönlendirme daha önceden tanımlanmış", $route->rule);
+      throw new Exception("Bu yönlendirme daha önceden tanımlanmış → " . $route->rule);
     $this->_routes[$route->method][$route->rule] = $route;
   }
 }

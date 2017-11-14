@@ -80,7 +80,7 @@ class ApplicationAlias {
         text-align: center;
         max-width: 33em;
         margin: 4em auto 0;
-        border-bottom: 3px solid #f07746;
+        border-bottom: 3px solid #30D5C8;
         box-shadow: 0 3px 12px rgba(0, 0, 0, 0.3);
         border-radius: 12px;
         background-color: #ddd;

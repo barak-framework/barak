@@ -20,7 +20,7 @@ class ApplicationRoute {
     if ($match) { // for :id/:action like
 
       if (!$target)
-        throw new ConfigurationException("Dynamic route özelliğinde hedef (controller#action) belirtilmek zorundadır!", $rule);
+        throw new Exception("Dynamic route özelliğinde hedef (controller#action) belirtilmek zorundadır! → " . $rule);
 
       list($controller, $action) = explode("#", trim($target, "/")); // get("/users/show/:id", "users#show"); // controller: users, action:show
       self::set($method, $match, $this->path . $rule, preg_replace("|:[\w]+|", self::dynamical_segment, $rule), $controller, $action);
@@ -34,12 +34,12 @@ class ApplicationRoute {
 
       list($controller, $action) = array_pad(explode("/", trim($rule, "/")), 2, null);
       if ($action == null)
-        throw new ConfigurationException("Route rule özelliğinde istek /controller/action şeklinde olmalıdır!", $rule);
+        throw new Exception("Route rule özelliğinde istek /controller/action şeklinde olmalıdır! → " . $rule);
 
       self::set($method, $match, "", $this->path . $rule, $controller, $action);
 
     } else {
-      throw new ConfigurationException("/config/routes.php içinde beklenmedik kurallar", $rule);
+      throw new Exception("/config/routes.php içinde beklenmedik kurallar → " . $rule);
     }
   }
 
@@ -106,7 +106,7 @@ class ApplicationRoute {
 
   public static function root($target = false, $path = null) {
     if (!$target)
-      throw new ConfigurationException("Root route özelliğinde hedef (controlller#action) belirtilmek zorundadır!", "root");
+      throw new Exception("Root route özelliğinde hedef (controlller#action) belirtilmek zorundadır! → root");
     return new ApplicationRoute("get", "/", $target, false, $path);
   }
 

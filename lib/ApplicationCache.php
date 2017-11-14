@@ -18,7 +18,7 @@ class ApplicationCache {
     $filename = self::filename_format($key);
 
     if (!($fh = fopen($filename, 'w')))
-      throw new FileNotFoundException("Cache bellek açılamadı", $filename);
+      throw new Exception("Cache bellek açılamadı → " . $filename);
 
     fwrite($fh, json_encode($data));
 

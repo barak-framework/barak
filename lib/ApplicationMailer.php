@@ -72,7 +72,7 @@ class ApplicationMailer {
         case "username": $mailer->Username = $value; $mailer->SetFrom($value, 'Admin'); break;
         case "password": $mailer->Password = $value; break;
         default:
-        throw new ConfigurationException("Uygulamanın yapılandırma dosyasında bilinmeyen parametre", $key);
+        throw new Exception("Uygulamanın yapılandırma dosyasında bilinmeyen parametre → " . $key);
       }
     }
 
@@ -112,7 +112,7 @@ class ApplicationMailer {
     $mailer = clone $main_mailer;
 
     if (!isset($this->_mail["to"]))
-      throw new Exception("Fonksiyounda bir alıcı belirtilmelidir", $action);
+      throw new Exception("Fonksiyounda bir alıcı belirtilmelidir → " . $action);
 
     foreach ($this->_mail["to"] as $recipient) {
       foreach ($recipient as $email => $name)
@@ -161,7 +161,7 @@ class ApplicationMailer {
     list($view) = explode("mailer", $mailer_class);
 
     if (!$action)
-      throw new MethodNotFoundException("Mailler sınıfında ilgili fonksiyon belirtilmelidir", $mailer_class);
+      throw new Exception("Mailler sınıfında ilgili fonksiyon belirtilmelidir → " . $mailer_class);
 
     $m = new $mailer_class();
     $m->_mailer = self::_mailer();

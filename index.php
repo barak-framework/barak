@@ -6,14 +6,6 @@ require "vendor/autoload.php";
 // load application
 require_once "lib/Application.php";
 
-set_exception_handler(
-  function ($e) {
-    $message = $e->getMessage();
-    ApplicationLogger::debug("$e kodundaki hata |$message|");
-    // TODO Mailer içersinde sorun olunca buraya düşmüyor :-'(
-    throw new GeneralException("Birtakım şeyler ters gitti :-(", $message);
-  });
-
 $time_start = microtime(true);
 
 // kick application

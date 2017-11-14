@@ -13,6 +13,15 @@ class Application {
       }
     }
 
+    // Error handling and new format display
+    register_shutdown_function('ApplicationDebug::shutdown');
+
+    // Exception handling and new format display
+    set_exception_handler('ApplicationDebug::exception');
+
+    // Error handling and new format display
+    set_error_handler('ApplicationDebug::error');
+
     // Database : connect
     ApplicationDatabase::connect();
 

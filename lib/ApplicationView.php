@@ -34,7 +34,7 @@ class ApplicationView {
           case "action":   $this->_action   = $value; break; // default kesin
           case "template": $this->_template = $value; break;
           default:
-          throw new ViewNotFoundException("Render fonksiyonunda bilinmeyen parametre", $key);
+          throw new Exception("Render fonksiyonunda bilinmeyen parametre → " . $key);
         }
       }
 
@@ -44,7 +44,7 @@ class ApplicationView {
       $this->_template = (isset($url[1])) ? $_render : $this->_view . "/" . $url[0];
 
     } else {
-      throw new ViewNotFoundException("Render fonksiyonun bilinmeyen değişken tipi", $this->_render);
+      throw new Exception("Render fonksiyonun bilinmeyen değişken tipi → " . $this->_render);
     }
 
   }
@@ -97,7 +97,7 @@ class ApplicationView {
     $layout_path = self::LAYOUTPATH . trim($this->_layout, "/") . ".php";
 
     if (!file_exists($layout_path))
-      throw new FileNotFoundException("Layout dosyası mevcut değil", $layout_path);
+      throw new Exception("Layout dosyası mevcut değil → " . $layout_path);
 
     return $layout_path;
   }
@@ -107,7 +107,7 @@ class ApplicationView {
     $template_path = $path . trim($this->_template, "/") . ".php";
 
     if (!file_exists($template_path))
-      throw new FileNotFoundException("Template dosyası mevcut değil", $template_path);
+      throw new Exception("Template dosyası mevcut değil → " . $template_path);
 
     return $template_path;
   }
@@ -116,7 +116,7 @@ class ApplicationView {
 
     // https://github.com/betephp/framework/blob/master/src/Bete/View/View.php#L100
     if (!file_exists($file))
-      throw new FileNotFoundException("Render dosyası mevcut değil", $file);
+      throw new Exception("Render dosyası mevcut değil → " . $file);
 
     ob_start();
     ob_implicit_flush(false);

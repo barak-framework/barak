@@ -37,7 +37,7 @@ class ApplicationModel {
       $foreign_key = $field . "_id"; // user_id
 
       if (!in_array($foreign_key, ApplicationMySQL::fieldnames($this->_table)))
-        throw new BelongNotFoundException("Modele ait olan böyle foreign key mevcut değil", $foreign_key);
+        throw new Exception("Modele ait olan böyle foreign key mevcut değil → " . $foreign_key);
 
       return $belong_table::find($this->_fields[$foreign_key]);
     } else {
@@ -56,7 +56,7 @@ class ApplicationModel {
       }
     }
 
-    throw new FieldNotFoundException("Modele ait böyle bir anahtar mevcut değil", $field);
+    throw new Exception("Modele ait böyle bir anahtar mevcut değil → " . $field);
   }
 
   // ok v3
@@ -64,17 +64,17 @@ class ApplicationModel {
     if (array_key_exists($field, $this->_fields))
       $this->_fields[$field] = $value;
     else
-      throw new FieldNotFoundException("Tabloda yüklenecek böyle bir anahtar mevcut değil", $field);
+      throw new Exception("Tabloda yüklenecek böyle bir anahtar mevcut değil → " . $field);
   }
 
   // ok v3
   public function __call($method, $args) {
-    throw new MethodNotFoundException("Modelde böyle bir method bulunamadı", $method);
+    throw new Exception("Modelde böyle bir method bulunamadı → " . $method);
   }
 
   // ok v3
   public static function __callStatic($method, $args) {
-    throw new MethodNotFoundException("Modelde böyle bir static method bulunamadı", $method);
+    throw new Exception("Modelde böyle bir static method bulunamadı → " . $method);
   }
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -168,18 +168,18 @@ class ApplicationModel {
       $value = NULL;
     } elseif (in_array($mark, ApplicationMySQL::$where_marks_in)) {
       if (!is_array($value))
-        throw new BelongNotFoundException(sprintf("WHERE %s için değer list olmalıdır", implode(',', ApplicationMySQL::$where_marks_in)), $value);
+        throw new Exception(sprintf("WHERE %s için değer list olmalıdır → ", implode(',', ApplicationMySQL::$where_marks_in)) . $value);
     } elseif (in_array($mark, ApplicationMySQL::$where_marks_between)) {
       if (!is_array($value) or (is_array($value) and count($value) != 2))
-        throw new BelongNotFoundException(sprintf("WHERE %s için değer list ve 2 değerli olmalıdır", implode(',', ApplicationMySQL::$where_marks_in)), $value);
+        throw new Exception(sprintf("WHERE %s için değer list ve 2 değerli olmalıdır → ", implode(',', ApplicationMySQL::$where_marks_in)) . $value);
     } elseif (!in_array($mark, array_merge(ApplicationMySQL::$where_marks_other, ApplicationMySQL::$where_marks_like))) {
-      throw new BelongNotFoundException("WHERE için tanımlı böyle bir işaretçi bulunamadı", $mark);
+      throw new Exception("WHERE için tanımlı böyle bir işaretçi bulunamadı → " . $mark);
     }
 
     // logic control
     $logic = strtoupper(trim($logic));
     if (!in_array($logic, ApplicationMySQL::$where_logics))
-      throw new BelongNotFoundException("WHERE de tanımlı böyle bir bağlayıcı bulunamadı", $logic);
+      throw new Exception("WHERE de tanımlı böyle bir bağlayıcı bulunamadı → " . $logic);
 
     $this->_where[] = self::set_to_where($field, $value, $mark, $logic);
 
@@ -234,7 +234,7 @@ class ApplicationModel {
     // sort_type control
     $sort_type = strtoupper(trim($sort_type));
     if (!in_array($sort_type, ApplicationMySQL::$order_sort_type))
-      throw new FieldNotFoundException("Order sorgusunda bilinmeyen parametre", $sort_type);
+      throw new Exception("Order sorgusunda bilinmeyen parametre → " . $sort_type);
 
     $this->_order[] = "$field $sort_type";
     return $this;
@@ -379,7 +379,7 @@ class ApplicationModel {
 
     // array control
     if (!is_array($ids))
-      throw new FieldNotFoundException("find_all sorgusunda değer list olmalıdır", $sort_type);
+      throw new Exception("find_all sorgusunda değer list olmalıdır → " . $sort_type);
 
     // int check
     foreach ($ids as $index => $id)
@@ -488,13 +488,13 @@ class ApplicationModel {
 
   private static function check_table($table) { // $table = $this->_table or static table
     if (!in_array($table, ApplicationMySQL::tablenames()))
-      throw new TableNotFoundException("Veritabanında böyle bir tablo mevcut değil", $table);
+      throw new Exception("Veritabanında böyle bir tablo mevcut değil → " . $table);
   }
 
   private static function check_field($field, $table) {
     $fields = ApplicationMySQL::fieldnames($table);
     if (!in_array($field, $fields))
-      throw new FieldNotFoundException("| $table | tablosunda böyle bir anahtar mevcut değil", $field);
+      throw new Exception("| $table | tablosunda böyle bir anahtar mevcut değil → " . $field);
   }
 }
 

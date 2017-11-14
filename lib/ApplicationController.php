@@ -105,12 +105,12 @@ class ApplicationController {
     $controller_path  = self::CONTROLLERPATH . trim($path,"/") . "/" . $controller_class . '.php';
 
     if (!file_exists($controller_path))
-      throw new FileNotFoundException("Controller dosyası mevcut değil", $controller_path);
+      throw new Exception("Controller dosyası mevcut değil → " . $controller_path);
 
     require_once $controller_path;
 
     if (!class_exists($controller_class))
-      throw new FileNotFoundException("Controller sınıfı yüklenemedi", $controller_class);
+      throw new Exception("Controller sınıfı yüklenemedi → " . $controller_class);
   }
 
   private function _run() {
