@@ -13,7 +13,7 @@ class Application {
       }
     }
 
-    // Error handling and new format display
+    // Fatal Error handling and new format display
     register_shutdown_function('ApplicationDebug::shutdown');
 
     // Exception handling and new format display
