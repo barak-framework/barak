@@ -17,7 +17,7 @@ class ApplicationDebug {
       " in " . $value["file"] . " at line " . $value["line"] . "<br/>";
     }
 
-    self::render($header, $numbers, $rows, $footer);
+    self::_render($header, $numbers, $rows, $footer);
   }
 
   /*
@@ -56,7 +56,7 @@ class ApplicationDebug {
       }
     }
 
-    self::render($header, $numbers, $rows, $footer);
+    self::_render($header, $numbers, $rows, $footer);
   }
 
   // if a fatal error occurred
@@ -69,18 +69,18 @@ class ApplicationDebug {
 
   // TODO Mailer içersinde sorun olunca buraya düşmüyor :-'(
 
-  private static function render($header, $numbers, $rows, $footer) {
+  private static function _render($header, $numbers, $rows, $footer) {
     ApplicationLogger::debug("$header in $footer");
 
     // ob_get_length() > 0 && ob_get_level() && ob_end_clean();
 
     $v = new ApplicationView();
-    $v->set(["text" => self::layout($header, $numbers, $rows, $footer)]);
+    $v->set(["text" => self::_layout($header, $numbers, $rows, $footer)]);
     echo $v->run();
     exit();
   }
 
-  private static function layout($header, $numbers, $rows, $footer) {
+  private static function _layout($header, $numbers, $rows, $footer) {
     return sprintf("
       <!DOCTYPE html>
       <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='tr' lang='tr'>
