@@ -13,13 +13,13 @@ class Application {
       }
     }
 
-    // Fatal Error handling and new format display
+    // Fatal error handling
     register_shutdown_function('ApplicationDebug::shutdown');
 
-    // Exception handling and new format display
+    // Exception handling
     set_exception_handler('ApplicationDebug::exception');
 
-    // Error handling and new format display
+    // Error handling
     set_error_handler('ApplicationDebug::error');
 
     // Database : connect
