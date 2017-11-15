@@ -72,7 +72,7 @@ class ApplicationDebug {
   private static function _render($header, $numbers, $rows, $footer) {
     ApplicationLogger::debug("$header in $footer");
 
-    // ob_get_length() > 0 && ob_get_level() && ob_end_clean();
+    ob_get_length() > 0 && ob_get_level() && ob_end_clean();
 
     $v = new ApplicationView();
     $v->set(["text" => self::_layout($header, $numbers, $rows, $footer)]);

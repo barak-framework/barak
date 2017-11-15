@@ -30,7 +30,7 @@ class ApplicationConfig {
           // #TODO
           // ini_set('log_errors', 'On');
           // ini_set('error_log', '/tmp/log/error.log');
-        case "locale":          ApplicationI18n::init($value);     break;
+        case "locale":          ApplicationI18n::init($value);        break;
         case "logsize":         ApplicationLogger::size($value);      break;
         case "cacheexpiration": ApplicationCache::expiration($value); break;
         default:
