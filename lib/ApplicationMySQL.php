@@ -130,6 +130,7 @@ class ApplicationMySQL {
     $connection = ApplicationDatabase::connect();
     $name = $connection->query("select database()")->fetchColumn();
     $result = $connection->query("show tables");
+    $tablenames = [];
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) $tablenames[] = $row["Tables_in_" . $name];
     return $tablenames;
   }
