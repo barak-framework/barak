@@ -6,8 +6,8 @@ class ApplicationI18n {
   private $_words;
 
   private function __construct($default) {
-    $this->_locale  = null;
-    $this->_words   = ApplicationConfig::i18n($default);
+    $this->_locale = $default;
+    $this->_words  = ApplicationConfig::i18n($default);
     return $this;
   }
 
