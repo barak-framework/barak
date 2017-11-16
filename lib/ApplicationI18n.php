@@ -24,6 +24,10 @@ class ApplicationI18n {
     $_SESSION[self::storage_key()]->_words = ApplicationConfig::i18n($locale);
   }
 
+  public static function get_locale() {
+    return $_SESSION[self::storage_key()]->_locale;
+  }
+
   public static function translate($_word) {
     $words = explode(".", $_word);
     $current_words = [];
