@@ -1450,10 +1450,11 @@ Web sayfasında 1 kişi şifre değişikliği talebinde bulundu. <br/>
 
 ```ini
 [application_configuration]
-errors   = true
-timezone = Europe/Istanbul
-locale   = tr
-logsize  = 5242880
+debug           = true
+timezone        = Europe/Istanbul
+locale          = tr
+logsize         = 5242880
+cacheexpiration = 604800
 ```
 
 > `config/database.ini` (database configuration file)
