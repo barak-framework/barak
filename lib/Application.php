@@ -22,6 +22,9 @@ class Application {
     // Error handling
     set_error_handler('ApplicationDebug::error');
 
+    // Configuration : sets
+    ApplicationConfig::sets();
+
     // Database : connect
     ApplicationDatabase::connect();
 
@@ -30,9 +33,6 @@ class Application {
 
     // Alias : get global functions
     ApplicationAlias::extract();
-
-    // Configuration : sets
-    ApplicationConfig::sets();
 
     // Route : run configration of route
     ApplicationConfig::route();

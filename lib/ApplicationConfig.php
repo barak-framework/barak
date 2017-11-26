@@ -11,6 +11,9 @@ class ApplicationConfig {
   // genel yapılandırma ayarlarını set et
   public static function sets() {
 
+    // default setting
+    ApplicationDebug::init(false);
+
     if (!file_exists(self::APPFILE))
       throw new Exception("Yapılandırma ayar dosyası mevcut değil → " . self::APPFILE);
 
@@ -26,10 +29,7 @@ class ApplicationConfig {
     foreach ($app_configuration as $key => $value) {
       switch ($key) {
         case "timezone":        date_default_timezone_set($value);    break;
-        case "errors":          ini_set("display_errors", $value);    break;
-          // #TODO
-          // ini_set('log_errors', 'On');
-          // ini_set('error_log', '/tmp/log/error.log');
+        case "debug":           ApplicationDebug::init($value);       break;
         case "locale":          ApplicationI18n::init($value);        break;
         case "logsize":         ApplicationLogger::size($value);      break;
         case "cacheexpiration": ApplicationCache::expiration($value); break;

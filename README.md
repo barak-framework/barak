@@ -279,7 +279,7 @@ ApplicationRoutes::draw(
 
 #### `scope`
 
-Kodları daha derli toplu kullanmak için Route'in Gruplama özelliğidir. Bir `PATH` altında `CONTROLLER` ve `VIEW` dizininin çalışma imkanı sağlar. 
+Kodları daha derli toplu kullanmak için Route'in Gruplama özelliğidir. Bir `PATH` altında `CONTROLLER` ve `VIEW` dizininin çalışma imkanı sağlar.
 
 > controller: `app/controllers/PATH/CONTROLLER.php`
 
@@ -400,32 +400,32 @@ class HomeController extends ApplicationController {
 
   public function index() {
     echo "HomeIndex sayfası öncesi çalışan fonksiyon";
-    
+
     /////////////////////////////////////////////////////////////////////////////////
     // default render for this functions examples : /home/index
     /////////////////////////////////////////////////////////////////////////////////
 
     // LAYOUT: home, VIEW: home, ACTION: index, LOCALS: null
     $this->render("/home/index");
-    
+
     $this->render(["template" => "/home/index"]);
     $this->render(["template" => "/home/index", "locals" => null]);
     $this->render(["template" => "/home/index", "layout" => "home"]);
     $this->render(["template" => "/home/index", "layout" => "home", "locals" => null]);
-    
+
     $this->render(["view" => "home"]);
     $this->render(["action" => "index"]);
     $this->render(["layout" => "home"]);
- 
+
     $this->render(["view" => "home", "action" => "index"]);
     $this->render(["view" => "home", "action" => "index", "locals" => null]);
     $this->render(["view" => "home", "action" => "index", "layout" => "home"]);
     $this->render(["view" => "home", "action" => "index", "layout" => "home", "locals" = null]);
-    
+
     /////////////////////////////////////////////////////////////////////////////////
     // no options
     /////////////////////////////////////////////////////////////////////////////////
-    
+
     // DEFAULT LAYOUT: home, VIEW: home, ACTION: index, DEFAULT LOCALS: null
     $this->render("/home/index"); // like $this->render(["template" => "/home/index"]);
 
@@ -438,7 +438,7 @@ class HomeController extends ApplicationController {
     /////////////////////////////////////////////////////////////////////////////////
     // option : layout, view, action, template
     /////////////////////////////////////////////////////////////////////////////////
-    
+
     // LAYOUT: false, DEFAULT VIEW: home, DEFAULT ACTION: index, DEFAULT LOCALS: null
     $this->render(["layout" => false]);
 
@@ -468,10 +468,10 @@ class HomeController extends ApplicationController {
     /////////////////////////////////////////////////////////////////////////////////
     // include locals and this file
     // example file path = "/app/views/home/users/show.php"
-    
+
     // DEFAULT LOCALS: null
     $this->render(["file" => "/app/views/home/users/show.php"]);
-    
+
     // LOCALS: ( $fist_name : "Gökhan", $last_name : "Demir" )
     $this->render(["file" => "/app/views/home/users/show.php", "locals" => ["fist_name" => "Gökhan", "last_name" => "Demir"]);
 
@@ -491,7 +491,7 @@ class HomeController extends ApplicationController {
     // option : text ( LAYOUT : pass, VIEW : pass, ACTION : pass, LOCALS : pass )
     /////////////////////////////////////////////////////////////////////////////////
     // this option, available in Ajax functions
-    
+
     $this->render(["text" => "Hello World"]);
   }
 
@@ -831,16 +831,29 @@ $user = User::create(["first_name" => "Gökhan"]);
 print_r($user);
 ```
 
-#### READ 
+#### READ
 
 - Functions
 
-> `load`, `select`, `where`, `or_where`, `order`, `group`, `limit`, `take`, `pluck`, `count`, `joins`, `find`, `find_all`, `all`, `first`, `last`
+> `load`, `select`, `where`, `or_where`, `order`, `group`, `limit`, `get`, `get_all`, `pluck`, `count`, `joins`, `find`, `find_all`, `all`, `first`, `last`
 
 ##### `load`
 
 ```php
-$users = User::load()->take();
+// Ör. 1:
+
+$user = User::load()->get();
+// SELECT * FROM user LIMIT 1
+
+echo $user->first_name;
+```
+
+```php
+// Ör. 2:
+
+$users = User::load()->get_all();
+// SELECT * FROM user
+
 foreach ($users as $user)
   echo $user->first_name;
 ```
@@ -850,60 +863,60 @@ foreach ($users as $user)
 operators: `=`, `!=`, `>`, `<`, `>=`, `<=`
 
 ```php
-$users = User::load()->where("first_name", "Gökhan")->take();
-$users = User::load()->where("first_name", "Gökhan", "=")->take();
+$users = User::load()->where("first_name", "Gökhan")->get_all();
+$users = User::load()->where("first_name", "Gökhan", "=")->get_all();
 // SELECT * FROM user WHERE first_name = 'Gökhan';
 
-$users = User::load()->where("age", 25, "<>")->take();
+$users = User::load()->where("age", 25, "<>")->get_all();
 // SELECT * FROM user WHERE age <> 25;
 
-$users = User::load()->where("age", 25, ">")->take();
+$users = User::load()->where("age", 25, ">")->get_all();
 // SELECT * FROM user WHERE age > 25;
 
-$users = User::load()->where("age", 25, "<")->take();
+$users = User::load()->where("age", 25, "<")->get_all();
 // SELECT * FROM user WHERE age < 25;
 
-$users = User::load()->where("age", 25, ">=")->take();
+$users = User::load()->where("age", 25, ">=")->get_all();
 // SELECT * FROM user WHERE age >= 25;
 
-$users = User::load()->where("age", 25, "<=")->take();
+$users = User::load()->where("age", 25, "<=")->get_all();
 // SELECT * FROM user WHERE age <= 25;
 ```
 
 operators: `IS NULL`, `IS NOT NULL`
 
 ```php
-$users = User::load()->where("email", NULL)->take();
-$users = User::load()->where("email", "IS NULL")->take();
+$users = User::load()->where("email", NULL)->get_all();
+$users = User::load()->where("email", "IS NULL")->get_all();
 // SELECT * FROM user WHERE email IS NULL;
-$users = User::load()->where("email", "IS NOT NULL")->take();
+$users = User::load()->where("email", "IS NOT NULL")->get_all();
 // SELECT * FROM user WHERE email IS NOT NULL;
 ```
 
 operators: `LIKE`, `NOT LIKE`
 
 ```php
-$users = User::load()->where("email", "%.com.tr", "LIKE")->take();
+$users = User::load()->where("email", "%.com.tr", "LIKE")->get_all();
 // SELECT * FROM user WHERE email LIKE '%.com.tr';
-$users = User::load()->where("email", "%.com.tr", "NOT LIKE")->take();
+$users = User::load()->where("email", "%.com.tr", "NOT LIKE")->get_all();
 // SELECT * FROM user WHERE email NOT LIKE '%.com.tr';
 ```
 
 operators: `IN`, `NOT IN`
 
 ```php
-$users = User::load()->where("id", [1, 2, 3], "IN")->take();
+$users = User::load()->where("id", [1, 2, 3], "IN")->get_all();
 // SELECT * FROM user WHERE id IN (1, 2, 3);
-$users = User::load()->where("id", [1, 2, 3], "NOT IN")->take();
+$users = User::load()->where("id", [1, 2, 3], "NOT IN")->get_all();
 // SELECT * FROM user WHERE id NOT IN (1, 2, 3)
 ```
 
 operators: `BETWEEN`, `NOT BETWEEN`
 
 ```php
-$users = User::load()->where("created_at", ["2016-12-01", "2016-13-01"], "BETWEEN")->take();
+$users = User::load()->where("created_at", ["2016-12-01", "2016-13-01"], "BETWEEN")->get_all();
 // SELECT * FROM user WHERE created_at BETWEEN "2016-12-01" AND "2016-13-01";
-$users = User::load()->where("created_at", ["2016-12-01", "2016-13-01"], "NOT BETWEEN")->take();
+$users = User::load()->where("created_at", ["2016-12-01", "2016-13-01"], "NOT BETWEEN")->get_all();
 // SELECT * FROM user WHERE created_at NOT BETWEEN "2016-12-01" AND "2016-13-01";
 ```
 
@@ -913,12 +926,12 @@ only logic key: `OR`
 
 ```php
 // where($field, $value, $mark, "OR")
-$users = User::load()->where("first_name", "Gökhan")->or_where("last_name", "Demir")->take();
-$users = User::load()->where("first_name", "Gökhan", "=", "AND")->where("last_name", "Demir", "=", "OR")->take();
+$users = User::load()->where("first_name", "Gökhan")->or_where("last_name", "Demir")->get_all();
+$users = User::load()->where("first_name", "Gökhan", "=", "AND")->where("last_name", "Demir", "=", "OR")->get_all();
 // SELECT * FROM user WHERE first_name = 'Gökhan' OR last_name = 'Demir';
 ```
 
-> `select`, `where`, `order`, `group`, `limit`, `take`
+> `select`, `where`, `order`, `group`, `limit`, `get`, `get_all`
 
 ```php
 $users = User::load()
@@ -926,7 +939,7 @@ $users = User::load()
            ->select("first_name")
            ->order("id")
            ->limit(10)
-           ->take();
+           ->get_all();
 
 foreach ($users as $user)
   echo $user->first_name;
@@ -977,13 +990,13 @@ echo User::load()->where("first_name", "Gökhan")->count();
 // Comment ["id", "article_id"]
 // Tag ["id", "comment_id"]
 
-$categories = Category::load()->joins("article")->take();
-$categories = Category::load()->joins(["article"])->take();
-$categories = Category::load()->joins(["article" => "comment"])->take();
-$categories = Category::load()->joins(["article" => ["comment" => ["tag"]]])->take();
-$categories = Category::load()->joins(["article" => ["comment" => ["tag"], "like"]])->take();
-$categories = Category::load()->joins(["article" => ["comment" => ["tag"], "like"], "document"])->take();
-$categories = Category::load()->joins(["article", "document"])->take();
+$categories = Category::load()->joins("article")->get_all();
+$categories = Category::load()->joins(["article"])->get_all();
+$categories = Category::load()->joins(["article" => "comment"])->get_all();
+$categories = Category::load()->joins(["article" => ["comment" => ["tag"]]])->get_all();
+$categories = Category::load()->joins(["article" => ["comment" => ["tag"], "like"]])->get_all();
+$categories = Category::load()->joins(["article" => ["comment" => ["tag"], "like"], "document"])->get_all();
+$categories = Category::load()->joins(["article", "document"])->get_all();
 ```
 
 ```php
@@ -998,7 +1011,7 @@ $department = Department::load()
                 ->where("User.id", 1)
                 ->select("User.first_name, Department.name, Address.content")
                 ->limit(1)
-                ->take();
+                ->get_all();
 print_r($department);
 ```
 
@@ -1085,6 +1098,7 @@ echo User::exists(1) ? "kayit var" : "kayit yok";
 
 $user = User::unique(["username" => "gdemir", "password" => "123456"]);
 $user = User::find(1);
+$user = User::load()->get();
 $user = User::first();
 $user = User::last();
 $user->first_name = "Gökhan";
@@ -1096,14 +1110,14 @@ print_r($user);
 // Ör. 2:
 
 $users = User::find_all([1, 2, 3]);
-$users = User::load()->take();
+$users = User::load()->get_all();
 $users = User::all();
 $users = User::load()
            ->where("first_name", "Gökhan")
            ->select("first_name")
            ->order("id")
            ->limit(10)
-           ->take();
+           ->get_all();
 $users = User::first(10);
 foreach ($users as $user) {
   $user->first_name = "Göktuğ";
@@ -1123,19 +1137,19 @@ User::update(1, ["first_name" => "Gökhan", "last_name" => "Demir"]);
 // Ör. 2:
 
 $users = User::find_all([1, 2, 3]);
-$users = User::load()->take();
+$users = User::load()->get_all();
 $users = User::all();
 $users = User::load()
            ->where("first_name", "Gökhan")
            ->select("first_name")
            ->order("id")
            ->limit(10)
-           ->take();
+           ->get_all();
 foreach ($users as $user)
   User::update($user->id, ["first_name" => "Göktuğ", "last_name" => "Demir"]);
 ```
 
-#### DELETE 
+#### DELETE
 
 - Functions
 
@@ -1146,6 +1160,7 @@ foreach ($users as $user)
 ```php
 $user = User::unique(["username" => "gdemir", "password" => "123456"]);
 $user = User::find(1);
+$user = User::load()->get();
 $user = User::first();
 $user = User::last();
 $user->destroy();
@@ -1244,7 +1259,7 @@ Mailer sınıf olarak `PHPMailer`i kullanmaktadır ve yapı olarak Controllerin 
 #### `delivery` ($action, [$param1, $param2, ...])
 
 1. parametre olarak kullanılacak Mailer içersindeki method ismi yazılır.
-2. parametre eğer method bir veri alacak şekilde tanımlandıysa bu veriler liste içersinde gönderilir. 
+2. parametre eğer method bir veri alacak şekilde tanımlandıysa bu veriler liste içersinde gönderilir.
 
 > `app/controllers/HomeController.php`
 
@@ -1281,7 +1296,7 @@ class PasswordMailer extends ApplicationMailer {
       "subject" => "[Admin] Please reset your password"
       ]);
   }
-  
+
   public function reset2($random_code, $site_url, $email, $fullname) {
     $this->code = $random_code;
     $this->site_url = $site_url;
@@ -1314,7 +1329,7 @@ class HomeController extends ApplicationController {
 class UserMailer extends ApplicationMailer {
 
   protected $after_actions = [["info"]];
-  
+
   protected $before_actions = [["notice"]];
 
   public function notice() {
@@ -1341,7 +1356,7 @@ class UserMailer extends ApplicationMailer {
       "subject" => "[Admin] Please reset your password"
       ]);
   }
-  
+
   public function reset2($random_code, $site_url, $email, $fullname) {
     $this->code = $random_code;
     $this->site_url = $site_url;
@@ -1519,7 +1534,7 @@ if (User::load()->count() == 0) {
 
 - Functions
 
-> `locale`, `translate`
+> `locale`, `get_locale`, `translate`
 
 #### `locale`
 
@@ -1541,6 +1556,25 @@ bu fonksiyonu daha kolay kullanmak için alias olarak tanımlı `t` fonksiyonu i
 
 ```php
 t("home.about_us");
+```
+
+#### `get_locale`
+
+O an seçili olan dilin hangisi olduğunu anlamak için bu fonksiyon kullanılır.
+
+```php
+// Ör. 1:
+
+ApplicationI18n::get_locale();
+// tr
+```
+
+```php
+// Ör. 1:
+
+ApplicationI18n::get_locale();
+// en
+
 ```
 
 ### Logger (`tmp/log/*`)

@@ -4,14 +4,14 @@ class ApplicationModel {
 
   // Query
 
-  private $_select = [];      // list
-  private $_table  = "";      // string
-  private $_where  = [];      // hash
-  private $_join   = [];      // hash
-  private $_order  = [];      // list
-  private $_group  = [];      // list
-  private $_limit  = null;    // int
-  private $_offset = null;    // int
+  private $_select = [];   // list
+  private $_table  = "";   // string
+  private $_where  = [];   // hash
+  private $_join   = [];   // hash
+  private $_order  = [];   // list
+  private $_group  = [];   // list
+  private $_limit  = null; // int
+  private $_offset = null; // int
 
   // One Record
 
@@ -26,7 +26,6 @@ class ApplicationModel {
     $this->_table = $tablename;
   }
 
-  // ok v3
   public function __get($field) {
 
     if (array_key_exists($field, $this->_fields)) {
@@ -59,7 +58,6 @@ class ApplicationModel {
     throw new Exception("Modele ait böyle bir anahtar mevcut değil → " . $field);
   }
 
-  // ok v3
   public function __set($field, $value) {
     if (array_key_exists($field, $this->_fields))
       $this->_fields[$field] = $value;
@@ -67,12 +65,10 @@ class ApplicationModel {
       throw new Exception("Tabloda yüklenecek böyle bir anahtar mevcut değil → " . $field);
   }
 
-  // ok v3
   public function __call($method, $args) {
     throw new Exception("Modelde böyle bir method bulunamadı → " . $method);
   }
 
-  // ok v3
   public static function __callStatic($method, $args) {
     throw new Exception("Modelde böyle bir static method bulunamadı → " . $method);
   }
@@ -81,7 +77,6 @@ class ApplicationModel {
   // |One Record Methods| : draft, create, save, destroy
   ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  // ok v3
   public static function draft($sets = null) {
 
     // check sets
@@ -98,12 +93,10 @@ class ApplicationModel {
     return $object;
   }
 
-  // ok v3
   public static function create($fields) {
     return self::draft($fields)->save();
   }
 
-  // ok v3
   public function save() {
 
     if (!$this->_new_record_state) {
@@ -125,7 +118,6 @@ class ApplicationModel {
     }
   }
 
-  // ok v3
   public function destroy() {
     ApplicationMySQL::delete($this->_table, [self::set_to_where("id", intval($this->_fields["id"]))], 1);
   }
@@ -134,13 +126,11 @@ class ApplicationModel {
   // |Query Methods| : load, select, where, or_where, joins, order, group, limit, offset
   ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  // ok v3
   public static function load() {
     $table = self::tablename();
     return self::instance_query($table);
   }
 
-  // ok v3
   public function select() {
 
     $fields = func_get_args();
@@ -154,7 +144,6 @@ class ApplicationModel {
     return $this;
   }
 
-  // ok v3
   public function where($field = null, $value = null, $mark = "=", $logic = "AND") {
     $field = $this->_merge_field_with_table($field);
 
@@ -186,7 +175,6 @@ class ApplicationModel {
     return $this;
   }
 
-  // ok v3
   public function or_where($field, $value = null, $mark = "=") {
     return $this->where($field, $value, $mark, "OR");
   }
@@ -240,7 +228,6 @@ class ApplicationModel {
     return $this;
   }
 
-  // ok v3
   public function group() {
 
     $fields = func_get_args();
@@ -252,14 +239,11 @@ class ApplicationModel {
     return $this;
   }
 
-
-  // ok v3
   public function limit($limit = null) {
     $this->_limit = intval($limit);
     return $this;
   }
 
-  // ok v3
   public function offset($offset = null) {
     $this->_offset = intval($offset);
     return $this;
@@ -269,7 +253,6 @@ class ApplicationModel {
   // | Public Execute Methods | : get, get_all, pluck, count, update_all, delete_all, first, last
   ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  // ok v3
   public function get() {
     if ($record = ApplicationMySQL::read($this->_select, $this->_table, $this->_where)) {
       return self::instance_model_old($this->_table, $record);
@@ -277,7 +260,6 @@ class ApplicationModel {
     return null;
   }
 
-  // ok v3
   public function get_all() {
     $records = $this->_read_all();
 
@@ -291,7 +273,6 @@ class ApplicationModel {
     }
   }
 
-  // ok v3
   public function pluck($field) {
     $this->_select = [$this->_merge_field_with_table($field)];
     $records = $this->_read_all();
@@ -304,7 +285,6 @@ class ApplicationModel {
     return null;
   }
 
-  // ok v3
   public function count() {
     $field = "count(*) as count";
     if (empty($this->_group)) {
@@ -317,7 +297,6 @@ class ApplicationModel {
     }
   }
 
-  // ok v3
   public function update_all($sets) {
     // check sets
     foreach ($sets as $field => $value)
@@ -326,12 +305,10 @@ class ApplicationModel {
     ApplicationMySQL::update($this->_table, $sets, $this->_where, $this->_limit);
   }
 
-  // ok v3
   public function delete_all() {
     ApplicationMySQL::delete($this->_table, $this->_where, $this->_limit);
   }
 
-  // ok v3
   public function first($limit = 1) {
     $this->_order[] = "id asc";
     $this->_limit = $limit;
@@ -340,7 +317,6 @@ class ApplicationModel {
     return self::get();
   }
 
-  // ok v3
   public function last($limit = 1) {
     $this->_order[] = "id desc";
     $this->_limit = $limit;
@@ -353,12 +329,10 @@ class ApplicationModel {
   // |Query Helper Methods| : all, create, unique, find, find_all, exists, update, delete
   ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  // ok v3
   public static function all() {
     return self::load()->get_all();
   }
 
-  // ok v3
   public static function unique($sets = null) {
     $record = self::load();
 
@@ -369,12 +343,10 @@ class ApplicationModel {
     return $record->get();
   }
 
-  // ok v3
   public static function find($id) {
     return self::load()->where("id", intval($id))->get();
   }
 
-  // ok v3
   public static function find_all($ids = null) {
 
     // array control
@@ -388,12 +360,10 @@ class ApplicationModel {
     return self::load()->where("id", $ids, "IN")->get_all();
   }
 
-  // ok v3
   public static function exists($id) {
     return self::load()->where("id", intval($id))->get() ? true : false;
   }
 
-  // ok v3
   public static function update($id, $sets) {
 
     // check sets
@@ -411,7 +381,6 @@ class ApplicationModel {
     return $record;
   }
 
-  // ok v3
   public static function delete($id) {
     // find record and destroy
     if ($record = self::load()->where("id", intval($id))->get())
@@ -455,13 +424,11 @@ class ApplicationModel {
     return $table;
   }
 
-  // ok v3
   private static function instance_query($modelname) {
     $object = new $modelname($modelname);
     return $object;
   }
 
-  // ok v3
   private static function instance_model_new($modelname) {
     $object = new $modelname($modelname);
     $object->_new_record_state = true;
@@ -470,7 +437,6 @@ class ApplicationModel {
     return $object;
   }
 
-  // ok v3
   private static function instance_model_old($modelname, $fields) {
     $object = new $modelname($modelname);
     $object->_new_record_state = false;

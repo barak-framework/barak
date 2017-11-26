@@ -1,6 +1,14 @@
 <?php
 class ApplicationDebug {
 
+
+  private static $_debug;
+
+
+  public static function init($debug) {
+    self::$_debug = $debug;
+  }
+
   /*
   throw new Exception("OMG!");
   */
@@ -75,7 +83,9 @@ class ApplicationDebug {
     ob_get_length() > 0 && ob_get_level() && ob_end_clean();
 
     $v = new ApplicationView();
-    $v->set(["text" => self::_layout($header, $numbers, $rows, $footer)]);
+
+    (self::$_debug) ? $v->set(["text" => self::_layout($header, $numbers, $rows, $footer)]) : $v->set(["file" => "public/500.html"]);
+
     echo $v->run();
     exit();
   }

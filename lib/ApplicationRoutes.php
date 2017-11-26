@@ -45,8 +45,9 @@ class ApplicationRoutes {
       ApplicationController::dispatch($route);
     } else {
       $v = new ApplicationView();
-      $v->set(["text" => _404()]);
+      $v->set(["file" => "public/404.html"]);
       echo $v->run();
+      exit();
     }
   }
 
