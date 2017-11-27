@@ -1,9 +1,7 @@
 <?php
 class ApplicationDebug {
 
-
   private static $_debug;
-
 
   public static function init($debug) {
     self::$_debug = $debug;
