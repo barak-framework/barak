@@ -1245,6 +1245,8 @@ foreach ($books as $book)
 
 ### Mailer (`app/mailers/*.php`)
 
+---
+
 Mailer sınıf olarak `PHPMailer`i kullanmaktadır ve yapı olarak Controllerin bir benzeri görev yapmaktadır. `helper`, `before_actions`, `after_actions` gibi ayarlamaları kullanabilme imkanı vermektedir. Her hazırlanan Mailer sınıfı içerisindeki fonksiyonda `mail` fonksyionu ve alıcı tanımlanmak *zorundadır*. Layout olarak *zorunlu* olarak `app/views/layouts/mailer.php` dosyasını kullanmaktadır. View olarak ise istenilen actiona göre `app/views/mail/ACTION.php` dosyası tanımlanması gerekir, buradaki `app/views/mail` dizinini kullanmak *zorunludur*.
 
 - Mailer Kick Functions
@@ -1583,6 +1585,8 @@ t("home.about_us");
 
 ### Debug
 
+---
+
 Exception, Error, Shutdown(Fatal Error) akışlarını yakalayıp tek sayfada göstermeye yararayan sınıftır. Eğer hataların gösterilmesi istenmiyorsa `config/application.ini` dosyası içerisinde `debug = false` denilerek kullanıcı bazlı `public/500.html` sayfası gösterilir, ancak log kaydı her şekilde de tutulur.
 
 - Functions
@@ -1625,9 +1629,7 @@ ApplicationDebug::shutdown()
 
 veya
 
-ölümcül başka türlü hatalarda (sistemin çalışmadığı durumlarda)
-
-sistemin ölümcül hata verdiği kısmı adım adım framework'de hangi dosyalardan hangi satıra kadar olduğunun gösterilmesini sağlar.
+ölümcül başka türlü hatalarda (sistemin çalışmadığı durumlarda) sistemin ölümcül hata verdiği kısmı adım adım framework'de hangi dosyalardan hangi satıra kadar olduğunun gösterilmesini sağlar.
 
 ### Logger (`tmp/log/*`)
 
