@@ -109,6 +109,9 @@ class HomeController extends ApplicationController {
 
 ---
 
+İstek yapılacak her URL için `config/routes.php` dosyası içerisinde izin verilen sınıftır. Eğer ilgili istek URL bulunmuyorsa  `public/404.html` sayfası gösterilir.
+
+
 - Functions
 
 > `get`, `post`, `resource`, `resources`, `scope`, `root`
@@ -1545,20 +1548,6 @@ if (User::load()->count() == 0) {
 ApplicationI18n::locale("tr");
 ```
 
-#### `translate`
-
-Çevirisi yapılacak bir kelime dizini o an hangi dil yüklü ise ona göre çeviri yapmak için aşağıdaki gibi kullanılır.
-
-```php
-ApplicationI18n::translate("home.about_us");
-```
-
-bu fonksiyonu daha kolay kullanmak için alias olarak tanımlı `t` fonksiyonu ile erişilebilir.
-
-```php
-t("home.about_us");
-```
-
 #### `get_locale`
 
 O an seçili olan dilin hangisi olduğunu anlamak için bu fonksiyon kullanılır.
@@ -1577,6 +1566,68 @@ ApplicationI18n::get_locale();
 // en
 
 ```
+
+#### `translate`
+
+Çevirisi yapılacak bir kelime dizini o an hangi dil yüklü ise ona göre çeviri yapmak için aşağıdaki gibi kullanılır.
+
+```php
+ApplicationI18n::translate("home.about_us");
+```
+
+bu fonksiyonu daha kolay kullanmak için alias olarak tanımlı `t` fonksiyonu ile erişilebilir.
+
+```php
+t("home.about_us");
+```
+
+### Debug
+
+Exception, Error, Shutdown(Fatal Error) akışlarını yakalayıp tek sayfada göstermeye yararayan sınıftır. Eğer hataların gösterilmesi istenmiyorsa `config/application.ini` dosyası içerisinde `debug = false` denilerek kullanıcı bazlı `public/500.html` sayfası gösterilir, ancak log kaydı her şekilde de tutulur.
+
+- Functions
+
+> `exception`, `error`, `shutdown`
+
+#### `exception`
+
+```php
+throw new Exception("OMG!");
+```
+
+veya
+
+```php
+ApplicationDebug::exception(new Exception("OMG!"));
+```
+
+tarzındaki fonksiyonlar ile hataları bulunduğu sayfada yakalar ve istisnanın bulunduğu kod satırınının bir kısmını gösterir.
+
+#### `error`
+
+```php
+ApplicationDebug::error(123123, "Undefined variable: a", "/var/www/html/app/controllers/DefaultController.php", 10);
+```
+
+veya
+
+```php
+echo $a;
+```
+
+gibi ifadelerle bir tanımlanmayan değişkenin kullanma hatasını adım adım framework'de hangi dosyalardan hangi satıra kadar olduğunun gösterilmesini sağlar.
+
+#### `shutdown`
+
+```
+ApplicationDebug::shutdown()
+```
+
+veya
+
+ölümcül başka türlü hatalarda (sistemin çalışmadığı durumlarda)
+
+sistemin ölümcül hata verdiği kısmı adım adım framework'de hangi dosyalardan hangi satıra kadar olduğunun gösterilmesini sağlar.
 
 ### Logger (`tmp/log/*`)
 
