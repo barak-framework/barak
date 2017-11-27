@@ -9,6 +9,10 @@ class ApplicationDebug {
 
   /*
   throw new Exception("OMG!");
+  
+  or
+  
+  ApplicationDebug::exception(new Exception("EXCEPTION!"));
   */
 
   public static function exception($exception) {
@@ -27,7 +31,7 @@ class ApplicationDebug {
   }
 
   /*
-  ApplicationError::handler(123123, "Undefined variable: a", "/var/www/html/app/controllers/DefaultController.php", 10);
+  ApplicationDebug::error(123123, "Undefined variable: a", "/var/www/html/app/controllers/DefaultController.php", 10);
   */
 
   public static function error($errno, $error, $file, $line) {
