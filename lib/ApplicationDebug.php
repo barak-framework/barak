@@ -1,4 +1,5 @@
 <?php
+
 class ApplicationDebug {
 
   private static $_debug;
