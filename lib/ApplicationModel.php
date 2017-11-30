@@ -462,6 +462,6 @@ class ApplicationModel {
     if (!in_array($field, $fields))
       throw new Exception("| $table | tablosunda böyle bir anahtar mevcut değil → " . $field);
   }
+  
 }
-
 ?>
