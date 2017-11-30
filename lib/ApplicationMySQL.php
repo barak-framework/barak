@@ -394,6 +394,6 @@ class ApplicationMySQL {
       return array("", "", []);
     }
   }
-}
 
+}
 ?>
