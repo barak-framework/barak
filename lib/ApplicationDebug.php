@@ -1,5 +1,4 @@
 <?php
-
 class ApplicationDebug {
 
   private static $_debug;
@@ -10,9 +9,9 @@ class ApplicationDebug {
 
   /*
   throw new Exception("OMG!");
-  
+
   or
-  
+
   ApplicationDebug::exception(new Exception("EXCEPTION!"));
   */
 
@@ -24,8 +23,7 @@ class ApplicationDebug {
     $rows = "";
     foreach ($exception->getTrace() as $number => $value) {
       $numbers .= $number . "<br/>";
-      $rows .= "<b>" . (isset($value["class"]) ? ($value["class"] . "→" . $value["function"]) :  $value["function"]) . "</b>" .
-      " in " . $value["file"] . " at line " . $value["line"] . "<br/>";
+      $rows .= (isset($value["class"]) ? ($value["class"] . "→" . $value["function"]) : $value["function"]) . " in " . $value["file"] . " at line " . $value["line"] . "<br/>";
     }
 
     self::_render($header, $numbers, $rows, $footer);
