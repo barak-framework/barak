@@ -1474,10 +1474,30 @@ name  = BARAK
 
 > `config/mailer.ini` (mailer configuration file)
 
+Default SMTP Configuration (Test Edildi)
+
 ```ini
 [mailer_configuration]
 port     = 25
 address  = mail.gdemir.me
+username = mail@gdemir.me
+password = 123456
+```
+
+Yandex SMTP Configuration (Test Edildi)
+
+```ini
+port     = 587
+address  = smtp.yandex.com
+username = mail@gdemir.me
+password = 123456
+```
+
+Gmail SMTP Configuration (Test Edilmedi)
+
+```ini
+port     = 465
+address  = smtp.gmail.com
 username = mail@gdemir.me
 password = 123456
 ```
