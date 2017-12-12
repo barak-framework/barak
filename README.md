@@ -21,7 +21,7 @@
 
 > Web Server : `Apache`, `Nginx`, `ISS`
 
-> Package Mananger : `Composer`
+> Package Manager : `Composer`
 
 - Configuration
 
