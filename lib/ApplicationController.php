@@ -10,7 +10,7 @@ class ApplicationController {
 
   private $_route;
 
-  final public function __construct(ApplicationRoute $route) { // genişletilemez fonksyion
+  final public function __construct(ApplicationRoute $route) { // genişletilemez fonksiyon
 
     $this->_route = $route;
 
@@ -18,27 +18,27 @@ class ApplicationController {
     $this->_locals = $route->locals;
   }
 
-  final public function __get($local) { // genişletilemez fonksyion
+  final public function __get($local) { // genişletilemez fonksiyon
     return $this->_locals[$local];
   }
 
-  final public function __set($local, $value) { // genişletilemez fonksyion
+  final public function __set($local, $value) { // genişletilemez fonksiyon
     $this->_locals[$local] = $value;
   }
 
-  final public function __isset($local) { // genişletilemez fonksyion
+  final public function __isset($local) { // genişletilemez fonksiyon
     return isset($this->_locals[$local]);
   }
 
-  final public function __unset($local) { // genişletilemez fonksyion
+  final public function __unset($local) { // genişletilemez fonksiyon
     unset($this->_locals[$local]);
   }
 
-  final public function render($options) { // genişletilemez fonksyion
+  final public function render($options) { // genişletilemez fonksiyon
     $this->_render = $options;
   }
 
-  final public function redirect_to($url) { // genişletilemez fonksyion
+  final public function redirect_to($url) { // genişletilemez fonksiyon
     $this->_redirect_to = $url;
   }
 
