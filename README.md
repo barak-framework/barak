@@ -1582,7 +1582,7 @@ ApplicationI18n::get_locale();
 ```
 
 ```php
-// Ör. 1:
+// Ör. 2:
 
 ApplicationI18n::get_locale();
 // en
