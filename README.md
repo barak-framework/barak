@@ -25,13 +25,13 @@
 
 - Configuration
 
-> Linux, Apache, MySQL, Php Installation : [LAMP](http://gdemir.me/categories/linux/lamp/)
+> Linux, Apache, MySQL, Php Installation : [LAMP](http://gdemir.github.io/categories/linux/lamp/)
 
-> Linux, Nginx, MySQL, Php Installation : [LEMP](http://gdemir.me/categories/linux/lemp/)
+> Linux, Nginx, MySQL, Php Installation : [LEMP](http://gdemir.github.io/categories/linux/lemp/)
 
 > Web Server Settings : [apache2-settings](https://github.com/barak-framework/barak/blob/master/.htaccess.sample) or [nginx-settings](https://github.com/barak-framework/barak/blob/master/nginx-settings.sample) or [iss-settings](https://github.com/barak-framework/barak/blob/master/web.config.sample)
 
-> Package Mananger Installation : [composer-installation](http://gdemir.me/categories/php/composer/)
+> Package Mananger Installation : [composer-installation](http://gdemir.github.io/categories/php/composer/)
 
 ## Install
 
