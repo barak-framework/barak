@@ -795,7 +795,7 @@ echo $user->full_name();
 
 > `get`, `get_all`, `pluck`, `count`, `update_all`, `delete_all`, `first`, `last`
 
-> Query Function Helpers (static) [alias]
+- Query Function Helpers (static) [alias]
 
 > `all`, `unique`, `find`, `find_all`, `exists`, `update`, `delete`
 
