@@ -934,7 +934,7 @@ $users = User::load()->where("first_name", "Gökhan", "=", "AND")->where("last_n
 // SELECT * FROM user WHERE first_name = 'Gökhan' OR last_name = 'Demir';
 ```
 
-> `select`, `where`, `order`, `group`, `limit`, `get`, `get_all`
+##### `select`, `where`, `order`, `group`, `limit`, `get`, `get_all`
 
 ```php
 $users = User::load()
