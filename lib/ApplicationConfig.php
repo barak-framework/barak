@@ -20,9 +20,6 @@ class ApplicationConfig {
     // for $_SESSION hash kick!
     if (!strlen(session_id())) session_start();
 
-    // default setting
-    ApplicationI18n::init();
-
     // configuration setting
     $app_configuration = parse_ini_file(self::APPFILE);
 
@@ -37,6 +34,9 @@ class ApplicationConfig {
         throw new Exception("Uygulamanın yapılandırma dosyasında bilinmeyen parametre → " . $key);
       }
     }
+
+  // default setting
+    ApplicationI18n::init();
   }
 
   // veritabanı ayar dosyasını oku
@@ -45,8 +45,8 @@ class ApplicationConfig {
     if (!file_exists(self::DATABASEFILE))
       throw new Exception("Veritabanı ayar dosyası mevcut değil → " . self::DATABASEFILE);
 
-    return parse_ini_file(self::DATABASEFILE);
-  }
+      return parse_ini_file(self::DATABASEFILE);
+    }
 
   // mail ayar dosyasını oku
   public static function mailer() {
@@ -54,8 +54,8 @@ class ApplicationConfig {
     if (!file_exists(self::MAILERFILE))
       throw new Exception("Mailer ayar dosyası mevcut değil → " . self::MAILERFILE);
 
-    return parse_ini_file(self::MAILERFILE);
-  }
+      return parse_ini_file(self::MAILERFILE);
+    }
 
   // router dosyasını oku
   public static function route() {
@@ -64,8 +64,8 @@ class ApplicationConfig {
       throw new Exception("Yönlendirme ayar dosyası mevcut değil → " . self::ROUTESFILE);
 
     // configuration routes load and route action dispatch
-    include self::ROUTESFILE;
-  }
+      include self::ROUTESFILE;
+    }
 
   // yerel ayar dosyasını oku
   public static function i18n($locale) {
