@@ -6,29 +6,28 @@ class ApplicationAlias {
 
     // ROUTE
 
-    function scope() {
-      $permitted_packages = func_get_args();
-      return ApplicationRoute::scope($permitted_packages);
+    function scope($path, $routes) {
+      return ApplicationRoutes::scope($path, $routes);
     }
 
     function resource($table, $path = null) {
-      return ApplicationRoute::resource($table, $path);
+      return ApplicationRoutes::resource($table, $path);
     }
 
     function resources($table, $path = null) {
-      return ApplicationRoute::resources($table, $path);
+      return ApplicationRoutes::resources($table, $path);
     }
-
+    
     function root($target = false, $path = null) {
-      return ApplicationRoute::root($target, $path);
+      return ApplicationRoutes::root($target, $path);
     }
-
+    
     function post($rule, $target = false, $path = null) {
-      return ApplicationRoute::post($rule, $target, $path);
+      return ApplicationRoutes::post($rule, $target, $path);
     }
-
+    
     function get($rule, $target = false, $path = null) {
-      return ApplicationRoute::get($rule, $target, $path);
+      return ApplicationRoutes::get($rule, $target, $path);
     }
 
     // LOCALES
