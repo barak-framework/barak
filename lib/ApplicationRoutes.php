@@ -100,7 +100,7 @@ class ApplicationRoutes {
         throw new Exception("Bu yönlendirme daha önceden tanımlanmış → " . $route->rule);
       }
     }
-    static::$_routes[$route->method][$route->path . $route->rule] = $route;
+    static::$_routes[$route->method][$route->rule] = $route;
   }
 
   public static function scope($path, callable $_functions) {
