@@ -19,7 +19,7 @@ class ApplicationRoute {
       if (!$target) { throw new Exception("Dynamic route özelliğinde hedef (controller#action) belirtilmek zorundadır! → " . $rule); }
       // get("/users/show/:id", "users#show"); // controller: users, action:show
       list($controller, $action) = explode("#", trim($target, "/"));
-      self::set($method, $this->path . $rule, preg_replace("|:[\w]+|", self::dynamical_segment, $rule), $controller, $action);
+      self::set($method, $this->path . $rule, $this->path . preg_replace("|:[\w]+|", self::dynamical_segment, $rule), $controller, $action);
     } elseif ($target) {
       list($controller, $action) = explode("#", trim($target, "/"));
       self::set($method, "", $this->path . $rule, $controller, $action);
