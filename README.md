@@ -64,9 +64,9 @@ and check homepage : [http://localhost:9090](http://localhost:9090) and thats al
 > `config/routes.php`
 
 ```php
-ApplicationRoutes::draw(
-  get("/", "home#index")
-);
+ApplicationRoutes::draw(function() {
+  get("/", "home#index");
+});
 ```
 
 > `app/controller/HomeController.php`
@@ -123,9 +123,9 @@ class HomeController extends ApplicationController {
 > `config/routes.php`
 
 ```php
-ApplicationRoutes::draw(
-  get("/home/index")
-);
+ApplicationRoutes::draw(function() {
+  get("/home/index");
+});
 ```
 
 - Dynamical Segment
@@ -135,9 +135,9 @@ Dinamik route tanımlamalarında "home#index" gibi hedef belirtilmek zorundadır
 > `config/routes.php`
 
 ```php
-ApplicationRoutes::draw(
-  get("/home/index/:id", "home#index")
-);
+ApplicationRoutes::draw(function() {
+  get("/home/index/:id", "home#index");
+});
 ```
 
 Dinamik route tanımlamalarında ki "id" gibi parçalara erişim:
@@ -168,9 +168,9 @@ class HomeController extends ApplicationController {
 > `config/routes.php`
 
 ```php
-ApplicationRoutes::draw(
-  post("/admin/login")
-);
+ApplicationRoutes::draw(function() {
+  post("/admin/login");
+});
 ```
 
 > `app/controllers/AdminController.php`
@@ -237,23 +237,23 @@ class AdminController extends ApplicationController {
 > `config/routes.php`
 
 ```php
-ApplicationRoutes::draw(
-  resource("/users")
-);
+ApplicationRoutes::draw(function() {
+  resource("/users");
+});
 ```
 
 > *Aşağıdaki routes kümesini üretir:*
 
 ```php
-ApplicationRoutes::draw(
-  get("/users/", "users#index"), // all record
-  get("/users/create"),          // new record form
-  post("users/save"),            // new record save
-  get("/users/show"),            // display record
-  get("/users/edit"),            // edit record
-  post("/users/update"),         // update record
-  post("/users/destroy")         // destroy record
-);
+ApplicationRoutes::draw(function() {
+  get("/users/", "users#index"); // all record
+  get("/users/create");          // new record form
+  post("users/save");            // new record save
+  get("/users/show");            // display record
+  get("/users/edit");            // edit record
+  post("/users/update");         // update record
+  post("/users/destroy");        // destroy record
+});
 ```
 
 #### `resources`
@@ -261,23 +261,23 @@ ApplicationRoutes::draw(
 > `config/routes.php`
 
 ```php
-ApplicationRoutes::draw(
-  resources("/users")
-);
+ApplicationRoutes::draw(function() {
+  resources("/users");
+});
 ```
 
 > *Aşağıdaki routes kümesini üretir:*
 
 ```php
-ApplicationRoutes::draw(
-  get("/users", "users#index"),         // all record
-  get("/users/create"),                 // new record form
-  post("/users/save"),                  // new record save
-  get("/users/show/:id", "users#show"), // display record
-  get("/users/edit/:id", "users#edit"), // edit record
-  post("/users/update"),                // update record
-  post("/users/destroy")                // destroy record
-);
+ApplicationRoutes::draw(function() {
+  get("/users", "users#index");         // all record
+  get("/users/create");                 // new record form
+  post("/users/save");                  // new record save
+  get("/users/show/:id", "users#show"); // display record
+  get("/users/edit/:id", "users#edit"); // edit record
+  post("/users/update");                // update record
+  post("/users/destroy");               // destroy record
+});
 ```
 
 #### `scope`
@@ -296,24 +296,24 @@ Kodları daha derli toplu kullanmak için Route'in Gruplama özelliğidir. Bir `
 > controller : `app/controllers/admin/CategoriesController.php`
 
 ```php
-ApplicationRoutes::draw(
- scope("/admin",
-    resources("/categories")
- )
-);
+ApplicationRoutes::draw(function() {
+ scope("/admin", function() {
+    resources("/categories");
+ });
+});
 ```
 > *Aşağıdaki routes kümesini üretir:*
 
 ```php
-ApplicationRoutes::draw(
-  get("/admin/categories",          "categories#index", "/admin"),  // all record
-  get("/admin/categories/create",   false,              "/admin"),  // new record form
-  post("/admin/categories/save",    false,              "/admin"),  // new record save
-  get("/admin/categories/show/:id", "categories#show",  "/admin"),  // display record
-  get("/admin/categories/edit/:id", "categories#edit",  "/admin"),  // edit record
-  post("/admin/categories/update",  false,              "/admin"),  // update record
-  post("/admin/categories/destroy", false,              "/admin"),  // destroy record
-);
+ApplicationRoutes::draw(function() {
+  get("/admin/categories",          "categories#index", "/admin");  // all record
+  get("/admin/categories/create",   false,              "/admin");  // new record form
+  post("/admin/categories/save",    false,              "/admin");  // new record save
+  get("/admin/categories/show/:id", "categories#show",  "/admin");  // display record
+  get("/admin/categories/edit/:id", "categories#edit",  "/admin");  // edit record
+  post("/admin/categories/update",  false,              "/admin");  // update record
+  post("/admin/categories/destroy", false,              "/admin");  // destroy record
+});
 ```
 
 - Mix
@@ -321,45 +321,42 @@ ApplicationRoutes::draw(
 > `config/routes.php`
 
 ```php
-ApplicationRoutes::draw(
-  get("/admin/login"),
-  scope("/admin",
-    [
-    get("/users", "users#index"),
-    get("/users/show/:id")
-    ],
-    resources("/categories"),
-    resource("/products")
-  );
-
-);
+ApplicationRoutes::draw(function() {
+  get("/admin/login");
+  scope("/admin", function() {
+    get("/users", "users#index");
+    get("/users/show/:id");
+    resources("/categories");
+    resource("/products");
+  });
+});
 ```
 
 > *Aşağıdaki routes kümesini üretir:*
 
 ```php
-ApplicationRoutes::draw(
-  get("/admin/login"),
+ApplicationRoutes::draw(function() {
+  get("/admin/login");
 
-  get("/admin/users",               "users#index",      "/admin"),  // all record
-  get("/admin/users/show/:id",      false,              "/admin"),  // display record
+  get("/admin/users",               "users#index",      "/admin");  // all record
+  get("/admin/users/show/:id",      false,              "/admin");  // display record
 
-  get("/admin/categories",          "categories#index", "/admin"),  // all record
-  get("/admin/categories/create",   false,              "/admin"),  // new record form
-  post("/admin/categories/save",    false,              "/admin"),  // new record save
-  get("/admin/categories/show/:id", "categories#show",  "/admin"),  // display record
-  get("/admin/categories/edit/:id", "categories#edit",  "/admin"),  // edit record
-  post("/admin/categories/update",  false,              "/admin"),  // update record
-  post("/admin/categories/destroy", false,              "/admin"),  // destroy record
+  get("/admin/categories",          "categories#index", "/admin");  // all record
+  get("/admin/categories/create",   false,              "/admin");  // new record form
+  post("/admin/categories/save",    false,              "/admin");  // new record save
+  get("/admin/categories/show/:id", "categories#show",  "/admin");  // display record
+  get("/admin/categories/edit/:id", "categories#edit",  "/admin");  // edit record
+  post("/admin/categories/update",  false,              "/admin");  // update record
+  post("/admin/categories/destroy", false,              "/admin");  // destroy record
 
-  get("/admin/products",           "products#index",    "/admin"),  // all record
-  get("/admin/products/create",     false,              "/admin"),  // new record form
-  post("/admin/products/save",      false,              "/admin"),  // new record save
-  get("/admin/products/show",       false,              "/admin"),  // display record
-  get("/admin/products/edit",       false,              "/admin"),  // edit record
-  post("/admin/products/update",    false,              "/admin"),  // update record
-  post("/admin/products/destroy",   false,              "/admin")   // destroy record
-);
+  get("/admin/products",           "products#index",    "/admin");  // all record
+  get("/admin/products/create",     false,              "/admin");  // new record form
+  post("/admin/products/save",      false,              "/admin");  // new record save
+  get("/admin/products/show",       false,              "/admin");  // display record
+  get("/admin/products/edit",       false,              "/admin");  // edit record
+  post("/admin/products/update",    false,              "/admin");  // update record
+  post("/admin/products/destroy",   false,              "/admin");   // destroy record
+});
 ```
 
 #### `root`
@@ -367,17 +364,17 @@ ApplicationRoutes::draw(
 > `config/routes.php`
 
 ```php
-ApplicationRoutes::draw(
-  root("home#index")
-);
+ApplicationRoutes::draw(function() {
+  root("home#index");
+});
 ```
 
 > *Aşağıdaki routes kümesini üretir:*
 
 ```php
-ApplicationRoutes::draw(
-  get("/", "home#index"),
-);
+ApplicationRoutes::draw(function() {
+  get("/", "home#index");
+});
 ```
 
 ### Controllers (`app/controllers/*.php`)
@@ -508,11 +505,11 @@ class HomeController extends ApplicationController {
 > `config/routes.php`
 
 ```php
-ApplicationRoutes::draw(
-  get("/", "home#home"), // or root("home#home"),
-  get("/home", "home#home"),
-  get("/home/index")
-);
+ApplicationRoutes::draw(function() {
+  get("/", "home#home"); // or root("home#home"),
+  get("/home", "home#home");
+  get("/home/index");
+});
 ```
 
 > `app/controllers/HomeController.php`
@@ -623,11 +620,11 @@ After Action (`protected $after_actions`) özelliği, `app/controller/*.php` dos
 > `config/routes.php`
 
 ```php
-ApplicationRoutes::draw(
-  get("/admin/home"),
-  get("/admin/login"),
-  post("/admin/login")
-);
+ApplicationRoutes::draw(function() {
+  get("/admin/home");
+  get("/admin/login");
+  post("/admin/login");
+});
 ```
 
 > `app/controllers/AdminController.php`
@@ -1216,7 +1213,7 @@ print_r($book->user);
 print_r($book->user->department);
 // [1, "Bilgisayar Mühendisliği"]
 
-echo "$book->user->department->name $book->user->first_name  $book->name";
+echo "$book->user->department->name $book->user->first_name $book->name";
 // "Bilgisayar Mühendisliği Gökhan Barak Türkmenlerinin Tarihi"
 ```
 
@@ -1564,7 +1561,8 @@ if (User::load()->count() == 0) {
 
 #### `locale`
 
-Çeviri kelimeleri (`config/locales/tr.php` veya `config/locales/en.php` gibi dosyalar dizi olarak $_SESSION["_i18n"] üzerine yüklenir.) proje başlangıcında `config/application.ini` dosyası içersinde `locale` değişkenine ile atanabilir veya projenin herhangi bir aşamasında aşağıdaki gibi atanabilir/değiştirilebilir. Varsayılan olarak `config/locales/tr.php` dosyası okunur.
+Çeviri kelimeleri (`config/locales/tr.php` veya `config/locales/en.php` gibi dosyalar dizi olarak $_SESSION["_i18n"] üzerine yüklenir.) proje başlangıcında `config/application.ini` dosyası içerisinde `locale` değişkenine ile atanabilir veya projenin herhangi bir aşamasında aşağıdaki gibi atanabilir/değiştirilebilir. Varsayılan olarak `config/locales/tr.php` dosyası okunur.
+
 
 ```php
 ApplicationI18n::locale("tr");
