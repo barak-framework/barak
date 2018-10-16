@@ -116,7 +116,7 @@ class HomeController extends ApplicationController {
 
 > `get`, `post`, `resource`, `resources`, `scope`, `root`
 
-#### `get`
+#### `get` ($rule, $target = false, $path = null)
 
 - Simple
 
@@ -161,7 +161,7 @@ class HomeController extends ApplicationController {
 <?= "id: $id"; ?>
 ```
 
-#### `post`
+#### `post` ($rule, $target = false, $path = null)
 
 - Simple
 
@@ -232,7 +232,7 @@ class AdminController extends ApplicationController {
 <?= $_SESSION["full_name"]; ?>
 ```
 
-#### `resource`
+#### `resource` ($rule, $path = null)
 
 > `config/routes.php`
 
@@ -256,7 +256,7 @@ ApplicationRoutes::draw(function() {
 });
 ```
 
-#### `resources`
+#### `resources` ($rule, $path = null)
 
 > `config/routes.php`
 
@@ -280,7 +280,7 @@ ApplicationRoutes::draw(function() {
 });
 ```
 
-#### `scope`
+#### `scope` ($path, callable $routes)
 
 Kodları daha derli toplu kullanmak için Route'in Gruplama özelliğidir. Bir `PATH` altında `CONTROLLER` ve `VIEW` dizininin çalışma imkanı sağlar.
 
@@ -320,7 +320,7 @@ ApplicationRoutes::draw(function() {
 
 ```php
 ApplicationRoutes::draw(function() {
-  scope("/admin", function() { 
+  scope("/admin", function() {
     scope("/dashboard", function() {
       resources("/categories");
     });
@@ -385,7 +385,7 @@ ApplicationRoutes::draw(function() {
 });
 ```
 
-#### `root`
+#### `root` ($target = false, $path = null)
 
 > `config/routes.php`
 
@@ -417,7 +417,7 @@ Her `config/routes.php` içerisinde tanımlanan `get` işlemi için `app/control
 
 > `helpers`, `before_actions`, `after_actions`
 
-#### `render`
+#### `render` (["view" => $view, "action" => $action, "template" => $template, "layout" => $layout, "locals" => $locals, "file" => $file, "partial" => $partial, "text" => $text]) or ($template)
 
 > options : `layout`, `view`, `action`, `template`, `file`, `text`, `partial`, `locals`
 
@@ -524,7 +524,7 @@ class HomeController extends ApplicationController {
 }
 ```
 
-#### `redirect_to`
+#### `redirect_to` ($url)
 
 > request url [`/` or `/home`] redirect to `/home/index`
 
@@ -832,7 +832,7 @@ echo $user->full_name();
 
 >  `draft`, `create`
 
-##### `draft`
+##### `draft` ([$key_1 => $value_1, $key_2 => $value_2, ...])
 
 ```php
 // Ör. 1:
@@ -850,7 +850,7 @@ $user = User::draft(["first_name" => "Gökhan"])->save();
 print_r($user); // otomatik id alır
 ```
 
-##### `create`
+##### `create` ([$key_1 => $value_1, $key_2 => $value_2, ...])
 
 ``` php
 $user = User::create(["first_name" => "Gökhan"]);
@@ -863,7 +863,7 @@ print_r($user);
 
 > `load`, `select`, `where`, `or_where`, `order`, `group`, `limit`, `get`, `get_all`, `pluck`, `count`, `joins`, `find`, `find_all`, `all`, `first`, `last`
 
-##### `load`
+##### `load` ()
 
 ```php
 // Ör. 1:
@@ -884,7 +884,7 @@ foreach ($users as $user)
   echo $user->first_name;
 ```
 
-##### `where`
+##### `where` ($key, $value, $option={"=", "LIKE", "NOT LIKE", "IN", "NOT IN", "BETWEEN", "NOT BETWEEN"}, $logic={"AND", "OR"}) or ($key, $option = {"NULL", "IS NULL", "IS NOT NULL"}, $logic={"AND", "OR"})
 
 operators: `=`, `!=`, `>`, `<`, `>=`, `<=`
 
@@ -971,7 +971,7 @@ foreach ($users as $user)
   echo $user->first_name;
 ```
 
-##### `pluck`
+##### `pluck` ($fieldname)
 
 ```php
 // Ör. 1:
@@ -989,7 +989,7 @@ print_r($user_firstnames);
 // ["Gökhan", "Göktuğ", "Gökçe", "Gökay", "Atilla", "Altay", "Tarkan", "Başbuğ", "Ülkü"]
 ```
 
-##### `count`
+##### `count` ()
 
 ```php
 // Ör. 1:
@@ -1005,7 +1005,7 @@ echo User::load()->where("first_name", "Gökhan")->count();
 // 5
 ```
 
-##### `joins`
+##### `joins` ($table) or ([$table_1 => $table_2]) or ([$table_1 => [$table_2 => $table_3]) or ([$table_1 => [$table_2, $table_3 => [$table_4]]])
 
 ```php
 // Ör. 1:
@@ -1015,13 +1015,14 @@ echo User::load()->where("first_name", "Gökhan")->count();
 // Like ["id", "article_id"]
 // Comment ["id", "article_id"]
 // Tag ["id", "comment_id"]
+// Document ["id", "category_id"]
 
 $categories = Category::load()->joins("article")->get_all();
 $categories = Category::load()->joins(["article"])->get_all();
 $categories = Category::load()->joins(["article" => "comment"])->get_all();
 $categories = Category::load()->joins(["article" => ["comment" => ["tag"]]])->get_all();
-$categories = Category::load()->joins(["article" => ["comment" => ["tag"], "like"]])->get_all();
-$categories = Category::load()->joins(["article" => ["comment" => ["tag"], "like"], "document"])->get_all();
+$categories = Category::load()->joins(["article" => ["like", "comment" => ["tag"]]])->get_all();
+$categories = Category::load()->joins(["document", "article" => ["like", "comment" => ["tag"]]])->get_all();
 $categories = Category::load()->joins(["article", "document"])->get_all();
 ```
 
@@ -1041,21 +1042,21 @@ $department = Department::load()
 print_r($department);
 ```
 
-##### `unique`
+##### `unique` ()
 
 ```php
 $user = User::unique(["username" => "gdemir", "password" => "123456"]);
 echo $user->first_name;
 ```
 
-##### `find`
+##### `find` ($id)
 
 ```php
 $user = User::find(1);
 echo $user->first_name;
 ```
 
-##### `find_all`
+##### `find_all` ([$id_1, $id_2, ...])
 
 ```php
 $users = User::find_all([1, 2, 3]);
@@ -1063,7 +1064,7 @@ foreach ($users as $user)
   echo $user->first_name;
 ```
 
-##### `all`
+##### `all` ()
 
 ```php
 $users = User::all();
@@ -1071,7 +1072,7 @@ foreach ($users as $user)
   echo $user->first_name;
 ```
 
-##### `first`
+##### `first` ($count = 1)
 
 ```php
 // Ör. 1:
@@ -1088,7 +1089,7 @@ foreach ($users as $user)
   echo $user->first_name;
 ```
 
-##### `last`
+##### `last` ($count = 1)
 
 ```php
 // Ör. 1:
@@ -1105,7 +1106,7 @@ foreach ($users as $user)
   echo $user->first_name;
 ```
 
-##### `exists`
+##### `exists` ($id)
 
 ```php
 echo User::exists(1) ? "kayit var" : "kayit yok";
@@ -1117,7 +1118,7 @@ echo User::exists(1) ? "kayit var" : "kayit yok";
 
 > `save`, `update`
 
-##### `save`
+##### `save` ()
 
 ```php
 // Ör. 1:
@@ -1151,7 +1152,7 @@ foreach ($users as $user) {
 }
 ```
 
-##### `update`
+##### `update` ($id, [$key_1 => $value_1, $key_2 => $value_2, ...])
 
 ```php
 // Ör. 1:
@@ -1181,7 +1182,7 @@ foreach ($users as $user)
 
 > `destroy`, `delete`, `delete_all`
 
-##### `destroy`
+##### `destroy` ()
 
 ```php
 $user = User::unique(["username" => "gdemir", "password" => "123456"]);
@@ -1192,13 +1193,13 @@ $user = User::last();
 $user->destroy();
 ```
 
-##### `delete`
+##### `delete` ($id)
 
 ```php
 User::delete(1);
 ```
 
-##### `delete_all`
+##### `delete_all` ()
 
 ```php
 User::load()->delete_all();
@@ -1310,7 +1311,7 @@ class PasswordMailer extends ApplicationMailer {
   public function info() {
     if (isset($this->email) && isset($this->fullname)) {
       $this->mail([
-        "to" => [[$this->email => $this->fullname]],
+        "to" => [$this->email => $this->fullname],
         "subject" => "Güçlü Şifre İçin Öneriler"
       ]);
     }
@@ -1320,7 +1321,7 @@ class PasswordMailer extends ApplicationMailer {
     $this->code = "ab234c2589de345fgAASD6";
     $this->site_url = "gdemir.me";
     $this->mail([
-      "to" => [["mail@gdemir.me" => "Gökhan Demir"]],
+      "to" => ["mail@gdemir.me" => "Gökhan Demir"],
       "subject" => "[Admin] Please reset your password"
       ]);
   }
@@ -1329,14 +1330,14 @@ class PasswordMailer extends ApplicationMailer {
     $this->code = $random_code;
     $this->site_url = $site_url;
     $this->mail([
-      "to" => [[$email => $fullname]],
+      "to" => [$email => $fullname],
       "subject" => "[Admin] Please reset your password"
       ]);
   }
 }
 ```
 
-#### `mail`
+#### `mail` (["to" => [$email_1 => $fullname_1, $email_2 => $fullname_2, ...], "subject" => [$subject]])
 
 > options : `to`, `subject`
 
@@ -1362,7 +1363,7 @@ class UserMailer extends ApplicationMailer {
 
   public function notice() {
     $this->mail([
-      "to" => [["gdemir@bil.omu.edu.tr" => "Gökhan Demir"]],
+      "to" => ["gdemir@bil.omu.edu.tr" => "Gökhan Demir"],
       "subject" => "1 Kullanıcı Şifre Sıfırlama Talebinde Bulundu"
       ]);
   }
@@ -1370,7 +1371,7 @@ class UserMailer extends ApplicationMailer {
   public function info() {
     if (isset($this->email) && isset($this->fullname)) {
       $this->mail([
-        "to" => [[$this->email => $this->fullname]],
+        "to" => [$this->email => $this->fullname],
         "subject" => "Güçlü Şifre İçin Öneriler"
       ]);
     }
@@ -1380,7 +1381,7 @@ class UserMailer extends ApplicationMailer {
     $this->code = "ab234c2589de345fgAASD6";
     $this->site_url = "gdemir.me";
     $this->mail([
-      "to" => [["mail@gdemir.me" => "Gökhan Demir"]],
+      "to" => ["mail@gdemir.me" => "Gökhan Demir"],
       "subject" => "[Admin] Please reset your password"
       ]);
   }
@@ -1391,7 +1392,7 @@ class UserMailer extends ApplicationMailer {
     $this->email = $email;
     $this->fullname = $fullname;
     $this->mail([
-      "to" => [[$this->email => $this->fullname]],
+      "to" => [$this->email => $this->fullname],
       "subject" => "[Admin] Please reset your password"
       ]);
   }
@@ -1585,16 +1586,16 @@ if (User::load()->count() == 0) {
 
 > `locale`, `get_locale`, `translate`
 
-#### `locale`
+#### `locale` ($locale)
 
-Çeviri kelimeleri (`config/locales/tr.php` veya `config/locales/en.php` gibi dosyalar dizi olarak $_SESSION["_i18n"] üzerine yüklenir.) proje başlangıcında `config/application.ini` dosyası içerisinde `locale` değişkenine ile atanabilir veya projenin herhangi bir aşamasında aşağıdaki gibi atanabilir/değiştirilebilir. Varsayılan olarak `config/locales/tr.php` dosyası okunur.
+Çeviri kelimeleri (`config/locales/tr.php` veya `config/locales/en.php` gibi dosyalar dizi olarak `$_SESSION["_i18n"]` üzerine yüklenir.) proje başlangıcında `config/application.ini` dosyası içerisinde `locale` değişkenine ile atanabilir veya projenin herhangi bir aşamasında aşağıdaki gibi atanabilir/değiştirilebilir. Varsayılan olarak `config/locales/tr.php` dosyası okunur.
 
 
 ```php
 ApplicationI18n::locale("tr");
 ```
 
-#### `get_locale`
+#### `get_locale` ()
 
 O an seçili olan dilin hangisi olduğunu anlamak için bu fonksiyon kullanılır.
 
@@ -1613,7 +1614,7 @@ ApplicationI18n::get_locale();
 
 ```
 
-#### `translate`
+#### `translate` ($path)
 
 Çevirisi yapılacak bir kelime dizini o an hangi dil yüklü ise ona göre çeviri yapmak için aşağıdaki gibi kullanılır.
 
@@ -1679,21 +1680,21 @@ veya
 
 ---
 
-Günlük olarak dosyalar açarak verilen mesajları loglamaya yarayan sınıftır. Log dosyaları varsayılan olarak 5242880 byte (5MB) ile sınırlıdır.
+Günlük olarak dosyalar açarak verilen mesajları loglamaya yarayan sınıftır.
 
 - Functions
 
 > `size`, `info`, `warning`, `error`, `fatal`, `debug`
 
-#### `size`
+#### `size` ($byte = 5242880)
 
-Lop dosyasının maximum boyutunun ayarlanması
+Log dosyasının maximum boyutunun ayarlar, varsayılan olarak boyut `5242880 byte (5 megabyte)` şeklindedir.
 
 ```php
 ApplicationLogger::size(5000);
 ```
 
-#### `info`, `warning`, `error`, `fatal`, `debug`
+#### `info`, `warning`, `error`, `fatal`, `debug` ($message)
 
 ```php
 ApplicationLogger::info("bilmek iyidir");
@@ -1714,21 +1715,21 @@ ApplicationLogger::debug("olaylar olaylar");
 
 ---
 
-Verilen anahtarlara göre  `request_url` + `key` (istek url ve verilen anahtar)'e göre md5 ile şifreleyip `tmp/cache/*` dizini üzerinde yazma, okuma, silme, var olduğunu bakma, tamamen silme gibi işlemleri yapan sınıftır. Veriler varsayılan olarak 604800 milisaniye (10 dakika) süre ile saklanır.
+Verilen anahtarlara göre  `request_url` + `key` (istek url ve verilen anahtar)'e göre md5 ile şifreleyip `tmp/cache/*` dizini üzerinde yazma, okuma, silme, var olduğunu bakma, tamamen silme gibi işlemleri yapan sınıftır.
 
 - Functions
 
 > `expiration`, `write`, `read`, `delete`, `exist`, `reset`
 
-#### `expiration`
+#### `expiration` ($millisecond = 600000)
 
-Saklanacak verilerin genel olarak ne kadar süre ile tutulacağının ayarlanması
+Saklanacak verilerin genel olarak ne kadar süre ile tutulacağının ayarlar, veriler varsayılan olarak `600000 milisaniye (10 dakika)` süre ile saklanır.
 
 ```php
-ApplicationLogger::expiration(604800);
+ApplicationLogger::expiration(600000);
 ```
 
-#### `write`
+#### `write` ($key, $value)
 
 Saklanacak verilerin  `request_url` + `key` (istek url ve verilen anahtar)'e göre md5 ile şifreleyip belleğe yazar. Bu şekilde farklı bir sayfada kaydettiğiniz aynı anahtar isimli veriler, farklı dosyalar olarak kaydedilmektedir.
 
@@ -1737,7 +1738,7 @@ $users = User::all();
 ApplicationCache::write("users", $users);
 ```
 
-#### `read`
+#### `read` ($key)
 
 Bellekteki veriyi `request_url` + `key` mantığı ile okur, eğer dosyanın süresi geçmişse otomatik olarak siler.
 
@@ -1745,7 +1746,7 @@ Bellekteki veriyi `request_url` + `key` mantığı ile okur, eğer dosyanın sü
 $users = ApplicationCache::read("users");
 ```
 
-#### `delete`
+#### `delete` ($key)
 
 `request_url` + `key` mantığına göre bulunan ve var olan dosya süresine bakılmaksızın silinir.
 
@@ -1753,7 +1754,7 @@ $users = ApplicationCache::read("users");
 ApplicationCache::delete("users");
 ```
 
-#### `exists`
+#### `exists` ($key)
 
 `request_url` + `key` mantığına göre var olmasına bakar.
 
@@ -1761,7 +1762,7 @@ ApplicationCache::delete("users");
 echo (ApplicationCache::exists("users")) ? "bellekte var" : "bellekte yok";
 ```
 
-#### `reset`
+#### `reset` ()
 
 `tmp/cache/*` altındaki tüm saklanan verileri sürelerine bakılmaksızın siler.
 
