@@ -4,7 +4,7 @@
 
 #### Introduction
 
-Barak Framework hızlı, basit için genişletilebilir PHP frameworktur. BARAK aktif hızlı ve kolay RESTful web uygulamaları yapabilirsiniz.
+Barak Framework hızlı, basit genişletilebilir bir PHP frameworktur. Barak Framework ile aktif hızlı ve kolay RESTful web uygulamaları yapabilirsiniz.
 
 ##### Requirements
 
