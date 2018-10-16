@@ -1,17 +1,10 @@
-<p align="center">
-<img src="https://raw.githubusercontent.com/barak-framework/barak/master/app/assets/img/default.png" height="64" />
-</p>
+# BARAK FRAMEWORK
 
-<h4 align="center">Barak Framework</h4>
-<p align="center">PHP MVC Framework Like ROR</p>
-<p align="center">
-  <img src="https://poser.pugx.org/barak-framework/barak/v/stable" />
-  <img src="https://poser.pugx.org/barak-framework/barak/license" />
-</p>
+## Barak Framework Nedir ?
 
----
+Barak Framework hızlı, basit için genişletilebilir PHP frameworktur. BARAK aktif hızlı ve kolay RESTful web uygulamaları yapabilirsiniz.
 
-## Requirements
+### Requirements
 
 - Packages
 
@@ -33,20 +26,20 @@
 
 > Package Mananger Installation : [composer-installation](http://gdemir.github.io/categories/php/composer/)
 
-## Install
+### Install
 
 ```sh
 composer create-project barak-framework/barak project_name
 ```
 
-## Run
+### Run
 
     cd project_name
     php -S localhost:9090
 
 and check homepage : [http://localhost:9090](http://localhost:9090) and thats all!
 
-## Releases
+### Releases
 
 - [https://github.com/barak-framework/barak/releases](https://github.com/barak-framework/barak/releases)
 
