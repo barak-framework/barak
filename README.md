@@ -316,6 +316,32 @@ ApplicationRoutes::draw(function() {
 });
 ```
 
+- Multiple
+
+```php
+ApplicationRoutes::draw(function() {
+  scope("/admin", function() { 
+    scope("/dashboard", function() {
+      resources("/categories");
+    });
+  });
+});
+```
+
+> *Aşağıdaki routes kümesini üretir:*
+
+```php
+ApplicationRoutes::draw(function() {
+  get("/admin/dashboard/categories",          "categories#index", "/admin/dashboard");  // all record
+  get("/admin/dashboard/categories/create",   false,              "/admin/dashboard");  // new record form
+  post("/admin/dashboard/categories/save",    false,              "/admin/dashboard");  // new record save
+  get("/admin/dashboard/categories/show/:id", "categories#show",  "/admin/dashboard");  // display record
+  get("/admin/dashboard/categories/edit/:id", "categories#edit",  "/admin/dashboard");  // edit record
+  post("/admin/dashboard/categories/update",  false,              "/admin/dashboard");  // update record
+  post("/admin/dashboard/categories/destroy", false,              "/admin/dashboard");  // destroy record
+});
+```
+
 - Mix
 
 > `config/routes.php`
@@ -355,7 +381,7 @@ ApplicationRoutes::draw(function() {
   get("/admin/products/show",       false,              "/admin");  // display record
   get("/admin/products/edit",       false,              "/admin");  // edit record
   post("/admin/products/update",    false,              "/admin");  // update record
-  post("/admin/products/destroy",   false,              "/admin");   // destroy record
+  post("/admin/products/destroy",   false,              "/admin");  // destroy record
 });
 ```
 
