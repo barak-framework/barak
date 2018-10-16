@@ -8,8 +8,8 @@ class ApplicationLogger {
 
   private static $_size = 5242880;
 
-  public static function size($size) {
-    self::$_size = intval($size);
+  public static function size($byte) {
+    self::$_size = intval($byte);
   }
 
   public static function __callStatic($level, $messages) {
