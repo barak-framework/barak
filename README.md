@@ -418,9 +418,9 @@ Her `config/routes.php` içerisinde tanımlanan `get` işlemi için `app/control
 > `helpers`, `before_actions`, `after_actions`
 
 #### `render`
-#### (["view" => $view, "action" => $action, "template" => $template, "layout" => $layout, "locals" => $locals, "file" => $file, "partial" => $partial, "text" => $text])
+##### (["view" => $view, "action" => $action, "template" => $template, "layout" => $layout, "locals" => $locals, "file" => $file, "partial" => $partial, "text" => $text])
 or
-#### ($template)
+##### ($template)
 
 > options : `layout`, `view`, `action`, `template`, `file`, `text`, `partial`, `locals`
 
