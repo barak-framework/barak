@@ -1048,7 +1048,7 @@ $department = Department::load()
 print_r($department);
 ```
 
-##### `unique` ()
+##### `unique` ([$key_1 => $value_1, $key_2 => $value_2, ...])
 
 ```php
 $user = User::unique(["username" => "gdemir", "password" => "123456"]);
