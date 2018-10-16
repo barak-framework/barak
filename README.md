@@ -1,12 +1,12 @@
-# BARAK FRAMEWORK
+## BARAK FRAMEWORK
 
-## Barak Framework Nedir ?
+### What is Barak Framework ?
+
+#### Introduction
 
 Barak Framework hızlı, basit için genişletilebilir PHP frameworktur. BARAK aktif hızlı ve kolay RESTful web uygulamaları yapabilirsiniz.
 
-### Introduction
-
-#### Requirements
+##### Requirements
 
 - Packages
 
@@ -28,20 +28,20 @@ Barak Framework hızlı, basit için genişletilebilir PHP frameworktur. BARAK a
 
 > Package Mananger Installation : [composer-installation](http://gdemir.github.io/categories/php/composer/)
 
-#### Install
+##### Install
 
 ```sh
 composer create-project barak-framework/barak project_name
 ```
 
-#### Run
+##### Run
 
     cd project_name
     php -S localhost:9090
 
 and check homepage : [http://localhost:9090](http://localhost:9090) and thats all!
 
-#### Releases
+##### Releases
 
 - [https://github.com/barak-framework/barak/releases](https://github.com/barak-framework/barak/releases)
 
