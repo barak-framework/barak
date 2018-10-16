@@ -419,6 +419,7 @@ Her `config/routes.php` içerisinde tanımlanan `get` işlemi için `app/control
 
 #### `render`
 #### (["view" => $view, "action" => $action, "template" => $template, "layout" => $layout, "locals" => $locals, "file" => $file, "partial" => $partial, "text" => $text])
+or
 #### ($template)
 
 > options : `layout`, `view`, `action`, `template`, `file`, `text`, `partial`, `locals`
@@ -888,6 +889,7 @@ foreach ($users as $user)
 
 ##### `where` 
 ##### ($key, $value, $option={"=", "LIKE", "NOT LIKE", "IN", "NOT IN", "BETWEEN", "NOT BETWEEN"}, $logic={"AND", "OR"})
+or
 ##### ($key, $option = {"NULL", "IS NULL", "IS NOT NULL"}, $logic={"AND", "OR"})
 
 operators: `=`, `!=`, `>`, `<`, `>=`, `<=`
