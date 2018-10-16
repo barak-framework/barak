@@ -45,6 +45,11 @@ and check homepage : [http://localhost:9090](http://localhost:9090) and thats al
 
 - [https://github.com/barak-framework/barak/releases](https://github.com/barak-framework/barak/releases)
 
+
+##### License
+
+Barak is released under the [MIT License](http://www.opensource.org/licenses/MIT).
+
 ---
 
 ## Guides
@@ -1770,7 +1775,3 @@ echo (ApplicationCache::exists("users")) ? "bellekte var" : "bellekte yok";
 ```php
 ApplicationCache::reset();
 ```
-
-## License
-
-Barak is released under the [MIT License](http://www.opensource.org/licenses/MIT).
