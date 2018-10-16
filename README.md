@@ -1771,10 +1771,6 @@ echo (ApplicationCache::exists("users")) ? "bellekte var" : "bellekte yok";
 ApplicationCache::reset();
 ```
 
-## Sources
-
-- [https://tr.wikipedia.org/wiki/Barak_T%C3%BCrkmenleri](https://tr.wikipedia.org/wiki/Barak_T%C3%BCrkmenleri)
-
 ## License
 
 Barak is released under the [MIT License](http://www.opensource.org/licenses/MIT).
