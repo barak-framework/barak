@@ -6,8 +6,8 @@ class ApplicationCache {
 
   private static $_expiration = 600000;
 
-  public static function expiration($expiration) {
-    self::$_expiration = intval($expiration);
+  public static function expiration($millisecond) {
+    self::$_expiration = intval($millisecond);
   }
 
   public static function write($key, $value) {
