@@ -1668,7 +1668,7 @@ gibi ifadelerle bir tanımlanmayan değişkenin kullanma hatasını adım adım 
 #### `shutdown`
 
 ```
-ApplicationDebug::shutdown()
+ApplicationDebug::shutdown();
 ```
 
 veya
