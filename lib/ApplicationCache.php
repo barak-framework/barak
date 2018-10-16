@@ -4,7 +4,7 @@ class ApplicationCache {
 
   const CACHEDIR = "tmp/cache/";
 
-  private static $_expiration = 604800;
+  private static $_expiration = 600000;
 
   public static function expiration($expiration) {
     self::$_expiration = intval($expiration);
