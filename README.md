@@ -835,7 +835,7 @@ echo $user->full_name();
 
 >  `draft`, `create`
 
-##### `draft` ([$key_1 => $value_1, $key_2 => $value_2, ...])
+##### `draft` ([$key_1 => $value_1, ...])
 
 ```php
 // Ör. 1:
@@ -853,7 +853,7 @@ $user = User::draft(["first_name" => "Gökhan"])->save();
 print_r($user); // otomatik id alır
 ```
 
-##### `create` ([$key_1 => $value_1, $key_2 => $value_2, ...])
+##### `create` ([$key_1 => $value_1, ...])
 
 ``` php
 $user = User::create(["first_name" => "Gökhan"]);
@@ -1048,7 +1048,7 @@ $department = Department::load()
 print_r($department);
 ```
 
-##### `unique` ([$key_1 => $value_1, $key_2 => $value_2, ...])
+##### `unique` ([$key_1 => $value_1, ...])
 
 ```php
 $user = User::unique(["username" => "gdemir", "password" => "123456"]);
@@ -1062,7 +1062,7 @@ $user = User::find(1);
 echo $user->first_name;
 ```
 
-##### `find_all` ([$id_1, $id_2, ...])
+##### `find_all` ([$id_1, ...])
 
 ```php
 $users = User::find_all([1, 2, 3]);
@@ -1158,7 +1158,7 @@ foreach ($users as $user) {
 }
 ```
 
-##### `update` ($id, [$key_1 => $value_1, $key_2 => $value_2, ...])
+##### `update` ($id, [$key_1 => $value_1, ...])
 
 ```php
 // Ör. 1:
@@ -1291,7 +1291,7 @@ Mailer sınıf olarak `PHPMailer`i kullanmaktadır ve yapı olarak Controllerin 
 
 > `helpers`, `before_actions`, `after_actions`
 
-#### `delivery` ($action, [$param1, $param2, ...])
+#### `delivery` ($action, [$param1, ...])
 
 1. parametre olarak kullanılacak Mailer içersindeki method ismi yazılır.
 2. parametre eğer method bir veri alacak şekilde tanımlandıysa bu veriler liste içersinde gönderilir.
@@ -1343,7 +1343,7 @@ class PasswordMailer extends ApplicationMailer {
 }
 ```
 
-#### `mail` (["to" => [$email_1 => $name_1, $email_2 => $name_2, ...], "subject" => $subject])
+#### `mail` (["to" => [$email_1 => $name_1, ...], "subject" => $subject])
 
 > options : `to`, `subject`
 
