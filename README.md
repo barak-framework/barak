@@ -1343,7 +1343,7 @@ class PasswordMailer extends ApplicationMailer {
 }
 ```
 
-#### `mail` (["to" => [$email_1 => $fullname_1, $email_2 => $fullname_2, ...], "subject" => [$subject]])
+#### `mail` (["to" => [$email_1 => $name_1, $email_2 => $name_2, ...], "subject" => $subject])
 
 > options : `to`, `subject`
 
