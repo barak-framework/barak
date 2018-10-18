@@ -114,7 +114,7 @@ class ApplicationMailer {
     if (!isset($this->_mail["to"]))
       throw new Exception("Fonksiyounda bir alıcı belirtilmelidir → " . $action);
 
-    foreach ($this->_mail["to"] as $email => $fullname) {
+    foreach ($this->_mail["to"] as $email => $name) {
       $mailer->AddAddress($email, $name);
     }
 
