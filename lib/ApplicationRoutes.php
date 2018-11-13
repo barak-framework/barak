@@ -5,7 +5,7 @@ class ApplicationRoutes {
   private static $_draws = NULL;
   private static $_routes = [];
 
-  public static function __callStatic(string $method, array $args) {
+  public static function __callStatic($method, array $args) {
     if (in_array($method, [ 'get', 'post' ])) {
       // args ([0] => rule, [1] => controller#action, [2] => path)
       $args[2] =  ($args[2]) ? static::$_path . $args[2] : static::$_path;
