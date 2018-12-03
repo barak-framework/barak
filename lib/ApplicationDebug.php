@@ -15,7 +15,7 @@ class ApplicationDebug {
   ApplicationDebug::exception(new Exception("EXCEPTION!"));
   */
 
-  public static function exception($exception) {
+  public static function exception(Exception $exception) {
     $header = $exception->getMessage();
     $footer = $exception->getFile() . " at line " . $exception->getLine();
 
