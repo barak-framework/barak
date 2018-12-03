@@ -1644,7 +1644,7 @@ Exception, Error, Shutdown(Fatal Error) akışlarını yakalayıp tek sayfada g�
 
 > `exception`, `error`, `shutdown`
 
-#### `exception`
+#### `exception` (Exception $exception)
 
 ```php
 throw new Exception("OMG!");
@@ -1658,7 +1658,7 @@ ApplicationDebug::exception(new Exception("OMG!"));
 
 tarzındaki fonksiyonlar ile hataları bulunduğu sayfada yakalar ve istisnanın bulunduğu kod satırınının bir kısmını gösterir.
 
-#### `error`
+#### `error` ($errno, $error, $file, $line)
 
 ```php
 ApplicationDebug::error(123123, "Undefined variable: a", "/var/www/html/app/controllers/DefaultController.php", 10);
