@@ -1672,7 +1672,7 @@ echo $a;
 
 gibi ifadelerle bir tanımlanmayan değişkenin kullanma hatasını adım adım framework'de hangi dosyalardan hangi satıra kadar olduğunun gösterilmesini sağlar.
 
-#### `shutdown`
+#### `shutdown` ()
 
 ```
 ApplicationDebug::shutdown();
