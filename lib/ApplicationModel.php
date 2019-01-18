@@ -244,7 +244,7 @@ class ApplicationModel {
     
     // limit control
     if ($limit < 0)
-      throw new Exception("LIMIT de değeri sıfır ve üstü olmalıdır → " . $limit);
+      throw new Exception("LIMIT de değer, sıfır veya üstü olmalıdır → " . $limit);
 
     $this->_limit = $limit;
     return $this;
