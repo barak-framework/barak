@@ -239,8 +239,14 @@ class ApplicationModel {
     return $this;
   }
 
-  public function limit($limit = null) {
-    $this->_limit = intval($limit);
+  public function limit($limit = 1) {
+    $limit = intval($limit);
+    
+    // limit control
+    if ($limit < 0)
+      throw new Exception("LIMIT de değeri sıfır ve üstü olmalıdır → " . $limit);
+
+    $this->_limit = $limit;
     return $this;
   }
 
@@ -276,7 +282,7 @@ class ApplicationModel {
   public function pluck($field) {
     $this->_select = [$this->_merge_field_with_table($field)];
     $records = $this->_read_all();
-
+ 
     if ($records) {
       foreach ($records as $record)
         $values[] = $record[$field];
