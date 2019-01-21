@@ -789,7 +789,20 @@ Fonksiyonu Controller'daki gibi tüm özellikleri ile kullanılabilir. Yalnızca
 
 ---
 
-Her tablonun bir modeli olmak zorundadır.
+Tablo Yapılandırmaları :
+
+- Her tablonun harfleri küçük olmalıdır! (ör.: user, agenda, page, product)
+
+- Her tablo `id` değerine sahip olmalı ve auto_increment olmalıdır!
+
+- Her tablonun sütunlarının(`id` hariç) varsayılan değeri `NULL` olmalıdır!
+
+Model Yapılandırmaları :
+
+- Her tablonun bir modeli olmak zorundadır.
+
+- Her model adının ilk harfi büyük olmalıdır.  (ör.: tablo: `user` ise `User` olmalıdır.)
+
 
 > `app/models/TABLE.php`
 `example: app/models/User.php`
@@ -835,7 +848,7 @@ echo $user->full_name();
 
 >  `draft`, `create`
 
-##### `draft` ([$key_1 => $value_1, ...])
+##### `draft` ([$field_1 => $value_1, ...])
 
 ```php
 // Ör. 1:
@@ -853,7 +866,7 @@ $user = User::draft(["first_name" => "Gökhan"])->save();
 print_r($user); // otomatik id alır
 ```
 
-##### `create` ([$key_1 => $value_1, ...])
+##### `create` ([$field_1 => $value_1, ...])
 
 ``` php
 $user = User::create(["first_name" => "Gökhan"]);
@@ -868,6 +881,8 @@ print_r($user);
 
 ##### `load` ()
 
+- With `get`
+
 ```php
 // Ör. 1:
 
@@ -876,6 +891,8 @@ $user = User::load()->get();
 
 echo $user->first_name;
 ```
+
+- With `get_all`
 
 ```php
 // Ör. 2:
@@ -887,10 +904,57 @@ foreach ($users as $user)
   echo $user->first_name;
 ```
 
-##### `where` 
-##### ($key, $value, $option={"=", "LIKE", "NOT LIKE", "IN", "NOT IN", "BETWEEN", "NOT BETWEEN"}, $logic={"AND", "OR"})
+##### `select` ("tablename.field_1", ...)
+
+ Tablodan her kayıt bir sınıfa yüklenirken sütun ismi olarak `id` otomatik olarak eklenmektedir.
+
+- Simple
+
+```php
+// Ör. 1:
+
+// User ["id", "first_name", "last_name"]
+// 1, Gökhan, Demir
+// 2, Gökhan, Arıoğlu
+
+$users = User::load()
+           ->select("last_name") // or ->select("user.id", "user.last_name")
+           ->get_all();
+
+foreach ($users as $user)
+  echo "$user->id, $user->last_name";
+
+// 1, Demir
+// 2, Arıoğlu
+```
+
+- With `joins`
+
+`joins` kullanılıyor ise `select` işleminde ilişki kurulan tabloya erişimde tablo ismi yazılmalıdır. (Ör.: address.content)
+Ayrıca  `joins` işleminde tüm sütunlar otomatik gelmektedir, bundan dolayı istediğiniz bir alan var ise `select` işlemini `joins`den sonra kullanılmalıdır.
+
+```php
+// Ör. 2:
+
+// user ["id", "first_name", "last_name"]
+// address ["id", "phone" "user_id"]
+
+$users = User::load()
+           ->joins("address")
+           ->select("user.first_name", "user.last_name", "address.phone")
+           ->get_all();
+
+foreach ($users as $user)
+  echo "$user->first_name, $user->phone";
+```
+
+##### `where`
+##### ($key, $value, $mark={"=", "LIKE", "NOT LIKE", "IN", "NOT IN", "BETWEEN", "NOT BETWEEN"}, $logic={"AND", "OR"})
 or
-##### ($key, $option = {"NULL", "IS NULL", "IS NOT NULL"}, $logic={"AND", "OR"})
+##### ($key, $mark={"NULL", "IS NULL", "IS NOT NULL"}, $logic={"AND", "OR"})
+
+defaults: mark="=", logic="AND"
+
 
 operators: `=`, `!=`, `>`, `<`, `>=`, `<=`
 
@@ -952,7 +1016,9 @@ $users = User::load()->where("created_at", ["2016-12-01", "2016-13-01"], "NOT BE
 // SELECT * FROM user WHERE created_at NOT BETWEEN "2016-12-01" AND "2016-13-01";
 ```
 
-##### `or_where`
+##### `or_where` ($field, $value, $mark="=")
+
+defaults: mark="="
 
 only logic key: `OR`
 
@@ -963,21 +1029,207 @@ $users = User::load()->where("first_name", "Gökhan", "=", "AND")->where("last_n
 // SELECT * FROM user WHERE first_name = 'Gökhan' OR last_name = 'Demir';
 ```
 
-##### `select`, `where`, `order`, `group`, `limit`, `get`, `get_all`
+##### `order` ($field, $sort_type={"DESC", "ASC"})
+
+- defaults: sort_type="ASC"
+
+
+- Simple
 
 ```php
+
 $users = User::load()
-           ->where("first_name", "Gökhan")
-           ->select("first_name")
-           ->order("id")
-           ->limit(10)
+           ->order("first_name") // or ->order("first_name", "ASC")
            ->get_all();
 
 foreach ($users as $user)
   echo $user->first_name;
 ```
 
-##### `pluck` ($fieldname)
+- Multiple
+
+```php
+$users = User::load()
+           ->order("first_name")
+           ->order("last_name", "DESC")
+           ->get_all();
+
+foreach ($users as $user)
+  echo $user->first_name;
+```
+
+##### `group` ("tablename.field_1", ...)
+
+- Simple
+
+Bir sütun seçilip ve seçilmeyen sütunlar gösterilmeye çalışılınırsa ilk bulduğu kaydı getirdiği için ilk kaydın da  sütunlarını getirmektedir. Bu `GROUP BY`ın  olağan sonucudur.
+
+```php
+// Ör.: 1
+
+// user ["id", "first_name", "last_name"]
+// 1, Gökhan, Demir
+// 2, Gökhan, Demir
+// 3, Gökhan, Arıoğlu
+// 4, Gökhan, Seven
+// 5, Gökçe, Demir
+// 6, Gökçe, Arıoğlu
+
+$users = User::load()
+           ->group("first_name") // or ->group("user.first_name")
+           ->get_all();
+
+foreach ($users as $user)
+  echo "$user->id, $user->first_name, $user->last_name";
+
+// 1, Gökhan, Demir
+// 4, Gökçe, Demir
+```
+
+- Simple With `count`
+
+```php
+// Ör.: 2
+
+// user ["id", "first_name", "last_name"]
+// 1, Gökhan, Demir
+// 2, Gökhan, Demir
+// 3, Gökhan, Arıoğlu
+// 4, Gökhan, Seven
+// 5, Gökçe, Demir
+// 6, Gökçe, Arıoğlu
+
+$user_count = User::load()
+                ->group("first_name") // or ->group("user.first_name")
+                ->count();
+
+// [4 => ["First_name" => "Gökhan"], 2 => ["first_name" => "Gökçe"]]
+
+foreach ($user_count as $count => $user_fields)
+  echo $user_count . " : " . implode(",", $user_fields));
+
+// 4 : Gökhan
+// 2 : Gökçe
+```
+
+- Multiple
+```php
+// Ör.: 2
+
+// user ["id", "first_name", "last_name"]
+// 1, Gökhan, Demir
+// 2, Gökhan, Demir
+// 3, Gökhan, Arıoğlu
+// 4, Gökhan, Seven
+// 5, Gökçe, Demir
+// 6, Gökçe, Arıoğlu
+
+$users = User::load()
+           ->where("first_name", "Gökhan")
+           ->group("first_name", "last_name")
+           ->get_all();
+
+foreach ($users as $user)
+  echo "$user->id, $user->first_name, $user->last_name";
+
+// 1, Gökhan, Demir
+// 3, Gökhan, Arıoğlu
+// 4, Gökhan, Seven
+```
+
+- Multiple With `count`
+
+```php
+// Ör.: 1
+
+// user ["id", "first_name", "last_name"]
+// 1, Gökhan, Demir
+// 2, Gökhan, Demir
+// 3, Gökhan, Arıoğlu
+// 4, Gökhan, Seven
+// 5, Gökçe, Demir
+// 6, Gökçe, Arıoğlu
+
+$user_counts = User::load()
+                 ->where("user.first_name", "Gökhan")
+                 ->group("user.first_name", "user.last_name")
+                 ->count();
+/*
+[
+2 => ["First_name" => "Gökhan", "last_name" => "Demir"],
+1 => ["First_name" => "Gökhan", "last_name" => "Arıoğlu"],
+1 => ["First_name" => "Gökhan", "last_name" => "Seven"]
+]
+*/
+
+foreach ($user_counts as $user_count => $user_fields)
+  echo $user_count . " : " . implode(",", $user_fields));
+
+// 2 : Gökhan, Demir
+// 1 : Gökhan, Arıoğlu
+// 1 : Gökhan, Seven
+```
+
+- Multiple With `joins`, `count`
+
+```php
+// Ör.: 3
+
+// user ["id", "first_name", "last_name"]
+// 1, Gökhan, Demir
+// 2, Gökhan, Arıoğlu
+// 3, Gökçe, Demir
+// 4, Gökçe, Arıoğlu
+
+// address ["id", "country_id", "user_id"]
+// 1, 1, 1
+// 2, 1, 2
+// 3, 1, 3
+// 4, 2, 4
+
+// country ["id", "name"]
+// 1, Mersin
+// 2, Samsun
+
+$user_count = User::load()
+                ->joins("address")
+                ->group("user.first_name", "address.country_id")
+                ->count();
+/*
+[
+2 => ["first_name" => Gökhan, "address_country_id" => 1],
+1 => ["first_name" => Gökçe, "address_country_id" => 1],
+1 => ["first_name" => Gökçe, "address_country_id" => 2]
+]
+*/
+
+$user_count = User::load()
+                ->joins(["address" => "country"])
+                ->group("user.first_name", "country.name")
+                ->count();
+
+/*
+[
+2 => ["first_name" => Gökhan, "country_name" => Mersin],
+1 => ["first_name" => Gökçe, "country_name" => Mersin],
+1 => ["first_name" => Gökçe, "country_name" => Samsun]
+]
+*/
+```
+
+##### `limit` ($limit=1)
+
+- defaults: limit=1
+
+```php
+$users = User::load()
+           ->limit(10)
+           ->get_all();
+
+print_r($users);
+```
+
+##### `pluck` ($field)
 
 ```php
 // Ör. 1:
@@ -990,12 +1242,14 @@ print_r($user_ids);
 ```php
 // Ör. 2:
 
-$user_firstnames = User::load()->pluck("first_name");
+$user_firstnames = User::load()->where("last_name", "Demir")->pluck("first_name");
 print_r($user_firstnames);
 // ["Gökhan", "Göktuğ", "Gökçe", "Gökay", "Atilla", "Altay", "Tarkan", "Başbuğ", "Ülkü"]
 ```
 
 ##### `count` ()
+
+Bu fonksiyon kullnılırken eğer `group` kullanılmamışsa direkt rakamsal sonuç döner, ancak `group` kullanılmışsa dizi döner.
 
 ```php
 // Ör. 1:
@@ -1011,19 +1265,24 @@ echo User::load()->where("first_name", "Gökhan")->count();
 // 5
 ```
 
-##### `joins` ($table) or ([$table_1 => $table_2]) or ([$table_1 => [$table_2 => $table_3]) or ([$table_1 => [$table_2, $table_3 => [$table_4]]])
+##### `joins` ($table) or ([$table]) or ([$table_1 => $table_2]) or ([$table_1 => [$table_2 => $table_3]) or ([$table_1 => [$table_2, $table_3 => [$table_4]]])
+
+İlk tablo sütunları hariç join işleminde select çakışmasını önlemek için diğer tablo alan bilgileri `$TABLE_$field` şeklinde gelmektedir. (Ör.: user.first_name as user_first_name gibi)
+Veriler alınırken eğer ilişki kurulan diğer tabloda ilişik-veri (yabancı anahtar bazlı bir satır) yok ise kayıt getirmeyecektir. Bu `INNER JOIN`in olağan sonucudur.
 
 ```php
 // Ör. 1:
 
-// Category ["id", "name"]
-// Article ["id", "category_id"]
-// Like ["id", "article_id"]
-// Comment ["id", "article_id"]
-// Tag ["id", "comment_id"]
-// Document ["id", "category_id"]
+// category ["id", "name"]
+// article ["id", "category_id"]
+// like ["id", "article_id"]
+// comment ["id", "article_id"]
+// tag ["id", "comment_id"]
+// document ["id", "category_id"]
 
 $categories = Category::load()->joins("article")->get_all();
+// SELECT category.id, category.name, article.id as article_id, article.category_id as article_category_id * FROM category INNER JOIN article ON article.category_id=category.id;
+
 $categories = Category::load()->joins(["article"])->get_all();
 $categories = Category::load()->joins(["article" => "comment"])->get_all();
 $categories = Category::load()->joins(["article" => ["comment" => ["tag"]]])->get_all();
@@ -1035,20 +1294,20 @@ $categories = Category::load()->joins(["article", "document"])->get_all();
 ```php
 // Ör. 2:
 
-// Department ["id", "name"]
-// User ["id", "department_id", "first_name"]
-// Address ["id", "user_id", "content"]
+// department ["id", "name"]
+// user ["id", "department_id", "first_name"]
+// address ["id", "user_id", "content"]
 
 $department = Department::load()
                 ->joins(["user", "address"])
-                ->where("User.id", 1)
-                ->select("User.first_name, Department.name, Address.content")
+                ->where("user.id", 1)
+                ->select("user.first_name", "department.name", "address.content")
                 ->limit(1)
                 ->get_all();
 print_r($department);
 ```
 
-##### `unique` ([$key_1 => $value_1, ...])
+##### `unique` ([$field_1 => $value_1, ...])
 
 ```php
 $user = User::unique(["username" => "gdemir", "password" => "123456"]);
@@ -1078,7 +1337,9 @@ foreach ($users as $user)
   echo $user->first_name;
 ```
 
-##### `first` ($count = 1)
+##### `first` ($count=1)
+
+defaults: count=1
 
 ```php
 // Ör. 1:
@@ -1095,7 +1356,9 @@ foreach ($users as $user)
   echo $user->first_name;
 ```
 
-##### `last` ($count = 1)
+##### `last` ($count=1)
+
+defaults: count=1
 
 ```php
 // Ör. 1:
@@ -1135,7 +1398,8 @@ $user = User::load()->get();
 $user = User::first();
 $user = User::last();
 $user->first_name = "Gökhan";
-$user->save()
+$user->save();
+
 print_r($user);
 ```
 
@@ -1152,13 +1416,14 @@ $users = User::load()
            ->limit(10)
            ->get_all();
 $users = User::first(10);
+
 foreach ($users as $user) {
   $user->first_name = "Göktuğ";
   $user->save();
 }
 ```
 
-##### `update` ($id, [$key_1 => $value_1, ...])
+##### `update` ($id, [$field_1 => $value_1, ...])
 
 ```php
 // Ör. 1:
@@ -1219,20 +1484,20 @@ User::load()->limit(10)->delete_all();
 > `$BELONG_TABLE->OWNER_TABLE`
 
 ```php
-// Department ["id", "name"]
-// User ["id", "department_id", "first_name", "last_name"]
-// Book ["id", "user_id", "name"]
+// department ["id", "name"]
+// user ["id", "department_id", "first_name", "last_name"]
+// book ["id", "user_id", "name"]
 
-// Department
+// department
 // [1, "Bilgisayar Mühendisliği"]
 // [2, "Makine Mühendisliği"]
 
-// User
+// user
 // [1, 1, "Gökhan", "Demir"]
 // [2, 1, "Göktuğ", "Demir"]
 // [3, 2, "Göksen", "Demir"]
 
-// Book
+// book
 // [1, 1, "Barak Türkmenlerinin Tarihi"]
 // [2, 1, "Oğuz Boyu"]
 // [3, 3, "Almila"]
@@ -1253,15 +1518,15 @@ echo "$book->user->department->name $book->user->first_name $book->name";
 > `$OWNER_TABLE->all_of_BELONG_TABLE`
 
 ```php
-// User ["id", "department_id", "first_name", "last_name"]
-// Book ["id", "user_id", "name"]
+// user ["id", "department_id", "first_name", "last_name"]
+// book ["id", "user_id", "name"]
 
-// User
+// user
 // [1, 1, "Gökhan", "Demir"]
 // [2, 1, "Göktuğ", "Demir"]
 // [3, 2, "Göksen", "Demir"]
 
-// Book
+// book
 // [1, 1, "Barak Türkmenlerinin Tarihi"]
 // [2, 1, "Oğuz Boyu"]
 // [3, 2, "Kımız"]
