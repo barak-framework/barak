@@ -155,7 +155,7 @@ class ApplicationMySQL {
       $query->execute();
 
     } catch(PDOException $e) {
-      ApplicationLogger::debug(debug_backtrace());
+      ApplicationLogger::debug(serialize(debug_backtrace()));
       ApplicationLogger::debug($_query);
       ApplicationLogger::error($e->getMessage());
       throw new Exception($_message . " → " . $e->getMessage());
