@@ -1267,7 +1267,7 @@ echo User::load()->where("first_name", "Gökhan")->count();
 
 ##### `joins` ($table) or ([$table]) or ([$table_1 => $table_2]) or ([$table_1 => [$table_2 => $table_3]) or ([$table_1 => [$table_2, $table_3 => [$table_4]]])
 
-İlk tablo sütunları hariç join işleminde select çakışmasını önlemek için diğer tablo alan bilgileri `$TABLE_$field` şeklinde gelmektedir. (Ör.: user.first_name as user_first_name gibi)
+İlk tablo sütunları hariç join işleminde select çakışmasını önlemek için diğer tablo alan bilgileri `$TABLE_$field` şeklinde gelmektedir. (Ör.: `user.first_name as user_first_name` gibi)
 Veriler alınırken eğer ilişki kurulan diğer tabloda ilişik-veri (yabancı anahtar bazlı bir satır) yok ise kayıt getirmeyecektir. Bu `INNER JOIN`in olağan sonucudur.
 
 ```php
