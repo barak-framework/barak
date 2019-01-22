@@ -199,17 +199,19 @@ class ApplicationModel {
       // join işlemi için user.id = comment.user_id gibi where'ye eklemeler yap
       $this->_join[$belong_table] = $belong_table . "." . $foreign_key . "=" . str_replace("_", ".", $foreign_key);
 
-      // join işleminde select çakışması önlenmesi için User.first_name, User.last_name gibi ekleme yap
-      foreach ($belong_table_fieldnames as $field)
-        $this->_select[] = $belong_table . "." . $field;
-
       // have a more belong tables ?
       if ($belong_tables)
         $this->joins($belong_tables, $belong_table);
 
+      // ilk tablo sütunları hariç join işleminde select çakışmasını önle. (Ör.: user.first_name as user_first_name gibi)
+      // select kullanılmamışsa
+      foreach ($belong_table_fieldnames as $field)
+        $this->_select[] = $belong_table . "." . "$field as $belong_table" . "_" . $field;
+        // $this->_select[] = $belong_table . "." . $field;
     }
 
-    // tablonun kendi select için eklemeler yap
+    // ilk tablonun kendi select'i için eklemeler yap. (Ör.: user.first_name gibi)
+    // select kullanılmamışsa
     foreach (ApplicationMySQL::fieldnames($this->_table) as $fieldname)
       $this->_select[] = $this->_table . "." . $fieldname;
 
@@ -241,10 +243,10 @@ class ApplicationModel {
 
   public function limit($limit = 1) {
     $limit = intval($limit);
-    
+
     // limit control
     if ($limit < 0)
-      throw new Exception("LIMIT de değer, sıfır veya üstü olmalıdır → " . $limit);
+      throw new Exception("LİMİT'de değer, sıfır veya üstü olmalıdır → " . $limit);
 
     $this->_limit = $limit;
     return $this;
@@ -282,7 +284,7 @@ class ApplicationModel {
   public function pluck($field) {
     $this->_select = [$this->_merge_field_with_table($field)];
     $records = $this->_read_all();
- 
+
     if ($records) {
       foreach ($records as $record)
         $values[] = $record[$field];
@@ -292,10 +294,10 @@ class ApplicationModel {
   }
 
   public function count() {
-    $field = "count(*) as count";
+    $field = "count(*)";
     if (empty($this->_group)) {
       $record = ApplicationMySQL::read([$field], $this->_table, $this->_where);
-      return $record["count"] ?: null;
+      return $record[$field] ?: null;
     } else {
       $this->_select = array_merge([$field], $this->_group);
       $records = $this->_read_all();
@@ -316,17 +318,17 @@ class ApplicationModel {
   }
 
   public function first($limit = 1) {
-    $this->_order[] = "id asc";
-    $this->_limit = $limit;
-    if ($limit != 1)
+    $this->order("id", "ASC");
+    $this->limit($limit);
+    if ($this->_limit != 1)
       return self::get_all();
     return self::get();
   }
 
   public function last($limit = 1) {
-    $this->_order[] = "id desc";
-    $this->_limit = $limit;
-    if ($limit != 1)
+  	$this->order("id", "DESC");
+    $this->limit($limit);
+    if ($this->_limit != 1)
       return self::get_all();
     return self::get();
   }
@@ -468,6 +470,6 @@ class ApplicationModel {
     if (!in_array($field, $fields))
       throw new Exception("| $table | tablosunda böyle bir anahtar mevcut değil → " . $field);
   }
-  
+
 }
 ?>
