@@ -1546,7 +1546,7 @@ Mailer sınıf olarak `PHPMailer`i kullanmaktadır ve yapı olarak Controller s�
 
 Her hazırlanan Mailer sınıfı kullanırken,
 
-- Sınıf `app/mailers/{MAILER}Mailer.php` isminde tanımlanmalıdır.
+- Sınıf `app/mailers/*.php` isminde tanımlanmalıdır.
 - Sınıf içerisinde tanımlanan fonksiyonlarda `mail` fonksiyonu kullanılmak **zorunludur**.
 - Layout olarak **zorunlu** `app/views/layouts/mailer.php` dosyasını kullanmaktadır.
 - View olarak **zorunlu** `app/views/mail` dizinini kullanmaktadır. İstenilen actiona göre `app/views/mail/ACTION.php` dosyası tanımlanması gerekir.
