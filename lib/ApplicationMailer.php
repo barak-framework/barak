@@ -134,7 +134,7 @@ class ApplicationMailer {
     if ($mailer->send())
       ApplicationLogger::info("Mail gönderildi");
     else
-      ApplicationLogger::error("Mail gönderiminde sorun oluştu");
+      ApplicationLogger::error("Mail gönderiminde sorun oluştu → " . $mailer->ErrorInfo);
   }
 
   private function _run() {
