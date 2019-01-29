@@ -789,19 +789,19 @@ Fonksiyonu Controller'daki gibi tüm özellikleri ile kullanılabilir. Yalnızca
 
 ---
 
-Tablo Yapılandırmaları :
+Her hazırlanan `Tablo` kullanırken,
 
-- Her tablonun harfleri küçük olmalıdır! (ör.: user, agenda, page, product)
+- Her tablonun harfleri küçük **olmalıdır**. (ör.: user, agenda, page, product)
 
-- Her tablo `id` değerine sahip olmalı ve auto_increment olmalıdır!
+- Her tablo `id` değerine sahip olmalı ve auto_increment **olmalıdır**.
 
-- Her tablonun sütunlarının(`id` hariç) varsayılan değeri `NULL` olmalıdır!
+- Her tablonun sütunlarının(`id` hariç) varsayılan değeri `NULL` **olmalıdır**.
 
-Model Yapılandırmaları :
+Her hazırlanan `Model` kullanırken,
 
-- Her tablonun bir modeli olmak zorundadır.
+- Her tablonun bir modeli olmak **zorundadır**.
 
-- Her model adının ilk harfi büyük olmalıdır.  (ör.: tablo: `user` ise `User` olmalıdır.)
+- Her model adının ilk harfi büyük olmak **zorundadır**.  (ör.: tablo: `user` ise `User` olmalıdır.)
 
 
 > `app/models/TABLE.php`
@@ -1542,7 +1542,15 @@ foreach ($books as $book)
 
 ---
 
-Mailer sınıf olarak `PHPMailer`i kullanmaktadır ve yapı olarak Controllerin bir benzeri görev yapmaktadır. `helper`, `before_actions`, `after_actions` gibi ayarlamaları kullanabilme imkanı vermektedir. Her hazırlanan Mailer sınıfı içerisindeki fonksiyonda `mail` fonksyionu ve alıcı tanımlanmak *zorundadır*. Layout olarak *zorunlu* olarak `app/views/layouts/mailer.php` dosyasını kullanmaktadır. View olarak ise istenilen actiona göre `app/views/mail/ACTION.php` dosyası tanımlanması gerekir, buradaki `app/views/mail` dizinini kullanmak *zorunludur*.
+Mailer sınıf olarak `PHPMailer`i kullanmaktadır ve yapı olarak Controller sınıfındaki gibi benzeri görev yapmaktadır. Ayarlama olarak `helper`, `before_actions`, `after_actions` yardımcı özelliklerini kullanabilme imkanı vermektedir.
+
+Her hazırlanan Mailer sınıfı kullanırken,
+
+- Sınıf `app/mailers/{MAILER}Mailer.php` isminde tanımlanmalıdır.
+- Sınıf içerisinde tanımlanan fonksiyonlarda `mail` fonksiyonu kullanılmak **zorunludur**.
+- Layout olarak **zorunlu** `app/views/layouts/mailer.php` dosyasını kullanmaktadır.
+- View olarak **zorunlu** `app/views/mail` dizinini kullanmaktadır. İstenilen actiona göre `app/views/mail/ACTION.php` dosyası tanımlanması gerekir.
+
 
 - Mailer Kick Functions
 
