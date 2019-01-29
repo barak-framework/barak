@@ -4,7 +4,7 @@
 
 #### Introduction
 
-Barak Framework hızlı, basit genişletilebilir bir PHP frameworktur. Barak Framework ile aktif hızlı ve kolay RESTful web uygulamaları yapabilirsiniz.
+Barak Framework PHP diliyle yazılmış, açık kaynak kodlu bir web uygulama geliştirme çatısıdır. Web uygulamaları için ihtiyaç duyulabilecek bütün bileşenleri barındıran Barak; MVC (model-view-controller), DRY (don't repeat yourself), CoC (convention over configuration) yaklaşımlarını temel alır. Barak ile aktif hızlı ve kolay RESTful web uygulamaları yapabilirsiniz.
 
 ##### Requirements
 
@@ -18,7 +18,7 @@ Barak Framework hızlı, basit genişletilebilir bir PHP frameworktur. Barak Fra
 
 > Package Manager : `Composer`
 
-- Configuration
+- Installation
 
 > Linux, Apache, MySQL, Php Installation : [LAMP](http://gdemir.github.io/categories/linux/lamp/)
 
@@ -28,7 +28,7 @@ Barak Framework hızlı, basit genişletilebilir bir PHP frameworktur. Barak Fra
 
 > Package Mananger Installation : [composer-installation](http://gdemir.github.io/categories/php/composer/)
 
-##### Install
+##### Installing Barak
 
 ```sh
 composer create-project barak-framework/barak project_name
@@ -109,12 +109,25 @@ class HomeController extends ApplicationController {
 
 ---
 
-İstek yapılacak her URL için `config/routes.php` dosyası içerisinde izin verilen sınıftır. Eğer ilgili istek URL bulunmuyorsa  `public/404.html` sayfası gösterilir.
+Herhangi bir İstek URL çalışabilmesi için yönlendirilme dosyasında (`config/routes.php`) ne tür bir istek olduğu tanımlanmalıdır. Eğer istek URL bulunmuyorsa  `public/404.html` sayfası gösterilir.
 
+- Kick Function (static)
 
-- Functions
+> `draw`
+
+- Route Functions (global)
 
 > `get`, `post`, `resource`, `resources`, `scope`, `root`
+
+#### `draw` (`function() { /* ROUTE_FUNCTIONS */ }`)
+
+Tanımlaması yapılan yönlendirmelerin okunması ve çalışması için tetikleyici fonksiyondur. Bu fonksiyon ikinci kez kullanıldığında işleme almamaktadır.
+
+```php
+ApplicationRoutes::draw(function() {
+  /* ROUTE_FUNCTIONS */
+});
+```
 
 #### `get` ($rule, $target = false, $path = null)
 
@@ -130,7 +143,7 @@ ApplicationRoutes::draw(function() {
 
 - Dynamical Segment
 
-Dinamik route tanımlamalarında "home#index" gibi hedef belirtilmek zorundadır:
+Dinamik route tanımlamalarında "home#index" gibi hedef belirtilmelidir.
 
 > `config/routes.php`
 
@@ -242,7 +255,7 @@ ApplicationRoutes::draw(function() {
 });
 ```
 
-> *Aşağıdaki routes kümesini üretir:*
+> *Aşağıdaki routes kümesini üretir.*
 
 ```php
 ApplicationRoutes::draw(function() {
@@ -266,7 +279,7 @@ ApplicationRoutes::draw(function() {
 });
 ```
 
-> *Aşağıdaki routes kümesini üretir:*
+> *Aşağıdaki routes kümesini üretir.*
 
 ```php
 ApplicationRoutes::draw(function() {
@@ -282,7 +295,7 @@ ApplicationRoutes::draw(function() {
 
 #### `scope` ($path, callable $routes)
 
-Kodları daha derli toplu kullanmak için Route'in Gruplama özelliğidir. Bir `PATH` altında `CONTROLLER` ve `VIEW` dizininin çalışma imkanı sağlar.
+Kodları daha derli toplu kullanmak için Route'in gruplama özelliğidir. Bir `PATH` altında `CONTROLLER` ve `VIEW` dizininin çalışma imkanı sağlar.
 
 > controller: `app/controllers/PATH/CONTROLLER.php`
 
@@ -302,7 +315,7 @@ ApplicationRoutes::draw(function() {
  });
 });
 ```
-> *Aşağıdaki routes kümesini üretir:*
+> *Aşağıdaki routes kümesini üretir.*
 
 ```php
 ApplicationRoutes::draw(function() {
@@ -328,7 +341,7 @@ ApplicationRoutes::draw(function() {
 });
 ```
 
-> *Aşağıdaki routes kümesini üretir:*
+> *Aşağıdaki routes kümesini üretir.*
 
 ```php
 ApplicationRoutes::draw(function() {
@@ -358,7 +371,7 @@ ApplicationRoutes::draw(function() {
 });
 ```
 
-> *Aşağıdaki routes kümesini üretir:*
+> *Aşağıdaki routes kümesini üretir.*
 
 ```php
 ApplicationRoutes::draw(function() {
@@ -395,7 +408,7 @@ ApplicationRoutes::draw(function() {
 });
 ```
 
-> *Aşağıdaki routes kümesini üretir:*
+> *Aşağıdaki routes kümesini üretir.*
 
 ```php
 ApplicationRoutes::draw(function() {
@@ -407,7 +420,18 @@ ApplicationRoutes::draw(function() {
 
 ---
 
-Her `config/routes.php` içerisinde tanımlanan `get` işlemi için `app/controller/*.php` dosyası içerisinde fonksiyon tanımlamak zorunlu değildir, fonksiyon tanımlanırsa ve değişken yükü/yükleri controller içinde `$this->KEY` şeklinde tanımlanırsa ilgili yönlenen sayfada `$KEY` şeklinde veriye erişebilir. Her `config/routes.php` içerisinde tanımlanan `post` için ilgili `app/controller/*.php` dosyası içerisinde fonksiyon tanımlamak zorunludur.
+Her controller dosyası ile sınıfının ismi aynı olmalıdır ve sistemin olan `ApplicationController` sınıfından miras alır.
+
+```php
+// dosya : `app/controllers/HomeController.php`
+class HomeController extends ApplicationController {
+}
+```
+
+Her `config/routes.php` içerisinde tanımlanan
+
+1. `get` yönlendirmesi için  `app/controller/CONTROLLER.php` sınıfı içerisinde fonksiyon tanımlamak zorunlu değildir. Eğer fonksiyon tanımlanırsa ve değişken yükü/yükleri controller içinde `$this->KEY` şeklinde atandığında ilgili yönlenen sayfada (`app/views/CONTROLLER/ACTION.php`) bu veriye `$KEY` şeklinde erişme imkanı verir.
+2. `post` yönlendirmesi için `app/controller/CONTROLLER.php` sınıfı içerisinde fonksiyon tanımlamak zorunludur.
 
 - Functions
 
@@ -595,7 +619,6 @@ class HomeController extends ApplicationController {
 }
 ```
 
-
 #### `before_actions`
 
 Before Action (`protected $before_actions`) özelliği, `app/controller/*.php` dosyası içerisinde her çalışacak get/post fonksiyonları için önceden çalışacak fonksiyonları belirtmeye yarayan özelliktir. Özelliğin etkisini ayarlamak için aşağıdaki 3 şekilde kullanılabilir:
@@ -752,7 +775,8 @@ class AdminController extends ApplicationController {
 
 ---
 
-Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `action` adlarını alarak, `app/views/CONTROLLER/ACTION.php` html sayfası `app/views/layouts/CONTROLLER.php` içerisine `<?= $yield; ?>` değişken kısmına gömülür ve görüntülenir.
+Yönlendirme dosyasında tanımlı olan (`config/routes.php`) her `get` veya `post` yönlendirmeleri için de yönlendirilen `controller` ve `action` adlarını alarak,
+view dosyasını (`app/views/CONTROLLER/ACTION.php`) layout dosyası (`app/views/layouts/CONTROLLER.php`) içerisine `<?= $yield; ?>` değişken kısmına gömülür ve görüntülenir.
 
 > `app/views/DIRECTORY/*.php`
 
@@ -789,20 +813,16 @@ Fonksiyonu Controller'daki gibi tüm özellikleri ile kullanılabilir. Yalnızca
 
 ---
 
-Her hazırlanan `Tablo` kullanırken,
+Her hazırlanan `Tablo` kullanılırken,
 
-- Her tablonun harfleri küçük **olmalıdır**. (ör.: user, agenda, page, product)
+1. Her tablo isminin harfleri küçük **olmalıdır**. (Ör.: user, agenda, page, product)
+2. Her tablo `id` değerine sahip olmalı ve `auto_increment` **olmalıdır**.
+3. Her tablo sütunlarının(`id` hariç) varsayılan değeri `NULL` **olmalıdır**.
 
-- Her tablo `id` değerine sahip olmalı ve auto_increment **olmalıdır**.
+Her hazırlanan `Model` kullanılırken,
 
-- Her tablonun sütunlarının(`id` hariç) varsayılan değeri `NULL` **olmalıdır**.
-
-Her hazırlanan `Model` kullanırken,
-
-- Her tablonun bir modeli olmak **zorundadır**.
-
-- Her model adının ilk harfi büyük olmak **zorundadır**.  (ör.: tablo: `user` ise `User` olmalıdır.)
-
+1. Her tablonun bir modeli olmak **zorundadır**.
+2. Her model adının ilk harfi büyük olmak **zorundadır**.  (Ör.: tablo: `user` ise `User` olmalıdır.)
 
 > `app/models/TABLE.php`
 `example: app/models/User.php`
@@ -848,7 +868,7 @@ echo $user->full_name();
 
 >  `draft`, `create`
 
-##### `draft` ([$field_1 => $value_1, ...])
+##### `draft` ([$field1 => $value1, ...])
 
 ```php
 // Ör. 1:
@@ -866,7 +886,7 @@ $user = User::draft(["first_name" => "Gökhan"])->save();
 print_r($user); // otomatik id alır
 ```
 
-##### `create` ([$field_1 => $value_1, ...])
+##### `create` ([$field1 => $value1, ...])
 
 ``` php
 $user = User::create(["first_name" => "Gökhan"]);
@@ -904,7 +924,7 @@ foreach ($users as $user)
   echo $user->first_name;
 ```
 
-##### `select` ("tablename.field_1", ...)
+##### `select` ("tablename.field1", ...)
 
  Tablodan her kayıt bir sınıfa yüklenirken sütun ismi olarak `id` otomatik olarak eklenmektedir.
 
@@ -1058,7 +1078,7 @@ foreach ($users as $user)
   echo $user->first_name;
 ```
 
-##### `group` ("tablename.field_1", ...)
+##### `group` ("tablename.field1", ...)
 
 - Simple
 
@@ -1265,7 +1285,7 @@ echo User::load()->where("first_name", "Gökhan")->count();
 // 5
 ```
 
-##### `joins` ($table) or ([$table]) or ([$table_1 => $table_2]) or ([$table_1 => [$table_2 => $table_3]) or ([$table_1 => [$table_2, $table_3 => [$table_4]]])
+##### `joins` ($table) or ([$table]) or ([$table1 => $table2]) or ([$table1 => [$table2 => $table3]) or ([$table1 => [$table2, $table3 => [$table4]]])
 
 İlk tablo sütunları hariç join işleminde select çakışmasını önlemek için diğer tablo alan bilgileri `$TABLE_$field` şeklinde gelmektedir. (Ör.: `user.first_name as user_first_name` gibi)
 Veriler alınırken eğer ilişki kurulan diğer tabloda ilişik-veri (yabancı anahtar bazlı bir satır) yok ise kayıt getirmeyecektir. Bu `INNER JOIN`in olağan sonucudur.
@@ -1307,7 +1327,7 @@ $department = Department::load()
 print_r($department);
 ```
 
-##### `unique` ([$field_1 => $value_1, ...])
+##### `unique` ([$field1 => $value1, ...])
 
 ```php
 $user = User::unique(["username" => "gdemir", "password" => "123456"]);
@@ -1321,7 +1341,7 @@ $user = User::find(1);
 echo $user->first_name;
 ```
 
-##### `find_all` ([$id_1, ...])
+##### `find_all` ([$id1, ...])
 
 ```php
 $users = User::find_all([1, 2, 3]);
@@ -1423,7 +1443,7 @@ foreach ($users as $user) {
 }
 ```
 
-##### `update` ($id, [$field_1 => $value_1, ...])
+##### `update` ($id, [$field1 => $value1, ...])
 
 ```php
 // Ör. 1:
@@ -1546,10 +1566,10 @@ Mailer sınıf olarak `PHPMailer`i kullanmaktadır ve yapı olarak Controller s�
 
 Her hazırlanan Mailer sınıfı kullanırken,
 
-- Sınıf `app/mailers/*.php` isminde tanımlanmalıdır.
-- Sınıf içerisinde tanımlanan fonksiyonlarda `mail` fonksiyonu kullanılmak **zorunludur**.
-- Layout olarak **zorunlu** `app/views/layouts/mailer.php` dosyasını kullanmaktadır.
-- View olarak **zorunlu** `app/views/mail` dizinini kullanmaktadır. İstenilen actiona göre `app/views/mail/ACTION.php` dosyası tanımlanması gerekir.
+1. Sınıf `app/mailers/*.php` isminde tanımlanmalıdır.
+2. Sınıf içerisinde tanımlanan fonksiyonlarda `mail` fonksiyonu kullanılmak **zorunludur**.
+3. Layout olarak **zorunlu** `app/views/layouts/mailer.php` dosyasını kullanmaktadır.
+4. View olarak **zorunlu** `app/views/mail` dizinini kullanmaktadır. İstenilen actiona göre `app/views/mail/ACTION.php` dosyası tanımlanması gerekir.
 
 
 - Mailer Kick Functions
@@ -1616,7 +1636,7 @@ class PasswordMailer extends ApplicationMailer {
 }
 ```
 
-#### `mail` (["to" => [$email_1 => $name_1, ...], "subject" => $subject])
+#### `mail` (["to" => [$email1 => $name1, ...], "subject" => $subject])
 
 > options : `to`, `subject`
 
@@ -1744,7 +1764,7 @@ Endişelenme! Parolanızı sıfırlamak için 1 saat içinde aşağıdaki bağla
 > `app/views/mail/password/notice.php`
 
 ```html
-<code>BILDIRIM</code>:
+<code>BİLDİRİM</code>:
 <hr>
 Web sayfasında 1 kişi şifre değişikliği talebinde bulundu. <br/>
 <b>Tarih :</b> <?= date("Y-m-d H:i:s"); ?>
@@ -1777,7 +1797,7 @@ name  = BARAK
 
 > `config/mailer.ini` (mailer configuration file)
 
-Default SMTP Configuration (Test Edildi)
+- Default SMTP Configuration (Test Edildi)
 
 ```ini
 [mailer_configuration]
@@ -1787,7 +1807,7 @@ username = mail@gdemir.me
 password = 123456
 ```
 
-Yandex SMTP Configuration (Test Edildi)
+- Yandex SMTP Configuration (Test Edildi)
 
 ```ini
 port     = 587
@@ -1796,7 +1816,7 @@ username = mail@gdemir.me
 password = 123456
 ```
 
-Gmail SMTP Configuration (Test Edilmedi)
+- Gmail SMTP Configuration (Test Edilmedi, Gmail'in kendi problemi var)
 
 ```ini
 port     = 465
