@@ -1,20 +1,17 @@
 # BARAK FRAMEWORK
 
-## Introduction
+## What is Barak Framework ?
 
 Barak Framework PHP diliyle yazılmış, açık kaynak kodlu bir web uygulama geliştirme çatısıdır. Web uygulamaları için ihtiyaç duyulabilecek bütün bileşenleri barındıran Barak; MVC (model-view-controller), DRY (don't repeat yourself), CoC (convention over configuration) yaklaşımlarını temel alır. Barak ile aktif hızlı ve kolay RESTful web uygulamaları yapabilirsiniz.
 
 ### Requirements
 
-- Packages
+1. Programming Language : `Php >=5.4`
+2. Database Access : `MySQL`
+3. Web Server : `Apache`, `Nginx`, `ISS`
+4. Package Manager : `Composer`
 
-> Programming Language : `Php`
-
-> Database Access : `MySQL`
-
-> Web Server : `Apache`, `Nginx`, `ISS`
-
-> Package Manager : `Composer`
+Barak Framework için gerekli olan paketler yukarıda verilmiştir. Bu paketlerin nasıl kurulacağına ilişkin aşağıdaki bağlantıları inceleyebilirsiniz.
 
 - Installation
 
