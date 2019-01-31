@@ -1497,9 +1497,9 @@ User::load()->where("first_name", "Gökhan")->limit(10)->delete_all();
 User::load()->limit(10)->delete_all();
 ```
 
-#### DEPENDENCİES
+#### DEPENDENCIES
 
-> `$BELONG_TABLE->OWNER_TABLE`
+> `$BELONGTABLE->OWNERTABLE`
 
 ```php
 // department ["id", "name"]
@@ -1533,7 +1533,7 @@ echo "$book->user->department->name $book->user->first_name $book->name";
 // "Bilgisayar Mühendisliği Gökhan Barak Türkmenlerinin Tarihi"
 ```
 
-> `$OWNER_TABLE->all_of_BELONG_TABLE`
+> `$OWNERTABLE->all_of_BELONGTABLE`
 
 ```php
 // user ["id", "department_id", "first_name", "last_name"]
@@ -2021,13 +2021,18 @@ ApplicationLogger::debug("olaylar olaylar");
 
 Belirlediğiniz değişkenleri belli bir mühdet veritabanından değil de dosya olarak tutup bunu tekrar kullanmanıza yarayan özelliktir. Örneğin bir veri durmadan veritabanından çekileceğine, dosyaya yazılıp eğer dosyada varsa dosyadan çek şeklinde bir kod yazılabilir. Bu şekilde veritabanın üzerindeki yük azaltılabilir.
 
-Farklı sayfalarda yapılan değişken aynı değişken ismini saklayabilmek için Verilen anahtarlara göre  "`request_url` + `key`" (istek url ve verilen anahtar)'e göre `md5` ile şifreleyip `tmp/cache/*` dizini üzerinde yazma, okuma, silme, var olduğunu bakma, tamamen silme gibi işlemleri yapılmaktadır.
+Farklı sayfalarda yapılan değişken tanımlamalarında, aynı değişken ismini saklayabilmek için verilen anahtarlara göre  "`request_url` + `key`" (istek url ve verilen anahtar)'e göre `md5` ile şifreleyip `tmp/cache/*` dizini üzerinde yazma, okuma, silme, var olduğunu bakma, tamamen silme gibi işlemleri yapılmaktadır.
 
-Yani `/home/users/` sayfasında istek geldiğinde `$users` değişkenini şifreleyip `tmp/cache/3290482038.php` gibi bir dosya üzerine yazar ve bu dosyayı belli bir zaman içerisinde erişimine imkan verir.
+Yani `/home/users/` sayfasına bir istek geldiğinde `$users` değişkenini şifreleyip `tmp/cache/3290482038.php` gibi bir dosya üzerine yazar ve bu dosyayı belli bir zaman içerisinde erişimine imkan verir. Ayrıca `/home/active_users` gibi bir sayfaya istek geldiğinde yine `$users` değişkenini saklayabilirsiniz, diğer `home/users/` sayfasındaki `$users` değişkeni ile çakışma olmamaktadır.
 
-`$users` üzerindeki verilen eğer `cache`'de var ise oradan al, yok ise veritabanından çek ve yeni bir `cache` oluştur.
-````php
-// Ör.:
+
+
+```php
+// Ör.: 
+// Eğer `cache`'de `$users` değişkenin
+// kaydı var ise oradan al
+// kaydı yok ise veritabanından çek ve yeni bir `cache` olarak `$users` verilerini kaydet.
+
 if (ApplicationCache::exists("users")) {
   $users = ApplicationCache::read("users");
 } else  {
@@ -2038,9 +2043,6 @@ if (ApplicationCache::exists("users")) {
 foreach ($users as $user)
   echo $user->first_name;
 ```
-
-
-
 
 - Functions
 
