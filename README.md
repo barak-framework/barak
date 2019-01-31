@@ -6,14 +6,12 @@ Barak Framework PHP diliyle yazılmış, açık kaynak kodlu bir web uygulama ge
 
 ### Requirements
 
-1. Programming Language : `Php >=5.4`
+1. Programming Language : `Php >= 5.4`
 2. Database Access : `MySQL`
 3. Web Server : `Apache`, `Nginx`, `ISS`
 4. Package Manager : `Composer`
 
 Barak Framework için gerekli olan paketler yukarıda verilmiştir. Bu paketlerin nasıl kurulacağına ilişkin aşağıdaki bağlantıları inceleyebilirsiniz.
-
-- Installation
 
 > Linux, Apache, MySQL, Php Installation : [LAMP](http://gdemir.github.io/categories/linux/lamp/)
 
@@ -103,7 +101,7 @@ class HomeController extends ApplicationController {
 
 ---
 
-Herhangi bir İstek URL çalışabilmesi için yönlendirilme dosyasında (`config/routes.php`) ne tür bir istek olduğu tanımlanmalıdır. Eğer istek URL bulunmuyorsa  `public/404.html` sayfası gösterilir.
+Herhangi bir istek URL çalışabilmesi için yönlendirilme dosyasında (`config/routes.php`) ne tür bir istek olduğu tanımlanmalıdır. Eğer istek URL bulunmuyorsa  `public/404.html` sayfası gösterilir. Yönlendirme fonksiyonları olan `get`, `post`, `resource`, `resources`, `scope`, `rout` fonksiyonları tanımlama yapılmadan önce  tetikleyici `draw` fonksiyonu içerisine yazılmalıdır.
 
 - Kick Function (static)
 
@@ -417,7 +415,7 @@ ApplicationRoutes::draw(function() {
 Her controller dosyası ile sınıfının ismi aynı olmalıdır ve sistemin olan `ApplicationController` sınıfından miras alır.
 
 ```php
-// dosya : `app/controllers/HomeController.php`
+// Ör.: dosya : `app/controllers/HomeController.php`
 class HomeController extends ApplicationController {
 }
 ```
@@ -578,7 +576,7 @@ class HomeController extends ApplicationController {
 
 #### `helpers`
 
-Helpers `app/helpers/*Helper.php` şeklinde tanımlanan her controller ya da proje için gerekli görüldüğü yerlerde çağrılması gereken sınıfları projeye dahil eder.
+Helpers `app/helpers/*Helper.php` şeklinde tanımlanan sınıfları proje için gerekli görüldüğü yerlerde projeye dahil eder.
 
 > keys : `$FILE`, `all`
 
@@ -615,7 +613,7 @@ class HomeController extends ApplicationController {
 
 #### `before_actions`
 
-Before Action (`protected $before_actions`) özelliği, `app/controller/*.php` dosyası içerisinde her çalışacak get/post fonksiyonları için önceden çalışacak fonksiyonları belirtmeye yarayan özelliktir. Özelliğin etkisini ayarlamak için aşağıdaki 3 şekilde kullanılabilir:
+Before Action (`protected $before_actions`) özelliği, `app/controller/*.php` dosyası içerisinde her çalışacak get/post fonksiyonları için önceden çalışacak fonksiyonları belirtmeye yarayan özelliktir. Özelliğin etkisini ayarlamak için aşağıdaki 3 şekilde kullanılabilir.
 
 > options : `except`, `only`
 
@@ -653,7 +651,7 @@ class HomeController extends ApplicationController {
 
 #### `after_actions`
 
-After Action (`protected $after_actions`) özelliği, `app/controller/*.php` dosyası içerisinde her çalışacak get/post fonksiyonları için sonradan çalışacak fonksiyonları belirtmeye yarayan özelliktir. Özelliğin etkisini ayarlamak için aşağıdaki 3 şekilde kullanılabilir:
+After Action (`protected $after_actions`) özelliği, `app/controller/*.php` dosyası içerisinde her çalışacak get/post fonksiyonları için sonradan çalışacak fonksiyonları belirtmeye yarayan özelliktir. Özelliğin etkisini ayarlamak için aşağıdaki 3 şekilde kullanılabilir.
 
 > options : `except`, `only`
 
@@ -769,8 +767,7 @@ class AdminController extends ApplicationController {
 
 ---
 
-Yönlendirme dosyasında tanımlı olan (`config/routes.php`) her `get` veya `post` yönlendirmeleri için de yönlendirilen `controller` ve `action` adlarını alarak,
-view dosyasını (`app/views/CONTROLLER/ACTION.php`) layout dosyası (`app/views/layouts/CONTROLLER.php`) içerisine `<?= $yield; ?>` değişken kısmına gömülür ve görüntülenir.
+Yönlendirme dosyasında tanımlı olan (`config/routes.php`) her `get` veya `post` yönlendirmeleri için de yönlendirilen `controller` ve `action` adlarını alarak, view dosyasını (`app/views/CONTROLLER/ACTION.php`) layout dosyası (`app/views/layouts/CONTROLLER.php`) içerisine `<?= $yield; ?>` değişken kısmına gömülür ve görüntülenir.
 
 > `app/views/DIRECTORY/*.php`
 
@@ -821,7 +818,13 @@ Her hazırlanan `Model` kullanılırken,
 > `app/models/TABLE.php`
 `example: app/models/User.php`
 
+Aşağıdaki örnekte bir tabloda var olan `id`, `first_name`, `last_name` sütunları vardır. Var olmayan `full_name` isimli sütun oluşturulmuş, o anki kaydın `first_name` ve `last_name` birleştirilmiş halini döneceği belirlenerek modele eklenmiştir.
+
 ```php
+// user ["id", "first_name", "last_name"]
+// 1, Gökhan, Demir
+// 2, Gökçe, Demir
+
 class User extends ApplicationModel {
 
   public function full_name() {
@@ -834,6 +837,7 @@ class User extends ApplicationModel {
 ```php
 $user = User::find(1);
 echo $user->full_name();
+// Gökhan Demir
 ```
 
 - Query Kick Function (static)
@@ -927,7 +931,7 @@ foreach ($users as $user)
 ```php
 // Ör. 1:
 
-// User ["id", "first_name", "last_name"]
+// user ["id", "first_name", "last_name"]
 // 1, Gökhan, Demir
 // 2, Gökhan, Arıoğlu
 
@@ -1768,7 +1772,9 @@ Web sayfasında 1 kişi şifre değişikliği talebinde bulundu. <br/>
 
 ---
 
-> `config/application.ini` (application configuration file)
+#### `config/application.ini` (application configuration file)
+
+Genel ayarlarının yapıldığı dosyadır.
 
 ```ini
 [application_configuration]
@@ -1779,7 +1785,10 @@ logsize         = 5242880
 cacheexpiration = 604800
 ```
 
-> `config/database.ini` (database configuration file)
+#### `config/database.ini` (database configuration file)
+
+Veritabanı ayarlarının yapıldığı dosyadır.
+
 
 ```ini
 [database_configuration]
@@ -1789,7 +1798,9 @@ pass  = barak
 name  = BARAK
 ```
 
-> `config/mailer.ini` (mailer configuration file)
+#### `config/mailer.ini` (mailer configuration file)
+
+Mail ayarlarının yapıldığı dosyadır. `PHPMailer` eklentisini kullanmakdır.
 
 - Default SMTP Configuration (Test Edildi)
 
@@ -1819,10 +1830,9 @@ username = mail@gdemir.me
 password = 123456
 ```
 
-> `config/locales/LANGUAGE.php` (language configuration file)
+#### `config/locales/LANGUAGE.php` (language configuration file)
 
-Varsayılan dosyası `config/locales/tr.php` dosyasıdır, yeni bir dil eklenecekse aynı list kullanılıp değer kısımları değiştirilerek
-kaydedilmelidir. Bu çeviri dosyalarının yönetimi erişimi ve yönetimi için I18n kısmında anlatılmaktadır.
+Varsayılan olarak okunan `config/locales/tr.php` dosyasıdır, yeni bir dil eklenecekse aynı `list` kullanılıp değer kısımları değiştirilerek kaydedilmelidir. Bu çeviri dosyalarının yönetimi erişimi ve yönetimi için I18n kısmında anlatılmaktadır.
 
 `config/locales/tr.php`
 
@@ -1858,7 +1868,7 @@ return [
 
 ---
 
-Proje başlamadan önce ilk çalıştırılacak dosyadır.
+Uygulamaya her URL isteği geldiğin ilk olarak çalışan betiktir. Örnekleme kayıtları oluşturmak veya loglama için kullanılabilir.
 
 > `db/seeds.php` (database seeds file)
 
@@ -1875,14 +1885,15 @@ if (User::load()->count() == 0) {
 
 ---
 
+Yapılandırma dizinindeki diller kısmında (`config/locales/`) tanımlı olan dil dosyaları (Ör.: `config/locales/tr.php`, `config/locales/en.php`) üzerinden erişim, çeviri, o anki dilin ne olduğu gibi işlemlerin yapılması hakkında kullanılan fonksiyonlar bu bölümde anlatılmıştır.
+
 - Functions
 
 > `locale`, `get_locale`, `translate`
 
 #### `locale` ($locale)
 
-Çeviri kelimeleri (`config/locales/tr.php` veya `config/locales/en.php` gibi dosyalar dizi olarak `$_SESSION["_i18n"]` üzerine yüklenir.) proje başlangıcında `config/application.ini` dosyası içerisinde `locale` değişkenine ile atanabilir veya projenin herhangi bir aşamasında aşağıdaki gibi atanabilir/değiştirilebilir. Varsayılan olarak `config/locales/tr.php` dosyası okunur.
-
+Çeviri kelimeleri (`config/locales/tr.php` veya `config/locales/en.php` gibi dosyalar dizi olarak `$_SESSION["_i18n"]` üzerine yüklenir.) proje başlangıcında `config/application.ini` dosyası içerisinde `locale` değişkenine ile atanabilir veya projenin herhangi bir aşamasında aşağıdaki gibi atanabilir/değiştirilebilir.
 
 ```php
 ApplicationI18n::locale("tr");
@@ -1890,7 +1901,7 @@ ApplicationI18n::locale("tr");
 
 #### `get_locale` ()
 
-O an seçili olan dilin hangisi olduğunu anlamak için bu fonksiyon kullanılır.
+O an seçili olan dilin hangisi olduğunu anlamak için kullanılan fonksiyondur.
 
 ```php
 // Ör. 1:
@@ -1925,7 +1936,7 @@ t("home.about_us");
 
 ---
 
-Exception, Error, Shutdown(Fatal Error) akışlarını yakalayıp tek sayfada göstermeye yararayan sınıftır. Eğer hataların gösterilmesi istenmiyorsa `config/application.ini` dosyası içerisinde `debug = false` denilerek kullanıcı bazlı `public/500.html` sayfası gösterilir, ancak log kaydı her şekilde de tutulur.
+Uygulamanın her istek URL geldiğinde Exception, Error, Shutdown(Fatal Error) akışlarını yakalayıp tek sayfada gösterilmesini sağladığını anlatan bölümdür. Eğer hataların gösterilmesi istenmiyorsa `config/application.ini` dosyası içerisinde `debug = false` denilerek kullanıcı bazlı `public/500.html` sayfası gösterilir, ancak log kaydı her şekilde de tutulur.
 
 - Functions
 
@@ -1973,7 +1984,7 @@ veya
 
 ---
 
-Günlük olarak dosyalar açarak verilen mesajları loglamaya yarayan sınıftır.
+**Günlük** olarak dosyalar açarak verilen mesajları loglamaya yarayan özelliktir.
 
 - Functions
 
@@ -2008,7 +2019,28 @@ ApplicationLogger::debug("olaylar olaylar");
 
 ---
 
-Verilen anahtarlara göre  `request_url` + `key` (istek url ve verilen anahtar)'e göre md5 ile şifreleyip `tmp/cache/*` dizini üzerinde yazma, okuma, silme, var olduğunu bakma, tamamen silme gibi işlemleri yapan sınıftır.
+Belirlediğiniz değişkenleri belli bir mühdet veritabanından değil de dosya olarak tutup bunu tekrar kullanmanıza yarayan özelliktir. Örneğin bir veri durmadan veritabanından çekileceğine, dosyaya yazılıp eğer dosyada varsa dosyadan çek şeklinde bir kod yazılabilir. Bu şekilde veritabanın üzerindeki yük azaltılabilir.
+
+Farklı sayfalarda yapılan değişken aynı değişken ismini saklayabilmek için Verilen anahtarlara göre  "`request_url` + `key`" (istek url ve verilen anahtar)'e göre `md5` ile şifreleyip `tmp/cache/*` dizini üzerinde yazma, okuma, silme, var olduğunu bakma, tamamen silme gibi işlemleri yapılmaktadır.
+
+Yani `/home/users/` sayfasında istek geldiğinde `$users` değişkenini şifreleyip `tmp/cache/3290482038.php` gibi bir dosya üzerine yazar ve bu dosyayı belli bir zaman içerisinde erişimine imkan verir.
+
+`$users` üzerindeki verilen eğer `cache`'de var ise oradan al, yok ise veritabanından çek ve yeni bir `cache` oluştur.
+````php
+// Ör.:
+if (ApplicationCache::exists("users")) {
+  $users = ApplicationCache::read("users");
+} else  {
+  $users = User::all();
+  ApplicationCache::write("users", $users);
+}
+
+foreach ($users as $user)
+  echo $user->first_name;
+```
+
+
+
 
 - Functions
 
