@@ -135,7 +135,7 @@ class ApplicationRoutes {
 
   public static function root($target = false, $path = null) {
     if (!$target)
-      throw new Exception("Root route özelliğinde hedef (controlller#action) belirtilmek zorundadır! → root");
+      throw new Exception("Root route özelliğinde hedef (controller#action) belirtilmek zorundadır! → root");
     ApplicationRoutes::get("/", $target, $path);
   }
 
