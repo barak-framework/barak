@@ -85,7 +85,10 @@ class ApplicationDebug {
 
     $v = new ApplicationView();
 
-    (self::$_debug) ? $v->set(["text" => self::_layout($header, $numbers, $rows, $footer)]) : $v->set(["file" => "public/500.html"]);
+    if (self::$_debug)
+      $v->set(["text" => self::_layout($header, $numbers, $rows, $footer)]);
+    else
+      $v->set(["file" => ApplicationView::DEBUGPAGE]);
 
     echo $v->run();
     exit();
