@@ -48,7 +48,7 @@ class ApplicationRoutes {
       ApplicationController::dispatch($route);
     } else {
       $v = new ApplicationView();
-      $v->set(["file" => ApplicationView::PAGEERROR]);
+      $v->set(["file" => ApplicationView::ERRORPAGE]);
       echo $v->run();
       exit();
     }
