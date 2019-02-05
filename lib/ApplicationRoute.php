@@ -28,7 +28,7 @@ class ApplicationRoute {
       list($controller, $action) = array_pad(explode("/", trim($rule, "/")), 2, null);
       if ($action == null) { throw new Exception("Route rule özelliğinde istek /controller/action şeklinde olmalıdır! → " . $rule); }
       self::set($method, "", $this->path . $rule, $controller, $action);
-    } else { throw new Exception("/Something is wrong/routes.php içinde beklenmedik kurallar → " . $rule); }
+    } else { throw new Exception("Route yapılandırmasında beklenmedik kural → " . $rule); }
   }
 
   public function set($method, $match_rule, $rule, $controller, $action) {
