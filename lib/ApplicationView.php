@@ -5,6 +5,9 @@ class ApplicationView {
   const LAYOUTPATH = "app/views/layouts/";
   const VIEWPATH   = "app/views/";
 
+  const PAGEERROR = "public/404.html";
+  const PAGEDEBUG = "public/500.html";
+  
   private $_layout;
   private $_template;
 
