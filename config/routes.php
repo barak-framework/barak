@@ -1,9 +1,7 @@
 <?php
 
-ApplicationRoutes::draw(
-
-  get("/", "default#index")
-
-);
+ApplicationRoutes::draw(function() {
+  get("/", "default#index");
+});
 
 ?>
