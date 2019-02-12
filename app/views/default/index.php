@@ -7,14 +7,10 @@
       </h4>
       <hr>
 
-      <center>
-        <h4><?= $title; ?></h4>
-        <h5 style="color:#aaa">
-          <b><?= $description; ?></b>
-          (<a href="<?= $guide; ?>">README.md</a>)
-        </h5>
-      </center>
-      <iframe src="<?= $site ?>" style="width: 100%;"></iframe>
+      <h2><b>Home#Index</b> sayfasındayız </h2></br>
+      <center><h4><?= $title; ?></h4></center>
+
+      <iframe src="<?= $site ?>" style="width: 100%; height:390px"></iframe>
       <br/>
 
     </div>
