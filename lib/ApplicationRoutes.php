@@ -35,14 +35,6 @@ class ApplicationRoutes {
 
     $request_route = [ "_rule" => $_SERVER['REQUEST_URI'], "_method" => $_SERVER["REQUEST_METHOD"] ];
 
-    $hour = intval(date("H"));
-    if ($hour > 2 && $hour < 5) {
-      $v = new ApplicationView();
-      $v->set(["file" => "public/1071.html"]);
-      echo $v->run();
-      exit();
-    }
-
     // İstek url ile routes'ı içinden bul ve sevk et
     if ($route = self::get_route($request_route)) {
       ApplicationController::dispatch($route);
