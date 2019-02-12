@@ -4,7 +4,7 @@
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title></title>
+  <title>Barak Framework</title>
   <link href="" rel="alternate" title="" type="application/atom+xml" />
   <link rel="shortcut icon" href="/favicon.ico">
   <link rel="stylesheet" href="/app/assets/css/syntax.css" type="text/css" />
