@@ -22,7 +22,7 @@ class ApplicationRoute {
 
         // Ör.: get("/users/show/:id", "users#show"); // controller: users, action:show
 
-        list($controller, $action) = self::_target_regexp($target, "#");
+        list($controller, $action) = self::_spliter_struct($target, "#");
         self::set($method, $this->path . $rule, $this->path . preg_replace("|:[\w]+|", self::dynamical_segment, $rule), $controller, $action);
 
       } else {
@@ -36,14 +36,14 @@ class ApplicationRoute {
 
         // Ör.: get("/users/index", "home#about"); // controller: users, action:about
 
-        list($controller, $action) = self::_target_regexp($target, "#");
+        list($controller, $action) = self::_spliter_struct($target, "#");
         self::set($method, "", $this->path . $rule, $controller, $action);
 
       } else {
 
         // Ör.: get("/users/index"); // controller: users, action:index
         $_rule = trim($rule, "/");
-        list($controller, $action) = self::_target_regexp($_rule, "/");
+        list($controller, $action) = self::_spliter_struct($_rule, "/");
         self::set($method, "", $this->path . $rule, $controller, $action);
 
       }
@@ -53,7 +53,7 @@ class ApplicationRoute {
     }
   }
 
-  private static function _target_regexp($subject, $delimiter) {
+  private static function _spliter_struct($subject, $delimiter) {
     // düzenli karakterler için  `\\` karakteri ile öncele
     $delimiter = "\\" . $delimiter;
     if (!preg_match('/^(.*)'. $delimiter . '(.*)$/', $subject, $rota))
