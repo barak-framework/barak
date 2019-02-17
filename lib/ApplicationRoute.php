@@ -54,7 +54,7 @@ class ApplicationRoute {
   }
 
   private static function _target_regexp($subject, $delimiter) {
-    // düzenli karakterler için  özel karakterlerini öncele
+    // düzenli karakterler için  `\\` karakteri ile öncele
     $delimiter = "\\" . $delimiter;
     if (!preg_match('/^(.*)'. $delimiter . '(.*)$/', $subject, $rota))
       throw new Exception("Route yapılandırmasında çözümlenemeyen yapı → " . $subject);
