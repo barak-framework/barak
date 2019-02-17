@@ -7,7 +7,7 @@ class ApplicationView {
 
   const ERRORPAGE = "public/404.html";
   const DEBUGPAGE = "public/500.html";
-  
+
   private $_layout;
   private $_template;
 
@@ -20,7 +20,11 @@ class ApplicationView {
 
   private $_locals;
 
-  public function __construct() {}
+  private $_time_start;
+
+  public function __construct() {
+    $this->_time_start = microtime(true);
+  }
 
   public function set($_render) {
 
@@ -130,6 +134,8 @@ class ApplicationView {
     }
 
     include $file;
+
+    ApplicationLogger::info("\tRendered $file " . sprintf ("(%.2f ms)", (microtime(true) - $this->_time_start) * 1000));
 
     return ob_get_clean();
   }

@@ -14,21 +14,51 @@ class ApplicationRoute {
 
   public function __construct($method, $rule, $target = false, $path = null) {
     $this->path = ($path) ? $path : "";
-    // is match_rule ? for :id/:action like
+
+    // Dinamik denetleyici tanımlaması mı ? :id/:action gibi
     if (strpos($rule, ":")) {
-      if (!$target) { throw new Exception("Dynamic route özelliğinde hedef (controller#action) belirtilmek zorundadır! → " . $rule); }
-      // get("/users/show/:id", "users#show"); // controller: users, action:show
-      list($controller, $action) = explode("#", trim($target, "/"));
-      self::set($method, $this->path . $rule, $this->path . preg_replace("|:[\w]+|", self::dynamical_segment, $rule), $controller, $action);
-    } elseif ($target) {
-      list($controller, $action) = explode("#", trim($target, "/"));
-      self::set($method, "", $this->path . $rule, $controller, $action);
-    // dizgi içerisinde konum(indexi) yok değilse (yani varsa)
+
+      if ($target) {
+
+        // Ör.: get("/users/show/:id", "users#show"); // controller: users, action:show
+
+        list($controller, $action) = self::_target_regexp($target, "#");
+        self::set($method, $this->path . $rule, $this->path . preg_replace("|:[\w]+|", self::dynamical_segment, $rule), $controller, $action);
+
+      } else {
+        throw new Exception("Dinamik route özelliğinde hedef (controller#action) belirtilmek zorundadır! → " . $rule);
+      }
+
     } elseif (strpos($rule, "/") !== false) {
-      list($controller, $action) = array_pad(explode("/", trim($rule, "/")), 2, null);
-      if ($action == null) { throw new Exception("Route rule özelliğinde istek /controller/action şeklinde olmalıdır! → " . $rule); }
-      self::set($method, "", $this->path . $rule, $controller, $action);
-    } else { throw new Exception("Route yapılandırmasında beklenmedik kural → " . $rule); }
+
+      // Hedefi olan denetleyici mi ? controller#action gibi
+      if ($target) {
+
+        // Ör.: get("/users/index", "home#about"); // controller: users, action:about
+
+        list($controller, $action) = self::_target_regexp($target, "#");
+        self::set($method, "", $this->path . $rule, $controller, $action);
+
+      } else {
+
+        // Ör.: get("/users/index"); // controller: users, action:index
+        $_rule = trim($rule, "/");
+        list($controller, $action) = self::_target_regexp($_rule, "/");
+        self::set($method, "", $this->path . $rule, $controller, $action);
+
+      }
+
+    } else {
+      throw new Exception("Route yapılandırmasında beklenmedik kural → " . $rule);
+    }
+  }
+
+  private static function _target_regexp($subject, $delimiter) {
+    // düzenli karakterler için  özel karakterlerini öncele
+    $delimiter = "\\" . $delimiter;
+    if (!preg_match('/^(.*)'. $delimiter . '(.*)$/', $subject, $rota))
+      throw new Exception("Route yapılandırmasında çözümlenemeyen yapı → " . $subject);
+    return [$rota[1], $rota[2]];
   }
 
   public function set($method, $match_rule, $rule, $controller, $action) {

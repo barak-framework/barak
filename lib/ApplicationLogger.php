@@ -17,7 +17,7 @@ class ApplicationLogger {
     if (!in_array($level, self::$_levels))
       throw new Exception("Bilinmeyen fonksiyon! → " . $level);
 
-    $message = date("Y-m-d H:i:s") . " → $level : " . implode(",", $messages);
+    $message = "[" . date("Y-m-d H:i:s") . "] $level : " . implode(",", $messages);
 
     $filename = self::LOGDIR . date("Y-m-d") . ".log";
     if (!($fh = fopen($filename, 'a')))

@@ -4,6 +4,8 @@ class ApplicationController {
 
   const CONTROLLERPATH = "app/controllers/";
 
+  const CONTROLLERSUBNAME = "Controller";
+
   private $_locals = [];
   private $_render = null;
   private $_redirect_to = null;
@@ -101,7 +103,7 @@ class ApplicationController {
   }
 
   private static function _load($file, $path = "") {
-    $controller_class = ucwords($file) . "Controller";
+    $controller_class = ucwords($file) . self::CONTROLLERSUBNAME;
     $controller_path  = self::CONTROLLERPATH . trim($path,"/") . "/" . $controller_class . '.php';
 
     if (!file_exists($controller_path))
@@ -152,7 +154,9 @@ class ApplicationController {
     }
 
     // run controller class and before_actions, before_afters, helper functions
-    $controller_class = ucwords($route->controller) . 'Controller';
+    $controller_class = ucwords($route->controller) . self::CONTROLLERSUBNAME;
+    ApplicationLogger::info("Processing by $controller_class#{$route->action}");
+
     $c = new $controller_class($route);
     $c->_run();
   }

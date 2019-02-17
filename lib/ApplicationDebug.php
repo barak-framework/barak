@@ -16,77 +16,62 @@ class ApplicationDebug {
   */
 
   public static function exception(Exception $exception) {
-    $header = $exception->getMessage();
-    $footer = $exception->getFile() . " at line " . $exception->getLine();
+    $file = $exception->getFile();
+    $line = $exception->getLine();
 
-    $numbers = "";
-    $rows = "";
+    $header = $exception->getMessage();
+    $footer = $file . " at line " . $line . PHP_EOL;
+
+    $file_steps = [];
     foreach ($exception->getTrace() as $number => $value) {
-      $numbers .= $number . "<br/>";
-      $rows .= (isset($value["class"]) ? ($value["class"] . "→" . $value["function"]) : $value["function"]) . " in " . $value["file"] . " at line " . $value["line"] . "<br/>";
+      $fileline = $value["file"] . ":" . $value["line"] . " in ";
+      $file_steps [] = (isset($value["class"])) ? ($fileline . $value["class"] . "#" . $value["function"] ) : $fileline . $value["function"];
     }
 
-    self::_render($header, $numbers, $rows, $footer);
+    list($numbers, $rows) = self::_read_in_range_of_file($file, $line);
+
+    self::_render($header, $numbers, $rows, $footer, $line);
   }
 
   /*
+  echo $a;
+
+  or
+
   ApplicationDebug::error(123123, "Undefined variable: a", "/var/www/html/app/controllers/DefaultController.php", 10);
   */
 
-  public static function error($errno, $error, $file, $line) {
+  public static function error($errno, $message, $file, $line) {
+    $header = $message;
+    $footer = $file . " at line " . $line . PHP_EOL;
 
-    $_rows = explode(PHP_EOL, file_get_contents($file));
+    list($numbers, $rows) = self::_read_in_range_of_file($file, $line);
 
-    $range = 5;
-    $start = ($line > $range) ? $line - $range : 0;
-    $stop  = $line + $range - 2;
-
-    $numbers = "";
-    $rows    = "";
-    $footer  = "<b>$file</b> at line <b>$line</b>" . PHP_EOL;
-    $header  = "$error" . PHP_EOL;
-
-    for ($number = $start; $number <= $stop; ++$number) {
-      if (array_key_exists($number, $_rows)) {
-
-        // escaping a space
-        $row = str_replace(' ', '&nbsp;', $_rows[$number]);
-
-        /* escaping a literal <?php and ?> in a PHP script */
-        if ($row == "<?php") $row = "&lt;?php";
-        if ($row == "?>") $row = "?&gt;";
-
-        if ($number == $line - 1)
-          $rows .= "<code style='background-color: #30D5C8; color: #ffffff; display: inline-block; width: 100%'> $row </code><br/>";
-        else
-          $rows .= "<code style='background-color: #ffffff; color: #665f75;'> $row </code><br/>";
-
-        $numbers .= ($number + 1) . "<br/>";
-      }
-    }
-
-    self::_render($header, $numbers, $rows, $footer);
+    self::_render($header, $numbers, $rows, $footer, $line);
   }
 
   // if a fatal error occurred
 
   public static function shutdown() {
     $error = error_get_last();
-    if (!is_null($error))
+    if (!is_null($error)) {
+      ApplicationLogger::fatal("Sistem çalışmasını engelleyecek hata → " . $error['message']);
       self::error($error['type'], $error['message'], $error['file'], $error['line']);
+    }
   }
 
   // TODO Mailer içersinde sorun olunca buraya düşmüyor :-'(
 
-  private static function _render($header, $numbers, $rows, $footer) {
-    ApplicationLogger::debug("$header in $footer");
+  private static function _render($header, $numbers, $rows, $footer, $line) {
+    ApplicationLogger::error("$header → $footer");
+    ApplicationLogger::warning(implode(PHP_EOL, $rows));
 
     ob_get_length() > 0 && ob_get_level() && ob_end_clean();
 
     $v = new ApplicationView();
 
     if (self::$_debug)
-      $v->set(["text" => self::_layout($header, $numbers, $rows, $footer)]);
+      $v->set(["text" => self::_layout($header, $numbers, $rows, $footer, $line)]);
     else
       $v->set(["file" => ApplicationView::DEBUGPAGE]);
 
@@ -94,7 +79,39 @@ class ApplicationDebug {
     exit();
   }
 
-  private static function _layout($header, $numbers, $rows, $footer) {
+  private static function _read_in_range_of_file($filename, $line) {
+
+    $range = 5; /* before and after brifing lines */
+    $start = ($line > $range) ? $line - $range - 1 : 0;
+    $stop  = $range * 2 + 1;
+
+    $file = new SplFileObject($filename);
+    $fileIterator = new LimitIterator($file, $start, $stop);
+
+    $rows = [];
+    $numbers = [];
+    foreach ($fileIterator as $number => $row) {
+
+      /* escaping a literal `<?=`, `<?php`, `?>` in a PHP script tags */
+      $row = str_replace("<?=", "&lt;?=", $row);
+      $row = str_replace("<?php", "&lt;?php", $row);
+      $row = str_replace("?>", "?&gt;", $row);
+
+      $numbers[] = $number + 1;
+      $rows[] = $row;
+    }
+
+    return [$numbers, $rows];
+  }
+
+  private static function _layout($header, $numbers, $rows, $footer, $line) {
+
+    /* coloring debug and other rows */
+    $debug_index = array_search($line, $numbers);
+    $_rows = [];
+    foreach ($rows as $index => $row)
+      $_rows[$index] = ($debug_index == $index) ? "<div class='debug_row'> $row </div>" : "<div class='other_row'> $row </div>";
+
     return sprintf("
       <!DOCTYPE html>
       <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='tr' lang='tr'>
@@ -122,6 +139,8 @@ class ApplicationDebug {
       }
       .numbers { float: left; width: 4%%; text-align: center; }
       .rows { float: right;  width: 96%%; border-radius: 5px; background-color: white; }
+      .debug_row { background-color: #30D5C8; color: #ffffff; display: inline-block; width:100%%; }
+      .other_row { background-color: #ffffff; color: #665f75; display: inline-block; width:100%%; }
       </style>
       </head>
       <body>
@@ -138,8 +157,8 @@ class ApplicationDebug {
       </body>
       </html>
       ",
-      $header, $numbers, $rows, $footer);
-}
+      $header, implode("<br/>", $numbers), implode("<br/>", $_rows), $footer);
+  }
 
 }
 ?>

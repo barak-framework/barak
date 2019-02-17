@@ -17,15 +17,15 @@ class ApplicationAlias {
     function resources($table, $path = null) {
       return ApplicationRoutes::resources($table, $path);
     }
-    
+
     function root($target = false, $path = null) {
       return ApplicationRoutes::root($target, $path);
     }
-    
+
     function post($rule, $target = false, $path = null) {
       return ApplicationRoutes::post($rule, $target, $path);
     }
-    
+
     function get($rule, $target = false, $path = null) {
       return ApplicationRoutes::get($rule, $target, $path);
     }
@@ -47,7 +47,7 @@ class ApplicationAlias {
     }
 
     // LAYOUT and TEMPLATE
-    // for app/views/VIEW/ACTION.php and app/views/layouts/VIEW_layout.php
+    // for app/views/VIEW/ACTION.php and app/views/layouts/VIEW.php
 
     function render($options = null) {
       if ($options) {

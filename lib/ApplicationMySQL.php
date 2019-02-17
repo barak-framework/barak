@@ -33,7 +33,7 @@ class ApplicationMySQL {
       $field_symbolvalues
       );
 
-    $query = self::query_execute($_query, $_symbolvalues, "CREATE fonksiyonu sorun oluştu");
+    $query = self::query_execute($_query, $_symbolvalues);
 
     $connection = ApplicationDatabase::connect();
     return intval($connection->lastInsertId());
@@ -49,7 +49,7 @@ class ApplicationMySQL {
 
     $_query = "SELECT $_select_fields FROM `$_table` $where_commands LIMIT 1";
 
-    $query = self::query_execute($_query, $_symbolvalues, "READ fonksiyonu sorun oluştu");
+    $query = self::query_execute($_query, $_symbolvalues);
 
     return $query->fetch(PDO::FETCH_ASSOC);
   }
@@ -89,7 +89,7 @@ class ApplicationMySQL {
       $offset_symbolvalue
       );
 
-    $query = self::query_execute($_query, $_symbolvalues, "READ_ALL fonksiyonu sorun oluştu");
+    $query = self::query_execute($_query, $_symbolvalues);
 
     return $query->fetchAll(PDO::FETCH_ASSOC);
   }
@@ -108,7 +108,7 @@ class ApplicationMySQL {
       $limit_symbolvalue
       );
 
-    $query = self::query_execute($_query, $_symbolvalues, "UPDATE fonksiyonu sorun oluştu");
+    $query = self::query_execute($_query, $_symbolvalues);
   }
 
   public static function delete($_table = "", $_where = [], $_limit = null) {
@@ -123,7 +123,7 @@ class ApplicationMySQL {
       $limit_symbolvalue
       );
 
-    $query = self::query_execute($_query, $_symbolvalues, "DELETE fonksiyonu sorun oluştu");
+    $query = self::query_execute($_query, $_symbolvalues);
   }
 
   public static function tablenames() {
@@ -144,7 +144,7 @@ class ApplicationMySQL {
   // Private Functions
   //////////////////////////////////////////////////
 
-  private static function query_execute($_query, $_symbolvalues, $_message) {
+  private static function query_execute($_query, $_symbolvalues) {
     try {
       $connection = ApplicationDatabase::connect();
       $query = $connection->prepare($_query);
@@ -152,13 +152,12 @@ class ApplicationMySQL {
       foreach ($_symbolvalues as $symbol => $value)
         $query->bindValue($symbol, $value, self::bindtype($value));
 
+      // kick query
       $query->execute();
 
     } catch(PDOException $e) {
-      ApplicationLogger::debug(serialize(debug_backtrace()));
       ApplicationLogger::debug($_query);
-      ApplicationLogger::error($e->getMessage());
-      throw new Exception($_message . " → " . $e->getMessage());
+      throw new Exception($e->getMessage());
     }
 
     return $query;

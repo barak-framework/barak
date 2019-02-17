@@ -23,22 +23,38 @@ class ApplicationRoutes {
       $_functions();
       // router processed
 
-     // TEST
-      // foreach (static::$_routes as $method => $routes) {
-      //   echo "## <|> METHOD: $method<br/>";
-      //   foreach ($routes as $route) {
-      //     print_r($route); echo "<br/><br/>";
-      //   }
-      // }
+      // bir daha ::draws fonksiyonu çağrılmaması için
       self::$_draws = TRUE;
     }
 
-    $request_route = [ "_rule" => $_SERVER['REQUEST_URI'], "_method" => $_SERVER["REQUEST_METHOD"] ];
+     // TEST
+    // foreach (static::$_routes as $method => $routes) {
+    //   echo "## <|> METHOD: $method<br/>";
+    //   foreach ($routes as $route) {
+    //     print_r($route); echo "<br/><br/>";
+    //   }
+    // }
+
+    /* requester info */
+    $requester_ip = $_SERVER['REMOTE_ADDR'];
+
+    /* requester what do you want ? */
+    $request_route = [ "_rule" => $_SERVER['REQUEST_URI'], "_method" => $_SERVER['REQUEST_METHOD'] ];
 
     // İstek url ile routes'ı içinden bul ve sevk et
     if ($route = self::get_route($request_route)) {
+
+      $time_start = microtime(true);
+      ApplicationLogger::info("Started {$route->method} {$route->rule} for $requester_ip");
+
       ApplicationController::dispatch($route);
+
+      ApplicationLogger::info("Completed OK in " . sprintf ("(%.2f ms)", (microtime(true) - $time_start) * 1000));
+
     } else {
+
+      ApplicationLogger::error("No route matches [" . $request_route["_method"] . "] " . $request_route["_rule"]);
+
       $v = new ApplicationView();
       $v->set(["file" => ApplicationView::ERRORPAGE]);
       echo $v->run();
@@ -89,7 +105,7 @@ class ApplicationRoutes {
   private static function set_route(ApplicationRoute $route) {
     if (array_key_exists($route->method, static::$_routes)) {
       if (array_key_exists($route->rule, static::$_routes[$route->method])) {
-        throw new Exception("Bu yönlendirme daha önceden tanımlanmış → " . $route->rule);
+        throw new Exception("Bu yönlendirme daha önceden tanımlanmış → X" . $route->rule . "X");
       }
     }
     static::$_routes[$route->method][$route->rule] = $route;
@@ -106,28 +122,28 @@ class ApplicationRoutes {
   }
 
   public static function resource($table, $path = null) {
-    ApplicationRoutes::get("$table",          "$table#index", $path);
-    ApplicationRoutes::get("$table/create",   false, $path);
-    ApplicationRoutes::post("$table/save",    false, $path);
-    ApplicationRoutes::get("$table/show/",    false, $path);
-    ApplicationRoutes::get("$table/edit/",    false, $path);
-    ApplicationRoutes::post("$table/update",  false, $path);
-    ApplicationRoutes::post("$table/destroy", false, $path);
+    $_table = trim($table, "/");
+    ApplicationRoutes::get("$table",          "$_table#index", $path);
+    ApplicationRoutes::get("$table/create",   false,           $path);
+    ApplicationRoutes::post("$table/save",    false,           $path);
+    ApplicationRoutes::get("$table/show/",    false,           $path);
+    ApplicationRoutes::get("$table/edit/",    false,           $path);
+    ApplicationRoutes::post("$table/update",  false,           $path);
+    ApplicationRoutes::post("$table/destroy", false,           $path);
   }
 
   public static function resources($table, $path = null) {
-    ApplicationRoutes::get("$table",          "$table#index", $path);
-    ApplicationRoutes::get("$table/create",   false,          $path);
-    ApplicationRoutes::post("$table/save",    false,          $path);
-    ApplicationRoutes::get("$table/show/:id", "$table#show",  $path);
-    ApplicationRoutes::get("$table/edit/:id", "$table#edit",  $path);
-    ApplicationRoutes::post("$table/update",  false,          $path);
-    ApplicationRoutes::post("$table/destroy", false,          $path);
+    $_table = trim($table, "/");
+    ApplicationRoutes::get("$table",          "$_table#index", $path);
+    ApplicationRoutes::get("$table/create",   false,           $path);
+    ApplicationRoutes::post("$table/save",    false,           $path);
+    ApplicationRoutes::get("$table/show/:id", "$_table#show",  $path);
+    ApplicationRoutes::get("$table/edit/:id", "$_table#edit",  $path);
+    ApplicationRoutes::post("$table/update",  false,           $path);
+    ApplicationRoutes::post("$table/destroy", false,           $path);
   }
 
   public static function root($target = false, $path = null) {
-    if (!$target)
-      throw new Exception("Root route özelliğinde hedef (controller#action) belirtilmek zorundadır! → root");
     ApplicationRoutes::get("/", $target, $path);
   }
 
