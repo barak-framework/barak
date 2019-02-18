@@ -39,14 +39,18 @@ class ApplicationRoutes {
     $requester_ip = $_SERVER['REMOTE_ADDR'];
 
     /* requester what do you want ? */
-    $request_route = [ "_rule" => $_SERVER['REQUEST_URI'], "_method" => $_SERVER['REQUEST_METHOD'] ];
+    $request_route = [ "_method" => $_SERVER['REQUEST_METHOD'], "_rule" => $_SERVER['REQUEST_URI'] ];
+
+    // info for REQUEST_ROUTE and REQUESTER
+    ApplicationLogger::info("Started " . $request_route["method"] . " " . $request_route["rule"] . " for $requester_ip");
 
     // İstek url ile routes'ı içinden bul ve sevk et
     if ($route = self::get_route($request_route)) {
 
       $time_start = microtime(true);
-      ApplicationLogger::info("Started {$route->method} {$route->rule} for $requester_ip");
+      ApplicationLogger::info("Processing by {$route->controller}#{$route->action}");
 
+      // route action dispatch in controller and view
       ApplicationController::dispatch($route);
 
       ApplicationLogger::info("Completed OK in " . sprintf ("(%.2f ms)", (microtime(true) - $time_start) * 1000));
