@@ -63,7 +63,7 @@ class ApplicationConfig {
     if (!file_exists(self::ROUTESFILE))
       throw new Exception("Yönlendirme ayar dosyası mevcut değil → " . self::ROUTESFILE);
 
-    // configuration routes load and route action dispatch
+      // configuration routes load and route action dispatch
       include self::ROUTESFILE;
     }
 
