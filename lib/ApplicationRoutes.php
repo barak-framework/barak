@@ -42,7 +42,7 @@ class ApplicationRoutes {
     $request_route = [ "_method" => $_SERVER['REQUEST_METHOD'], "_rule" => $_SERVER['REQUEST_URI'] ];
 
     // info for REQUEST_ROUTE and REQUESTER
-    ApplicationLogger::info("Started " . $request_route["method"] . " " . $request_route["rule"] . " for $requester_ip");
+    ApplicationLogger::info("Started " . $request_route["_method"] . " " . $request_route["_rule"] . " for $requester_ip");
 
     // İstek url ile routes'ı içinden bul ve sevk et
     if ($route = self::get_route($request_route)) {
