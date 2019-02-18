@@ -155,7 +155,6 @@ class ApplicationController {
 
     // run controller class and before_actions, before_afters, helper functions
     $controller_class = ucwords($route->controller) . self::CONTROLLERSUBNAME;
-    ApplicationLogger::info("Processing by $controller_class#{$route->action}");
 
     $c = new $controller_class($route);
     $c->_run();
