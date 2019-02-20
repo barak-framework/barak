@@ -60,8 +60,8 @@ class ApplicationController {
           } elseif (!array_key_exists("only", $filter_action) and !array_key_exists("except", $filter_action)) {
             $this->{$filter_action_name}();
           }
-          if ($this->_redirect_to) exit($this->_redirect_to());
-          if ($this->_render)      exit($this->_render());
+          if ($this->_redirect_to) $this->_redirect_to();
+          if ($this->_render)      $this->_render();
         }
       }
 
@@ -96,6 +96,7 @@ class ApplicationController {
       $v->set($this->_render);
 
     echo $v->run();
+    exit();
   }
 
   private function _redirect_to() {
@@ -127,7 +128,7 @@ class ApplicationController {
     // kick main action!
     if (method_exists($this, $this->_route->action)) $this->{$this->_route->action}();
 
-    //  main action için _redirect_to, _render için atanan verileri sakla
+    // main action için _redirect_to, _render için atanan verileri sakla
     $main_redirect_to = $this->_redirect_to;
     $main_render = $this->_render;
 
@@ -136,8 +137,14 @@ class ApplicationController {
     if (isset($this->after_actions)) $this->_filter($this->_route->action, $this->after_actions);
 
     // main action için daha önce saklanan _redirect_to, _render verilerini çalıştır ve sonlandır
-    if ($main_redirect_to != NULL) exit($main_redirect_to());
-    if ($main_render != NULL) exit($main_render());
+    if ($main_redirect_to != NULL) {
+      $this->_redirect_to = $main_redirect_to;
+      $this->_redirect_to();
+    }
+    if ($main_render != NULL) {
+      $this->_render = $main_render;
+      $this->_render();
+    }
 
     // before actions, main action, after actions içerisinde
     // hiçbir şekilde _redirect_to, _render için atanan veri yok ise varsayılan _render çalışmalı!
