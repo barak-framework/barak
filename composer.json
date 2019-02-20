@@ -1,9 +1,9 @@
 {
     "name": "barak-framework/barak",
     "type": "project",
-    "description": "Barak MVC Framework",
+    "description": "Barak Framework",
     "keywords": ["barak", "turkmen", "framework"],
-    "homepage": "https://github.com/barak-framework/barak",
+    "homepage": "http://barak-framework.github.io",
     "license": "MIT",
     "authors": [
         {
