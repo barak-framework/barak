@@ -127,7 +127,7 @@ class ApplicationController {
     // kick main action!
     if (method_exists($this, $this->_route->action)) $this->{$this->_route->action}();
 
-    //  main action için _redirect_to, _render atanan verileri sakla
+    //  main action için _redirect_to, _render için atanan verileri sakla
     $main_redirect_to = $this->_redirect_to;
     $main_render = $this->_render;
 
@@ -139,9 +139,8 @@ class ApplicationController {
     if ($main_redirect_to != NULL) exit($main_redirect_to());
     if ($main_render != NULL) exit($main_render());
 
-    // before actions, main action, after actions içersinde
-    // hiçbir şekilde _redirect_to, _render atanan veri yok ise
-    // varsayılan _render çalışmalı!
+    // before actions, main action, after actions içerisinde
+    // hiçbir şekilde _redirect_to, _render için atanan veri yok ise varsayılan _render çalışmalı!
     $this->_render();
   }
 
