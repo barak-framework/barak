@@ -7,8 +7,8 @@ class ApplicationController {
   const CONTROLLERSUBNAME = "Controller";
 
   private $_locals = [];
-  private $_render = null;
-  private $_redirect_to = null;
+  private $_render = NULL;
+  private $_redirect_to = NULL;
 
   private $_route;
 
@@ -135,9 +135,9 @@ class ApplicationController {
     // eğer _redirect_to, _render herhangi biri atanmışsa çalıştır ve sonlandır
     if (isset($this->after_actions)) $this->_filter($this->_route->action, $this->after_actions);
 
-    // main action için daha önce saklanan _redirect_to, _render verilerini çalıştır
-    if (!empty($main_redirect_to)) exit($main_redirect_to());
-    if (!empty($main_render)) exit($main_render());
+    // main action için daha önce saklanan _redirect_to, _render verilerini çalıştır ve sonlandır
+    if ($main_redirect_to != NULL) exit($main_redirect_to());
+    if ($main_render != NULL) exit($main_render());
 
     // before actions, main action, after actions içersinde
     // hiçbir şekilde _redirect_to, _render atanan veri yok ise
