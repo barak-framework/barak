@@ -1,8 +1,5 @@
 <?php
 
-// CRUD
-// DRAFT #TODO or builder : https://github.com/ryangurn/PHP-MVC/blob/master/libraries/activerecord/lib/SQLBuilder.php
-
 // SQL injection protection http://stackoverflow.com/questions/60174/how-can-i-prevent-sql-injection-in-php
 
 class ApplicationMySQL {
