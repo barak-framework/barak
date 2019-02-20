@@ -117,31 +117,31 @@ class ApplicationController {
 
   private function _run() {
 
+    // include helper classes
     if (isset($this->helpers)) $this->_helpers();
 
+    // before actions
+    // eğer _redirect_to, _render herhangi biri atanmışsa çalıştır ve sonlandır
     if (isset($this->before_actions)) $this->_filter($this->_route->action, $this->before_actions);
 
+    // kick main action!
     if (method_exists($this, $this->_route->action)) $this->{$this->_route->action}();
 
-    if (!isset($this->_redirect_to)) {
-      $main_redirect_to = $this->_redirect_to;
-      $this->_redirect_to = null;
-    }
+    //  main action için _redirect_to, _render atanan verileri sakla
+    $main_redirect_to = $this->_redirect_to;
+    $main_render = $this->_render;
 
-    if (!isset($this->_render)) {
-      $main_render = $this->_render;
-      $this->_render = null;
-    }
-
+    // after actions
+    // eğer _redirect_to, _render herhangi biri atanmışsa çalıştır ve sonlandır
     if (isset($this->after_actions)) $this->_filter($this->_route->action, $this->after_actions);
 
-    if (isset($main_redirect_to)) $this->_redirect_to = $main_redirect_to;
+    // main action için daha önce saklanan _redirect_to, _render verilerini çalıştır
+    if (!empty($main_redirect_to)) exit($main_redirect_to());
+    if (!empty($main_render)) exit($main_render());
 
-    if (isset($main_render)) $this->_render = $main_render;
-
-    if (isset($this->_redirect_to)) $this->_redirect_to();
-
-    // default render must be!
+    // before actions, main action, after actions içersinde
+    // hiçbir şekilde _redirect_to, _render atanan veri yok ise
+    // varsayılan _render çalışmalı!
     $this->_render();
   }
 
