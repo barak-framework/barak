@@ -9,6 +9,8 @@ class ApplicationController {
   private $_locals = [];
   private $_render = NULL;
   private $_redirect_to = NULL;
+  private $_send_data = NULL;
+  // private _send_data // for attachement files
 
   private $_route;
 
@@ -16,8 +18,6 @@ class ApplicationController {
 
     $this->_route = $route;
 
-    // router'in localslarını(sayfadan :id, çekmek için), controller'dan gelen localslara yükle ki action içerisinden erişebilesin
-    $this->_locals = $route->locals;
   }
 
   final public function __get($local) { // genişletilemez fonksiyon
@@ -36,12 +36,44 @@ class ApplicationController {
     unset($this->_locals[$local]);
   }
 
-  final public function render($options) { // genişletilemez fonksiyon
-    $this->_render = $options;
+  final public function send_data($content, $filename) { // genişletilemez fonksiyon
+    $this->_send_data = [$content => $filename];
   }
 
   final public function redirect_to($url) { // genişletilemez fonksiyon
     $this->_redirect_to = $url;
+  }
+
+  final public function render($options) { // genişletilemez fonksiyon
+    $this->_render = $options;
+  }
+
+  public static function get_content(ApplicationRoute $route) {
+    if ($route->path) {
+      self::_load(trim($route->path, "/")); // for superclass
+      self::_load($route->controller, $route->path);
+    } else {
+      self::_load($route->controller);
+    }
+
+    // run controller class and before_actions, before_afters, helper functions
+    $controller_class = ucwords($route->controller) . self::CONTROLLERSUBNAME;
+
+    $c = new $controller_class($route);
+    return $c->_run();
+  }
+
+  private static function _load($file, $path = "") {
+    $controller_class = ucwords($file) . self::CONTROLLERSUBNAME;
+    $controller_path  = self::CONTROLLERPATH . trim($path,"/") . "/" . $controller_class . '.php';
+
+    if (!file_exists($controller_path))
+      throw new Exception("Controller dosyası mevcut değil → " . $controller_path);
+
+    require_once $controller_path;
+
+    if (!class_exists($controller_class))
+      throw new Exception("Controller sınıfı yüklenemedi → " . $controller_class);
   }
 
   private function _filter($action, $filter_actions) {
@@ -49,27 +81,42 @@ class ApplicationController {
     foreach ($filter_actions as $filter_action) {
 
       if (array_key_exists(0, $filter_action)) {
+
         $filter_action_name = $filter_action[0];
         if (method_exists($this, $filter_action_name)) {
+
+          // her action öncesi locals yükünü boşalt
+          $this->_locals = [];
+
           if (array_key_exists("only", $filter_action)) {
-            if (in_array($action, $filter_action["only"]))
-              $this->{$filter_action_name}();
+
+            if (in_array($action, $filter_action["only"])) $this->{$filter_action_name}();
+
           } elseif (array_key_exists("except", $filter_action)) {
-            if (!in_array($action, $filter_action["except"]))
-              $this->{$filter_action_name}();
+
+            if (!in_array($action, $filter_action["except"])) $this->{$filter_action_name}();
+
           } elseif (!array_key_exists("only", $filter_action) and !array_key_exists("except", $filter_action)) {
             $this->{$filter_action_name}();
           }
-          if ($this->_redirect_to) $this->_redirect_to();
-          if ($this->_render)      $this->_render();
-        }
-      }
 
+          // interrupt ?
+          if ($this->_redirect_to || $this->_render || $this->_send_data) return TRUE;
+        }
+
+      }
     }
+    // kesinti olmadı!
+    return FALSE;
   }
 
-  private function _helpers() {
-    ApplicationHelper::load($this->helpers);
+  private function _send_data() {
+    return [NULL => $this->_send_data];
+  }
+
+  private function _redirect_to() {
+    return [302 => $this->_redirect_to];
+    // exit(header("Location: http://" . $_SERVER['SERVER_NAME'] . "/" . trim($this->_redirect_to, "/"), false, 303));
   }
 
   private function _render() {
@@ -95,75 +142,71 @@ class ApplicationController {
     if ($this->_render)
       $v->set($this->_render);
 
-    echo $v->run();
-    exit();
-  }
-
-  private function _redirect_to() {
-    exit(header("Location: http://" . $_SERVER['SERVER_NAME'] . "/" . trim($this->_redirect_to, "/"), false, 303));
-  }
-
-  private static function _load($file, $path = "") {
-    $controller_class = ucwords($file) . self::CONTROLLERSUBNAME;
-    $controller_path  = self::CONTROLLERPATH . trim($path,"/") . "/" . $controller_class . '.php';
-
-    if (!file_exists($controller_path))
-      throw new Exception("Controller dosyası mevcut değil → " . $controller_path);
-
-    require_once $controller_path;
-
-    if (!class_exists($controller_class))
-      throw new Exception("Controller sınıfı yüklenemedi → " . $controller_class);
+    return [200 => $v->run()];
   }
 
   private function _run() {
 
     // include helper classes
-    if (isset($this->helpers)) $this->_helpers();
+    if (isset($this->helpers)) ApplicationHelper::load($this->helpers);
 
     // before actions
-    // eğer _redirect_to, _render herhangi biri atanmışsa çalıştır ve sonlandır
-    if (isset($this->before_actions)) $this->_filter($this->_route->action, $this->before_actions);
+    // eğer _send_data, _redirect_to, _render herhangi biri atanmışsa çalıştır ve sonlandır
+    if (isset($this->before_actions)) {
+
+      if ($this->_filter($this->_route->action, $this->before_actions)) {
+
+        if ($this->_send_data)   return self::_send_data();
+        if ($this->_redirect_to) return self::_redirect_to();
+        if ($this->_render)      return self::_render();
+      }
+    }
+
+    // router'in localslarını(sayfadan :id, çekmek için),
+    // controller'dan gelen localslara yükle ki action içerisinden erişebilesin
+    $this->_locals = $this->_route->locals;
 
     // kick main action!
     if (method_exists($this, $this->_route->action)) $this->{$this->_route->action}();
 
-    // main action için _redirect_to, _render için atanan verileri sakla
+    // main action için _locals, _send_data, _redirect_to, _render için atanan verileri sakla
+    $main_locals = $this->_locals;
+    $main_send_data = $this->_send_data;
     $main_redirect_to = $this->_redirect_to;
     $main_render = $this->_render;
 
     // after actions
-    // eğer _redirect_to, _render herhangi biri atanmışsa çalıştır ve sonlandır
-    if (isset($this->after_actions)) $this->_filter($this->_route->action, $this->after_actions);
+    // eğer _send_data, _redirect_to, _render herhangi biri atanmışsa çalıştır ve sonlandır
+    if (isset($this->after_actions)) {
+      if ($this->_filter($this->_route->action, $this->after_actions)) {
+        if ($this->_send_data)   return self::_send_data();
+        if ($this->_redirect_to) return self::_redirect_to();
+        if ($this->_render)      return self::_render();
+      }
+    }
 
-    // main action için daha önce saklanan _redirect_to, _render verilerini çalıştır ve sonlandır
+    // main action için daha önce saklanan _send_data verisini çalıştır ve sonlandır
+    if ($main_send_data != NULL) {
+      $this->_send_data = $main_send_data;
+      return self::_send_data();
+    }
+    // main action için daha önce saklanan _redirect_to verisini çalıştır ve sonlandır
     if ($main_redirect_to != NULL) {
       $this->_redirect_to = $main_redirect_to;
-      $this->_redirect_to();
+      return self::_redirect_to();
     }
+
+    // main action için daha önce saklanan _locals ile _render verilerini çalıştır ve sonlandır
     if ($main_render != NULL) {
+      $this->_locals = $main_locals;
       $this->_render = $main_render;
-      $this->_render();
+      return self::_render();
     }
 
     // before actions, main action, after actions içerisinde
     // hiçbir şekilde _redirect_to, _render için atanan veri yok ise varsayılan _render çalışmalı!
-    $this->_render();
+    return $this->_render();
   }
 
-  public static function dispatch(ApplicationRoute $route) {
-    if ($route->path) {
-      self::_load(trim($route->path, "/")); // for superclass
-      self::_load($route->controller, $route->path);
-    } else {
-      self::_load($route->controller);
-    }
-
-    // run controller class and before_actions, before_afters, helper functions
-    $controller_class = ucwords($route->controller) . self::CONTROLLERSUBNAME;
-
-    $c = new $controller_class($route);
-    $c->_run();
-  }
 }
 ?>

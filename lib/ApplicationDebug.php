@@ -29,7 +29,6 @@ class ApplicationDebug {
     }
 
     list($numbers, $rows) = self::_read_in_range_of_file($file, $line);
-
     self::_render($header, $numbers, $rows, $footer, $line);
   }
 
@@ -46,7 +45,6 @@ class ApplicationDebug {
     $footer = $file . " at line " . $line . PHP_EOL;
 
     list($numbers, $rows) = self::_read_in_range_of_file($file, $line);
-
     self::_render($header, $numbers, $rows, $footer, $line);
   }
 
@@ -55,27 +53,19 @@ class ApplicationDebug {
   public static function shutdown() {
     $error = error_get_last();
     if (!is_null($error)) {
-      ApplicationLogger::fatal("Sistem çalışmasını engelleyecek hata → " . $error['message']);
-      self::error($error['type'], $error['message'], $error['file'], $error['line']);
+      ApplicationLogger::fatal("Sistem çalışmasını engelleyecek hata → " . $error["message"]);
+      self::error($error["type"], $error["message"], $error["file"], $error["line"]);
     }
   }
-
-  // TODO Mailer içersinde sorun olunca buraya düşmüyor :-'(
 
   private static function _render($header, $numbers, $rows, $footer, $line) {
     ApplicationLogger::error("$header → $footer");
     ApplicationLogger::warning(implode(PHP_EOL, $rows));
 
-    ob_get_length() > 0 && ob_get_level() && ob_end_clean();
+    $body = (self::$_debug) ? self::_layout($header, $numbers, $rows, $footer, $line) : NULL;
 
-    $v = new ApplicationView();
-
-    if (self::$_debug)
-      $v->set(["text" => self::_layout($header, $numbers, $rows, $footer, $line)]);
-    else
-      $v->set(["file" => ApplicationView::DEBUGPAGE]);
-
-    echo $v->run();
+    $response = new ApplicationResponse(500, $body);
+    $response->send();
     exit();
   }
 
@@ -86,11 +76,11 @@ class ApplicationDebug {
     $stop  = $range * 2 + 1;
 
     $file = new SplFileObject($filename);
-    $fileIterator = new LimitIterator($file, $start, $stop);
+    $file_iterator = new LimitIterator($file, $start, $stop);
 
     $rows = [];
     $numbers = [];
-    foreach ($fileIterator as $number => $row) {
+    foreach ($file_iterator as $number => $row) {
 
       /* escaping a literal `<?=`, `<?php`, `?>` in a PHP script tags */
       $row = str_replace("<?=", "&lt;?=", $row);
@@ -110,7 +100,7 @@ class ApplicationDebug {
     $debug_index = array_search($line, $numbers);
     $_rows = [];
     foreach ($rows as $index => $row)
-      $_rows[$index] = ($debug_index == $index) ? "<div class='debug_row'> $row </div>" : "<div class='other_row'> $row </div>";
+      $_rows[$index] = ($debug_index == $index) ? "<div class='debugrow'> $row </div>" : "<div class='otherrow'> $row </div>";
 
     return sprintf("
       <!DOCTYPE html>
@@ -139,8 +129,8 @@ class ApplicationDebug {
       }
       .numbers { float: left; width: 4%%; text-align: center; }
       .rows { float: right;  width: 96%%; border-radius: 5px; background-color: white; }
-      .debug_row { background-color: #30D5C8; color: #ffffff; display: inline-block; width:100%%; }
-      .other_row { background-color: #ffffff; color: #665f75; display: inline-block; width:100%%; }
+      .debugrow { background-color: #30D5C8; color: #ffffff; display: inline-block; width:100%%; }
+      .otherrow { background-color: #ffffff; color: #665f75; display: inline-block; width:100%%; }
       </style>
       </head>
       <body>
@@ -158,7 +148,7 @@ class ApplicationDebug {
       </html>
       ",
       $header, implode("<br/>", $numbers), implode("<br/>", $_rows), $footer);
-  }
+}
 
 }
 ?>

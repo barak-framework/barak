@@ -135,7 +135,7 @@ class ApplicationView {
 
     include $file;
 
-    ApplicationLogger::info("\tRendered $file " . sprintf ("(%.2f ms)", (microtime(true) - $this->_time_start) * 1000));
+    ApplicationLogger::info("  Rendered $file " . sprintf ("(%.2f ms)", (microtime(true) - $this->_time_start) * 1000));
 
     return ob_get_clean();
   }

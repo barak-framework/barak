@@ -34,8 +34,11 @@ class Application {
     // Alias : get global functions
     ApplicationAlias::extract();
 
-    // Route : run configration of route
+    // Route : load routes in configuration file
     ApplicationConfig::route();
+
+    // Dispatcher : request dispatch to controller
+    ApplicationDispatcher::dispatch();
 
     // Database : close
     ApplicationDatabase::close();

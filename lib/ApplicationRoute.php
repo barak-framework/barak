@@ -5,6 +5,10 @@ class ApplicationRoute {
   // change name for :id/:action
   const dynamical_segment = "_dynamical_segment_";
 
+  // router'in localslarını(sayfadan :id, çekmek için),
+  // controller'dan gelen localslara yüklemek için sakla
+  public $locals;
+
   public $path;
   public $match_rule;
   public $method;
@@ -24,7 +28,7 @@ class ApplicationRoute {
       // Ör.: get("/users/show/:id", "users#show"); // controller: users, action:show
 
       list($controller, $action) = self::_spliter_struct($target, "#");
-      self::set($method, $this->path . $rule, $this->path . preg_replace("|:[\w]+|", self::dynamical_segment, $rule), $controller, $action);
+      self::set($method, $this->path . $rule, $this->path . preg_replace("|:[\w]+|", self::dynamical_segment, $rule), $controller,$action);
 
     } elseif (strpos($rule, "/") !== false) {
 

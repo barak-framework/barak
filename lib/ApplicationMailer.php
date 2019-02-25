@@ -4,7 +4,9 @@ class ApplicationMailer {
 
   const MAILERPATH = "app/mailers/";
 
-  private $_mailer;
+  private static $_configuration = NULL; // for PHPMailer
+
+  // private static $_mailer;
 
   private $_locals = [];
   private $_mail;
@@ -33,50 +35,54 @@ class ApplicationMailer {
     $this->_mail = $options;
   }
 
-  private static function _mailer() {
-    $mailer = new PHPMailer();
+  private static function _configuration() {
 
-    // Enables SMTP debug information (for testing)
-    //    0 = diasabled
-    //    1 = errors and messages
-    //    2 = messages only
-    //
-    $mailer->SMTPDebug = 0;
+    // yapılandırma dosyasını bu fonkiyon ne kadar çağrılırrsa çağrılsın sadece bir defa oku!
+    if (self::$_configuration == NULL) {
 
-    // Setting SMTP Protocol
-    // telling the class to use SMTP
-    $mailer->isSMTP();
+      self::$_configuration = new PHPMailer();
 
-    // Default Charset
-    $mailer->CharSet  = 'UTF-8';
-    $mailer->Encoding = "base64";
+      // Enables SMTP debug information (for testing)
+      //    0 = diasabled
+      //    1 = errors and messages
+      //    2 = messages only
+      //
+      self::$_configuration->SMTPDebug = 0;
 
-    // Default SMTP Auth
-    // Enable SMTP authentication
-    $mailer->SMTPAuth = true;
+      // Setting SMTP Protocol
+      // telling the class to use SMTP
+      self::$_configuration->isSMTP();
 
-    // Default HTML Format
-    $mailer->isHTML(true);
+      // Default Charset
+      self::$_configuration->CharSet  = 'UTF-8';
+      self::$_configuration->Encoding = "base64";
 
-    $mailer_configuration = ApplicationConfig::mailer();
-    foreach ($mailer_configuration as $key => $value) {
-      switch ($key) {
-        // set host like 'mail.website.com'
-        case "address":  $mailer->Host = $value; break;
-        // Setting Default Port
-        // set the SMTP port for the outMail server
-        //    use either 25, 587, 2525 or 8025
-        case "port":     $mailer->Port = $value; break;
-        // nerden ?
-        // set username like mail@gdemir.me
-        case "username": $mailer->Username = $value; $mailer->SetFrom($value, 'Admin'); break;
-        case "password": $mailer->Password = $value; break;
-        default:
-        throw new Exception("Uygulamanın yapılandırma dosyasında bilinmeyen parametre → " . $key);
+      // Default SMTP Auth
+      // Enable SMTP authentication
+      self::$_configuration->SMTPAuth = true;
+
+      // Default HTML Format
+      self::$_configuration->isHTML(true);
+
+      foreach (ApplicationConfig::mailer() as $key => $value) {
+        switch ($key) {
+          // set host like 'mail.website.com'
+          case "address":  self::$_configuration->Host = $value; break;
+          // Setting Default Port
+          // set the SMTP port for the outMail server
+          //    use either 25, 587, 2525 or 8025
+          case "port":     self::$_configuration->Port = $value; break;
+          // nerden ?
+          // set username like mail@gdemir.me
+          case "username": self::$_configuration->Username = $value; self::$_configuration->SetFrom($value, 'Admin'); break;
+          case "password": self::$_configuration->Password = $value; break;
+          default:
+          throw new Exception("Mailer yapılandırma dosyasında bilinmeyen parametre → " . $key);
+        }
       }
     }
 
-    return $mailer;
+    return self::$_configuration;
   }
 
   private function _filter($action, $filter_actions) {
@@ -107,7 +113,7 @@ class ApplicationMailer {
   }
 
   private function _mail($action) {
-    $main_mailer = $this->_mailer;
+    $main_mailer = $this->_configuration;
 
     $mailer = clone $main_mailer;
 
@@ -160,10 +166,10 @@ class ApplicationMailer {
     list($view) = explode("mailer", $mailer_class);
 
     if (!$action)
-      throw new Exception("Mailler sınıfında ilgili fonksiyon belirtilmelidir → " . $mailer_class);
+      throw new Exception("Mailler sınıfında ilgili method belirtilmelidir → " . $mailer_class);
 
     $m = new $mailer_class();
-    $m->_mailer = self::_mailer();
+    $m->_configuration = self::_configuration();
     $m->_view = $view;
     $m->_action = $action;
     $m->_args = $args;

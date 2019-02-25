@@ -27,7 +27,7 @@ class ApplicationRoutes {
       self::$_draws = TRUE;
     }
 
-    // TEST
+    /* TEST */
     // foreach (static::$_routes as $method => $routes) {
     //   echo "## <|> METHOD: $method<br/>";
     //   foreach ($routes as $route) {
@@ -35,52 +35,23 @@ class ApplicationRoutes {
     //   }
     // }
 
-    /* requester info */
-    $requester_ip = $_SERVER['REMOTE_ADDR'];
-
-    /* requester what do you want ? */
-    $request_route = [ "_method" => $_SERVER['REQUEST_METHOD'], "_rule" => $_SERVER['REQUEST_URI'] ];
-
-    // info for REQUEST_ROUTE and REQUESTER
-    ApplicationLogger::info("Started " . $request_route["_method"] . " " . $request_route["_rule"] . " for $requester_ip");
-
-    // İstek url ile routes'ı içinden bul ve sevk et
-    if ($route = self::get_route($request_route)) {
-
-      $time_start = microtime(true);
-      ApplicationLogger::info("Processing by {$route->controller}#{$route->action}");
-
-      // route action dispatch in controller and view
-      ApplicationController::dispatch($route);
-
-      ApplicationLogger::info("Completed OK in " . sprintf ("(%.2f ms)", (microtime(true) - $time_start) * 1000));
-
-    } else {
-
-      ApplicationLogger::error("No route matches [" . $request_route["_method"] . "] " . $request_route["_rule"]);
-
-      $v = new ApplicationView();
-      $v->set(["file" => ApplicationView::ERRORPAGE]);
-      echo $v->run();
-      exit();
-    }
   }
 
   // __get($request_route) // is not support object, only string
-  private static function get_route(array $request_route) {
-    if (array_key_exists($request_route["_method"], static::$_routes)) {
-      if (array_key_exists($request_route["_rule"], static::$_routes[$request_route["_method"]])) {
-        return static::$_routes[$request_route["_method"]][$request_route["_rule"]];
+  public static function get_route(ApplicationRequest $request) {
+    if (array_key_exists($request->method, static::$_routes)) {
+      if (array_key_exists($request->rule, static::$_routes[$request->method])) {
+        return static::$_routes[$request->method][$request->rule];
       } else {
         // search for match routes
-        foreach (static::$_routes[$request_route["_method"]] as $route) {
+        foreach (static::$_routes[$request->method] as $route) {
           if ($route->match_rule != "") {
-            $request_rule = explode("/", trim($request_route["_rule"], "/"));
-            $permit_rule = explode("/", trim($route->rule, "/"));
-            if (count($request_rule) == count($permit_rule)) {
+            $request_rule = explode("/", trim($request->rule, "/"));
+            $route_rule = explode("/", trim($route->rule, "/"));
+            if (count($request_rule) == count($route_rule)) {
               $match = true;
               foreach ($request_rule as $index => $value) {
-                if (($request_rule[$index] != $permit_rule[$index]) and ($permit_rule[$index] != ApplicationRoute::dynamical_segment)) {
+                if (($request_rule[$index] != $route_rule[$index]) and ($route_rule[$index] != ApplicationRoute::dynamical_segment)) {
                   $match = false;
                   break;
                 }
@@ -101,15 +72,15 @@ class ApplicationRoutes {
           }
         }
       }
-      return null;
+      return NULL;
     }
-    throw new Exception("Uzay çağında bizim henüz desteklemediğimiz bir method → " . $request_route["_method"]);
+    throw new Exception("Uzay çağında bizim henüz desteklemediğimiz bir method → " . $request->method);
   }
 
   private static function set_route(ApplicationRoute $route) {
     if (array_key_exists($route->method, static::$_routes)) {
       if (array_key_exists($route->rule, static::$_routes[$route->method])) {
-        throw new Exception("Bu yönlendirme daha önceden tanımlanmış → X" . $route->rule . "X");
+        throw new Exception("Bu yönlendirme daha önceden tanımlanmış → " . $route->rule);
       }
     }
     static::$_routes[$route->method][$route->rule] = $route;
