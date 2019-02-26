@@ -6,20 +6,23 @@ Barak Framework PHP diliyle yazılmış, açık kaynak kodlu bir web uygulama ge
 
 ### Gereksinimler
 
-1. Programming Language : `Php >= 5.4`
-2. Database Access : `MySQL`
-3. Web Server : `Apache`, `Nginx`, `ISS`
-4. Package Manager : `Composer`
+1. Programlama Dili : `Php >= 5.4`
+2. Veritabanı Sürücüsü : `PDO`
+3. Web Sunucuları :
+    1. `Apache`
+    2. `Nginx`
+    3. `ISS`
+4. Paket Yöneticisi : `Composer`
 
 Barak Framework için gerekli olan paketler yukarıda verilmiştir. Bu paketlerin nasıl kurulacağına ilişkin aşağıdaki bağlantıları inceleyebilirsiniz.
 
-> Linux, Apache, MySQL, Php Installation : [LAMP](http://gdemir.github.io/categories/linux/lamp/)
+> Linux, Apache, MySQL, Php Kurulum : [LAMP](http://gdemir.github.io/categories/linux/lamp/)
 
-> Linux, Nginx, MySQL, Php Installation : [LEMP](http://gdemir.github.io/categories/linux/lemp/)
+> Linux, Nginx, MySQL, Php Kurulum : [LEMP](http://gdemir.github.io/categories/linux/lemp/)
 
-> Web Server Settings : [apache2-settings](https://github.com/barak-framework/barak/blob/master/.htaccess.sample) or [nginx-settings](https://github.com/barak-framework/barak/blob/master/nginx.config.sample) or [iss-settings](https://github.com/barak-framework/barak/blob/master/web.config.sample)
+> Web Sunucu Ayarları : [apache2-settings](https://github.com/barak-framework/barak/blob/master/.htaccess.sample) veya [nginx-settings](https://github.com/barak-framework/barak/blob/master/nginx.config.sample) veya [iss-settings](https://github.com/barak-framework/barak/blob/master/web.config.sample)
 
-> Package Mananger Installation : [composer-installation](http://gdemir.github.io/categories/php/composer/)
+> Paket Yönetici Kurulumu : [composer-installation](http://gdemir.github.io/categories/php/composer/)
 
 ### Barak Kurulum
 
