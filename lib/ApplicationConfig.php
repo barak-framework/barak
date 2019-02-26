@@ -36,7 +36,7 @@ class ApplicationConfig {
     }
 
     // default setting
-    ApplicationI18n::init();
+    ApplicationI18n::init("tr");
   }
 
   // veritabanı ayar dosyasını oku
