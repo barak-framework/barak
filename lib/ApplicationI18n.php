@@ -5,21 +5,21 @@ class ApplicationI18n {
   private $_locale;
   private $_words;
 
-  private function __construct($default) {
-    $this->_locale = $default;
-    $this->_words  = ApplicationConfig::i18n($default);
+  private function __construct($locale) {
+    $this->_locale = $locale;
+    $this->_words = ApplicationConfig::i18n($default);
     return $this;
   }
 
-  public static function init($default = "tr") {
+  public static function init($locale) {
     if (isset($_SESSION[self::storage_key()])) {
       if ($_SESSION[self::storage_key()]->_locale)
         return;
     }
-    $_SESSION[self::storage_key()] = new ApplicationI18n($default);
+    $_SESSION[self::storage_key()] = new ApplicationI18n($locale);
   }
 
-  public static function locale($locale = "tr") {
+  public static function locale($locale) {
     $_SESSION[self::storage_key()]->_locale = $locale;
     $_SESSION[self::storage_key()]->_words = ApplicationConfig::i18n($locale);
   }
@@ -28,12 +28,12 @@ class ApplicationI18n {
     return $_SESSION[self::storage_key()]->_locale;
   }
 
-  public static function translate($_word) {
-    $words = explode(".", $_word);
-    $current_words = [];
-    foreach ($words as $word)
-      $current_words = ($current_words == []) ? self::get_first_word($word) : $current_words[$word];
-    return $current_words;
+  public static function translate($words) {
+    $array_words = explode(".", $words);
+    $reply_words = [];
+    foreach ($array_words as $word)
+      $reply_words = ($reply_words == []) ? self::get_first_word($word) : $reply_words[$word];
+    return $reply_words;
   }
 
   private static function get_first_word($word) {
