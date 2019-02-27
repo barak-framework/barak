@@ -2,7 +2,7 @@
 
 // SQL injection protection http://stackoverflow.com/questions/60174/how-can-i-prevent-sql-injection-in-php
 
-class ApplicationMySQL {
+class ApplicationQuery {
 
   public static $order_sort_type = ["ASC", "DESC"];
   public static $where_logics = ["AND", "OR"];
