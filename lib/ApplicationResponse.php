@@ -15,7 +15,7 @@ class ApplicationResponse {
   const DEBUGPAGE = "public/500.html";
 
   private $_statuscode;
-  private $_status;
+  private $_status; // status code and status text
   private $_body;
 
   final public function __construct($statuscode = 200, $body = NULL) { // genişletilemez fonksiyon
