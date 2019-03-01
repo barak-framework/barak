@@ -176,5 +176,6 @@ class ApplicationMailer {
     $m->_run();
 
   }
+
 }
 ?>

@@ -26,7 +26,7 @@ class ApplicationLogger {
      }
 
      if (!in_array($levelname, self::LEVELNAMES))
-      throw new Exception("Bilinmeyen method! → " . $levelname);
+      throw new Exception("Logger kullanımı için bilinmeyen method → " . $levelname);
 
      // find key of array
      $levels = array_flip(self::LEVELNAMES);

@@ -2,18 +2,21 @@
 
 class ApplicationRoutes {
 
+  CONST METHODS = ["GET", "POST"];
+
   private static $_path = "";
   private static $_draws = NULL;
   private static $_routes = [];
 
   public static function __callStatic($method, array $args) {
-    if (in_array($method, [ 'get', 'post' ])) {
-      // args ([0] => rule, [1] => controller#action, [2] => path)
-      $args[2] =  ($args[2]) ? static::$_path . $args[2] : static::$_path;
-      // call private method _get, _post
-      $route = ApplicationRoutes::{"_$method"}(...$args);
-      self::set_route($route);
-    } else { throw new Exception("Beklenmedik bir method → " .  $method); }
+    if (!in_array(strtoupper($method), self::METHODS))
+      throw new Exception("Routes yapılandırma dosyasında bilinmeyen method → " .  $method);
+
+    // args ([0] => rule, [1] => controller#action, [2] => path)
+    $args[2] =  ($args[2]) ? static::$_path . $args[2] : static::$_path;
+    // call private method _get, _post
+    $route = ApplicationRoutes::{"_$method"}(...$args);
+    self::set_route($route);
   }
 
   public static function draw(callable $_functions) {
@@ -38,7 +41,6 @@ class ApplicationRoutes {
     // exit();
   }
 
-  // __get($request_route) // is not support object, only string
   public static function get_route(ApplicationRequest $request) {
     if (array_key_exists($request->method, static::$_routes)) {
       if (array_key_exists($request->rule, static::$_routes[$request->method])) {
@@ -121,12 +123,13 @@ class ApplicationRoutes {
     ApplicationRoutes::get("", $target, $path);
   }
 
+  private static function _get($rule, $target = FALSE, $path = "") {
+    return new ApplicationRoute("get",  $rule, $target, $path);
+  }
+
   private static function _post($rule, $target = FALSE, $path = "") {
     return new ApplicationRoute("post", $rule, $target, $path);
   }
 
-  private static function _get($rule, $target = FALSE, $path = "") {
-    return new ApplicationRoute("get",  $rule, $target, $path);
-  }
 }
 ?>

@@ -16,7 +16,7 @@ class ApplicationConfig {
     ApplicationDebug::init(false);
 
     if (!file_exists(self::APPFILE))
-      throw new Exception("Yapılandırma ayar dosyası mevcut değil → " . self::APPFILE);
+      throw new Exception("Uygulama yapılandırma ayar dosyası mevcut değil → " . self::APPFILE);
 
     // for $_SESSION hash kick!
     if (!strlen(session_id())) session_start();
@@ -31,7 +31,7 @@ class ApplicationConfig {
         case "locale":          ApplicationI18n::init($value);        break;
         case "cacheexpiration": ApplicationCache::expiration($value); break;
         default:
-        throw new Exception("Uygulamanın yapılandırma dosyasında bilinmeyen parametre → " . $key);
+        throw new Exception("Uygulama yapılandırma dosyasında bilinmeyen parametre → " . $key);
       }
     }
 
@@ -72,7 +72,7 @@ class ApplicationConfig {
     if (!file_exists(self::ROUTESFILE))
       throw new Exception("Yönlendirme ayar dosyası mevcut değil → " . self::ROUTESFILE);
 
-      // configuration routes load in this file
+    // configuration routes load in this file
     include self::ROUTESFILE;
   }
 
@@ -86,6 +86,6 @@ class ApplicationConfig {
     $words = include $localefile;
     return $words;
   }
-}
 
+}
 ?>
