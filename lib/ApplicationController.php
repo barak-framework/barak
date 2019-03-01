@@ -10,14 +10,11 @@ class ApplicationController {
   private $_render = NULL;
   private $_redirect_to = NULL;
   private $_send_data = NULL;
-  // private _send_data // for attachement files
 
   private $_route;
 
   final public function __construct(ApplicationRoute $route) { // genişletilemez fonksiyon
-
     $this->_route = $route;
-
   }
 
   final public function __get($local) { // genişletilemez fonksiyon

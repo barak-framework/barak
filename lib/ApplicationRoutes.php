@@ -1,6 +1,7 @@
 <?php
 
 class ApplicationRoutes {
+
   private static $_path = "";
   private static $_draws = NULL;
   private static $_routes = [];
@@ -34,7 +35,7 @@ class ApplicationRoutes {
     //     print_r($route); echo "<br/><br/>";
     //   }
     // }
-
+    // exit();
   }
 
   // __get($request_route) // is not support object, only string
@@ -46,18 +47,18 @@ class ApplicationRoutes {
         // search for match routes
         foreach (static::$_routes[$request->method] as $route) {
           if ($route->match_rule != "") {
-            $request_rule = explode("/", trim($request->rule, "/"));
-            $route_rule = explode("/", trim($route->rule, "/"));
+            $request_rule = explode("/", $request->rule);
+            $route_rule = explode("/", $route->rule);
             if (count($request_rule) == count($route_rule)) {
-              $match = true;
+              $match = TRUE;
               foreach ($request_rule as $index => $value) {
                 if (($request_rule[$index] != $route_rule[$index]) and ($route_rule[$index] != ApplicationRoute::dynamical_segment)) {
-                  $match = false;
+                  $match = FALSE;
                   break;
                 }
               }
               if ($match) {
-                $permit_match_rule = explode("/", trim($route->match_rule, "/"));
+                $permit_match_rule = explode("/", $route->match_rule);
                 preg_match_all('@:([\w]+)@', $route->match_rule, $segments, PREG_PATTERN_ORDER);
                 $segments = $segments[0];
                 // get methodları için locals'a yükle : değişkenler
@@ -88,7 +89,7 @@ class ApplicationRoutes {
 
   public static function scope($path, callable $_functions) {
     // path daha önce ilklendirildiyse (scope içinde scope varsa gibi) pathe ekleme yap yoksa path'i ata
-    static::$_path = static::$_path . $path;
+    static::$_path =  static::$_path . "/$path";
     // scope içindeki fonksiyonları çalıştır
     $_functions();
     // https://stackoverflow.com/questions/2430208/php-how-to-remove-last-part-of-a-path
@@ -96,37 +97,35 @@ class ApplicationRoutes {
     static::$_path = preg_replace("/\/\w+$/i", "", static::$_path);
   }
 
-  public static function resource($table, $path = null) {
-    $_table = trim($table, "/");
-    ApplicationRoutes::get("$table",          "$_table#index", $path);
-    ApplicationRoutes::get("$table/create",   false,           $path);
-    ApplicationRoutes::post("$table/save",    false,           $path);
-    ApplicationRoutes::get("$table/show/",    false,           $path);
-    ApplicationRoutes::get("$table/edit/",    false,           $path);
-    ApplicationRoutes::post("$table/update",  false,           $path);
-    ApplicationRoutes::post("$table/destroy", false,           $path);
+  public static function resource($table, $path = "") {
+    ApplicationRoutes::get("$table",          "$table#index", $path);
+    ApplicationRoutes::get("$table/create",   FALSE,          $path);
+    ApplicationRoutes::post("$table/save",    FALSE,          $path);
+    ApplicationRoutes::get("$table/show/",    FALSE,          $path);
+    ApplicationRoutes::get("$table/edit/",    FALSE,          $path);
+    ApplicationRoutes::post("$table/update",  FALSE,          $path);
+    ApplicationRoutes::post("$table/destroy", FALSE,          $path);
   }
 
-  public static function resources($table, $path = null) {
-    $_table = trim($table, "/");
-    ApplicationRoutes::get("$table",          "$_table#index", $path);
-    ApplicationRoutes::get("$table/create",   false,           $path);
-    ApplicationRoutes::post("$table/save",    false,           $path);
-    ApplicationRoutes::get("$table/show/:id", "$_table#show",  $path);
-    ApplicationRoutes::get("$table/edit/:id", "$_table#edit",  $path);
-    ApplicationRoutes::post("$table/update",  false,           $path);
-    ApplicationRoutes::post("$table/destroy", false,           $path);
+  public static function resources($table, $path = "") {
+    ApplicationRoutes::get("$table",          "$table#index", $path);
+    ApplicationRoutes::get("$table/create",   FALSE,          $path);
+    ApplicationRoutes::post("$table/save",    FALSE,          $path);
+    ApplicationRoutes::get("$table/show/:id", "$table#show",  $path);
+    ApplicationRoutes::get("$table/edit/:id", "$table#edit",  $path);
+    ApplicationRoutes::post("$table/update",  FALSE,          $path);
+    ApplicationRoutes::post("$table/destroy", FALSE,          $path);
   }
 
-  public static function root($target = false, $path = null) {
-    ApplicationRoutes::get("/", $target, $path);
+  public static function root($target = FALSE, $path = "") {
+    ApplicationRoutes::get("", $target, $path);
   }
 
-  private static function _post($rule, $target = false, $path = null) {
+  private static function _post($rule, $target = FALSE, $path = "") {
     return new ApplicationRoute("post", $rule, $target, $path);
   }
 
-  private static function _get($rule, $target = false, $path = null) {
+  private static function _get($rule, $target = FALSE, $path = "") {
     return new ApplicationRoute("get",  $rule, $target, $path);
   }
 }
