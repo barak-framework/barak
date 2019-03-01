@@ -36,16 +36,6 @@ class ApplicationAlias {
       return ApplicationI18n::translate($words);
     }
 
-    // UTILS
-
-    function h($content) {
-      return ApplicationUtil::html_escape($content);
-    }
-
-    function u($content) {
-      return ApplicationUtil::url_encode($content);
-    }
-
     // LAYOUT and TEMPLATE
     // for app/views/VIEW/ACTION.php and app/views/layouts/VIEW.php
 
