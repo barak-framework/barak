@@ -9,7 +9,7 @@ class ApplicationRoutes {
   private static $_routes = [];
 
   public static function __callStatic($method, array $args) {
-    if (!in_array(strtoupper($method), self::METHODS))
+    if (!in_array($method, self::METHODS))
       throw new Exception("Routes yapılandırma dosyasında bilinmeyen method → " .  $method);
 
     // args ([0] => rule, [1] => controller#action, [2] => path)
