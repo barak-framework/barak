@@ -2,7 +2,7 @@
 
 class ApplicationRoutes {
 
-  CONST METHODS = ["GET", "POST"];
+  CONST METHODS = ["get", "post"];
 
   private static $_path = "";
   private static $_draws = NULL;
