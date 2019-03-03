@@ -30,12 +30,12 @@ class ApplicationModel {
 
     if (array_key_exists($field, $this->_fields)) {
       return $this->_fields[$field];
-    } else if (in_array($field, ApplicationQuery::tablenames())) {
+    } else if (in_array($field, ApplicationSql::tablenames())) {
 
       $belong_table = $field; // user
       $foreign_key = $field . "_id"; // user_id
 
-      if (!in_array($foreign_key, ApplicationQuery::fieldnames($this->_table)))
+      if (!in_array($foreign_key, ApplicationSql::fieldnames($this->_table)))
         throw new Exception("Modele ait olan böyle foreign key mevcut değil → " . $foreign_key);
 
       return $belong_table::find($this->_fields[$foreign_key]);
@@ -45,7 +45,7 @@ class ApplicationModel {
 
       if ($matches) {
         $field = substr($field, 7);
-        if (in_array($field, ApplicationQuery::tablenames())) {
+        if (in_array($field, ApplicationSql::tablenames())) {
 
           $owner_table = ucfirst($field); // model name
           $owner_key = strtolower($this->_table) . "_id";
@@ -101,12 +101,12 @@ class ApplicationModel {
 
     if (!$this->_new_record_state) {
 
-      ApplicationQuery::update($this->_table, $this->_fields, [self::set_to_where("id", intval($this->_fields["id"]))], 1);
+      ApplicationSql::update($this->_table, $this->_fields, [self::set_to_where("id", intval($this->_fields["id"]))], 1);
 
     } else {
 
       // kayıt tamamlandıktan sonra en son id döndür
-      $id = ApplicationQuery::create($this->_table, $this->_fields);
+      $id = ApplicationSql::create($this->_table, $this->_fields);
 
       // artık yeni kayıt değil
       $this->_new_record_state = false;
@@ -119,7 +119,7 @@ class ApplicationModel {
   }
 
   public function destroy() {
-    ApplicationQuery::delete($this->_table, [self::set_to_where("id", intval($this->_fields["id"]))], 1);
+    ApplicationSql::delete($this->_table, [self::set_to_where("id", intval($this->_fields["id"]))], 1);
   }
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -150,24 +150,24 @@ class ApplicationModel {
     // mark control
     $mark = strtoupper(trim($mark));
     if (is_null($value)) {
-      $mark = ApplicationQuery::$where_marks_null[0]; // "IS NULL";
+      $mark = ApplicationSql::$where_marks_null[0]; // "IS NULL";
       $value = NULL;
-    } elseif (in_array($value, ApplicationQuery::$where_marks_null, true)) {
+    } elseif (in_array($value, ApplicationSql::$where_marks_null, true)) {
       $mark = $value;
       $value = NULL;
-    } elseif (in_array($mark, ApplicationQuery::$where_marks_in)) {
+    } elseif (in_array($mark, ApplicationSql::$where_marks_in)) {
       if (!is_array($value))
-        throw new Exception(sprintf("WHERE %s için değer list olmalıdır → ", implode(',', ApplicationQuery::$where_marks_in)) . $value);
-    } elseif (in_array($mark, ApplicationQuery::$where_marks_between)) {
+        throw new Exception(sprintf("WHERE %s için değer list olmalıdır → ", implode(',', ApplicationSql::$where_marks_in)) . $value);
+    } elseif (in_array($mark, ApplicationSql::$where_marks_between)) {
       if (!is_array($value) or (is_array($value) and count($value) != 2))
-        throw new Exception(sprintf("WHERE %s için değer list ve 2 değerli olmalıdır → ", implode(',', ApplicationQuery::$where_marks_in)) . $value);
-    } elseif (!in_array($mark, array_merge(ApplicationQuery::$where_marks_other, ApplicationQuery::$where_marks_like))) {
+        throw new Exception(sprintf("WHERE %s için değer list ve 2 değerli olmalıdır → ", implode(',', ApplicationSql::$where_marks_in)) . $value);
+    } elseif (!in_array($mark, array_merge(ApplicationSql::$where_marks_other, ApplicationSql::$where_marks_like))) {
       throw new Exception("WHERE için tanımlı böyle bir işaretçi bulunamadı → " . $mark);
     }
 
     // logic control
     $logic = strtoupper(trim($logic));
-    if (!in_array($logic, ApplicationQuery::$where_logics))
+    if (!in_array($logic, ApplicationSql::$where_logics))
       throw new Exception("WHERE de tanımlı böyle bir bağlayıcı bulunamadı → " . $logic);
 
     $this->_where[] = self::set_to_where($field, $value, $mark, $logic);
@@ -193,7 +193,7 @@ class ApplicationModel {
       list($belong_table, $belong_tables) = (is_array($value)) ? [$key, $value] : [$value, null];
 
       self::check_table($belong_table);
-      $belong_table_fieldnames = ApplicationQuery::fieldnames($belong_table);
+      $belong_table_fieldnames = ApplicationSql::fieldnames($belong_table);
       $foreign_key = strtolower($table) . "_id";
 
       // join işlemi için user.id = comment.user_id gibi where'ye eklemeler yap
@@ -212,7 +212,7 @@ class ApplicationModel {
 
     // ilk tablonun kendi select'i için eklemeler yap. (Ör.: user.first_name gibi)
     // select kullanılmamışsa
-    foreach (ApplicationQuery::fieldnames($this->_table) as $fieldname)
+    foreach (ApplicationSql::fieldnames($this->_table) as $fieldname)
       $this->_select[] = $this->_table . "." . $fieldname;
 
     return $this;
@@ -223,7 +223,7 @@ class ApplicationModel {
 
     // sort_type control
     $sort_type = strtoupper(trim($sort_type));
-    if (!in_array($sort_type, ApplicationQuery::$order_sort_type))
+    if (!in_array($sort_type, ApplicationSql::$order_sort_type))
       throw new Exception("Order sorgusunda bilinmeyen parametre → " . $sort_type);
 
     $this->_order[] = "$field $sort_type";
@@ -262,7 +262,7 @@ class ApplicationModel {
   ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   public function get() {
-    if ($record = ApplicationQuery::read($this->_select, $this->_table, $this->_where)) {
+    if ($record = ApplicationSql::read($this->_select, $this->_table, $this->_where)) {
       return self::instance_model_old($this->_table, $record);
     }
     return null;
@@ -296,7 +296,7 @@ class ApplicationModel {
   public function count() {
     $field = "count(*)";
     if (empty($this->_group)) {
-      $record = ApplicationQuery::read([$field], $this->_table, $this->_where);
+      $record = ApplicationSql::read([$field], $this->_table, $this->_where);
       return $record[$field] ?: null;
     } else {
       $this->_select = array_merge([$field], $this->_group);
@@ -310,11 +310,11 @@ class ApplicationModel {
     foreach ($sets as $field => $value)
       self::check_field($field, $this->_table);
 
-    ApplicationQuery::update($this->_table, $sets, $this->_where, $this->_limit);
+    ApplicationSql::update($this->_table, $sets, $this->_where, $this->_limit);
   }
 
   public function delete_all() {
-    ApplicationQuery::delete($this->_table, $this->_where, $this->_limit);
+    ApplicationSql::delete($this->_table, $this->_where, $this->_limit);
   }
 
   public function first($limit = 1) {
@@ -400,7 +400,7 @@ class ApplicationModel {
   ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   private function _read_all($all = false) {
-    return ApplicationQuery::read_all($this->_select, $this->_table, $this->_join, $this->_where, $this->_order, $this->_group, $this->_limit, $this->_offset);
+    return ApplicationSql::read_all($this->_select, $this->_table, $this->_join, $this->_where, $this->_order, $this->_group, $this->_limit, $this->_offset);
   }
 
   private function _merge_field_with_table($field) {
@@ -440,7 +440,7 @@ class ApplicationModel {
   private static function instance_model_new($modelname) {
     $object = new $modelname($modelname);
     $object->_new_record_state = true;
-    foreach (ApplicationQuery::fieldnames($modelname) as $fieldname)
+    foreach (ApplicationSql::fieldnames($modelname) as $fieldname)
       $object->_fields[$fieldname] = null;
     return $object;
   }
@@ -461,12 +461,12 @@ class ApplicationModel {
   }
 
   private static function check_table($table) { // $table = $this->_table or static table
-    if (!in_array($table, ApplicationQuery::tablenames()))
+    if (!in_array($table, ApplicationSql::tablenames()))
       throw new Exception("Veritabanında böyle bir tablo mevcut değil → " . $table);
   }
 
   private static function check_field($field, $table) {
-    $fields = ApplicationQuery::fieldnames($table);
+    $fields = ApplicationSql::fieldnames($table);
     if (!in_array($field, $fields))
       throw new Exception("| $table | tablosunda böyle bir anahtar mevcut değil → " . $field);
   }
