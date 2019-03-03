@@ -31,7 +31,7 @@ class ApplicationResponse {
       case 302:  $this->_redirect();  break; // exit
       case 404:  $this->_write_404(); break;
       case 500:  $this->_write_500(); break;
-      case NULL: $this->_send_data(); break; // exit
+      case NULL: $this->_send_data(); break;
       default:
       throw new Exception("Yanıt vermek için bilinmeyen durum kodu → " . $this->_statuscode);
     }
@@ -43,7 +43,7 @@ class ApplicationResponse {
 
 
   private function _redirect() {
-    exit(header("Location: http://" . $_SERVER['SERVER_NAME'] . "/" . trim($this->_body, "/"), false, 302));
+    exit(header("Location: http://" . $_SERVER['SERVER_NAME'] . "/" . trim($this->_body, "/"), FALSE, 302));
   }
 
   private function _write() {
@@ -67,9 +67,10 @@ class ApplicationResponse {
   }
 
   private function _send_data() {
-    list($body, $filename) = each($this->_body);
-    header("Content-Disposition: attachment; filename='{$filename}'", false, 200);
+    list($body, $filename) = $this->_body;
+    header("Content-Disposition: attachment; filename='{$filename}'", FALSE, 200);
     echo $body;
   }
+
 }
 ?>

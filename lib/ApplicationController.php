@@ -108,12 +108,11 @@ class ApplicationController {
   }
 
   private function _send_data() {
-    return [NULL => $this->_send_data];
+    return [NULL, $this->_send_data];
   }
 
   private function _redirect_to() {
-    return [302 => $this->_redirect_to];
-    // exit(header("Location: http://" . $_SERVER['SERVER_NAME'] . "/" . trim($this->_redirect_to, "/"), false, 303));
+    return [302, $this->_redirect_to];
   }
 
   private function _render() {
@@ -139,7 +138,7 @@ class ApplicationController {
     if ($this->_render)
       $v->set($this->_render);
 
-    return [200 => $v->run()];
+    return [200, $v->run()];
   }
 
   private function _run() {

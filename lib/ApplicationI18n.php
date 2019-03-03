@@ -47,5 +47,6 @@ class ApplicationI18n {
   private static function storage_key() {
     return '_i18n';
   }
+
 }
 ?>

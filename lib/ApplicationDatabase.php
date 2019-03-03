@@ -37,5 +37,6 @@ class ApplicationDatabase {
     if (file_exists(self::SEEDSFILE))
       include self::SEEDSFILE;
   }
+
 }
 ?>

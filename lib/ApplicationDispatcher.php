@@ -17,8 +17,7 @@ class ApplicationDispatcher {
       ApplicationLogger::info("Processing by {$route->controller}#{$route->action}");
 
       // route action dispatch in controller and view
-      $content = ApplicationController::get_content($route);
-      foreach ($content as $key => $value) { $statuscode = $key; $content = $value; }
+      list($statuscode, $content) = ApplicationController::get_content($route);
 
       // maybe status code : 200, 302, NULL
       $response = new ApplicationResponse($statuscode, $content);
