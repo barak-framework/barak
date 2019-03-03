@@ -35,6 +35,26 @@ class ApplicationMailer {
     $this->_mail = $options;
   }
 
+  // UserMailer::delivery("password_reset");
+  // UserMailer::delivery("password_reset", [$code]);
+  // UserMailer::delivery("password_reset", [$code, $site_url]);
+
+  final public static function delivery($action = null, $args = []) { // genişletilemez fonksyion
+    $mailer_class = strtolower(get_called_class());
+    list($view) = explode("mailer", $mailer_class);
+
+    if (!$action)
+      throw new Exception("Mailler sınıfında ilgili method belirtilmelidir → " . $mailer_class);
+
+    $m = new $mailer_class();
+    $m->_configuration = self::_configuration();
+    $m->_view = $view;
+    $m->_action = $action;
+    $m->_args = $args;
+    $m->_run();
+
+  }
+
   private static function _configuration() {
 
     // yapılandırma dosyasını bu fonkiyon ne kadar çağrılırrsa çağrılsın sadece bir defa oku!
@@ -90,14 +110,21 @@ class ApplicationMailer {
     foreach ($filter_actions as $filter_action) {
 
       if (array_key_exists(0, $filter_action)) {
+
         $filter_action_name = $filter_action[0];
         if (method_exists($this, $filter_action_name)) {
+
+          // her action öncesi locals yükünü boşalt
+          $this->_locals = [];
+
           if (array_key_exists("only", $filter_action)) {
-            if (in_array($action, $filter_action["only"]))
-              $this->{$filter_action_name}();
+
+            if (in_array($action, $filter_action["only"])) $this->{$filter_action_name}();
+
           } elseif (array_key_exists("except", $filter_action)) {
-            if (!in_array($action, $filter_action["except"]))
-              $this->{$filter_action_name}();
+
+            if (!in_array($action, $filter_action["except"])) $this->{$filter_action_name}();
+
           } elseif (!array_key_exists("only", $filter_action) and !array_key_exists("except", $filter_action)) {
             $this->{$filter_action_name}();
           }
@@ -106,10 +133,6 @@ class ApplicationMailer {
       }
 
     }
-  }
-
-  private function _helpers() {
-    ApplicationHelper::load($this->helpers);
   }
 
   private function _mail($action) {
@@ -145,35 +168,19 @@ class ApplicationMailer {
 
   private function _run() {
 
-    if (isset($this->helpers)) $this->_helpers();
+    if (isset($this->helpers)) ApplicationHelper::load($this->helpers);
 
+    // before actions
     if (isset($this->before_actions)) $this->_filter($this->_action, $this->before_actions);
 
+    // kick main action!
     if (method_exists($this, $this->_action)) call_user_func_array(array($this, $this->_action), $this->_args);
 
+    // main action and view go!
     if ($this->_mail) self::_mail($this->_action);
 
+    // after actions
     if (isset($this->after_actions)) $this->_filter($this->_action, $this->after_actions);
-
-  }
-
-  // UserMailer::delivery("password_reset");
-  // UserMailer::delivery("password_reset", [$code]);
-  // UserMailer::delivery("password_reset", [$code, $site_url]);
-
-  final public static function delivery($action = null, $args = []) { // genişletilemez fonksyion
-    $mailer_class = strtolower(get_called_class());
-    list($view) = explode("mailer", $mailer_class);
-
-    if (!$action)
-      throw new Exception("Mailler sınıfında ilgili method belirtilmelidir → " . $mailer_class);
-
-    $m = new $mailer_class();
-    $m->_configuration = self::_configuration();
-    $m->_view = $view;
-    $m->_action = $action;
-    $m->_args = $args;
-    $m->_run();
 
   }
 
