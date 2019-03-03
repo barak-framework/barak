@@ -4,11 +4,11 @@ class ApplicationResponse {
 
   CONST STATUS =
   [
-  200 => "OK",
-  302 => "Found",
-  404 => "Not Found",
-  500 => "Internal Server Error",
-  NULL => ""
+  200 => "OK", // doğru görüntülendi : HTML
+  302 => "Found", // yönlendirme yapıldı : NULL
+  404 => "Not Found", // sayfa bulunamadı : HTML
+  500 => "Internal Server Error", // uygulama hata verdi : HTML
+  NULL => "" // dosya indirme isteği geldi : MIX
   ];
 
   const ERRORPAGE = "public/404.html";
@@ -24,8 +24,11 @@ class ApplicationResponse {
     $this->_body = $body;
   }
 
-  final public function send() { // genişletilemez fonksiyon
+  final public function status() {
+    return $this->_status;
+  }
 
+  final public function send() { // genişletilemez fonksiyon
     switch ($this->_statuscode) {
       case 200:  $this->_write();     break;
       case 302:  $this->_redirect();  break; // exit
@@ -37,19 +40,23 @@ class ApplicationResponse {
     }
   }
 
-  final public function status() {
-    return $this->_status;
+  private function _write() {
+    header("Content-Type: text/html; charset=utf-8");
+    header("HTTP/1.1 {$this->_status}");
+    echo $this->_body;
   }
-
 
   private function _redirect() {
     exit(header("Location: http://" . $_SERVER['SERVER_NAME'] . "/" . trim($this->_body, "/"), FALSE, 302));
   }
 
-  private function _write() {
-    header("Content-Type: text/html; charset=utf-8");
-    header("HTTP/1.1 {$this->_status}");
-    echo $this->_body;
+  private function _send_data() {
+    list($body, $filename, $type) = $this->_body;
+    $type = ($type) ?: "application/octet-stream";
+
+    header("Content-Type: $type; charset=utf-8");
+    header("Content-Disposition: attachment; filename='{$filename}'", FALSE, 200);
+    echo $body;
   }
 
   private function _write_404() {
@@ -64,12 +71,6 @@ class ApplicationResponse {
     ($this->_body) ? $v->set(["text" => $this->_body]) : $v->set(["file" => self::DEBUGPAGE]);
     $this->_body = $v->run();
     $this->_write();
-  }
-
-  private function _send_data() {
-    list($body, $filename) = $this->_body;
-    header("Content-Disposition: attachment; filename='{$filename}'", FALSE, 200);
-    echo $body;
   }
 
 }

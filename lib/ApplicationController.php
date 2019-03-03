@@ -33,8 +33,8 @@ class ApplicationController {
     unset($this->_locals[$local]);
   }
 
-  final public function send_data($content, $filename) { // genişletilemez fonksiyon
-    $this->_send_data = [$content => $filename];
+  final public function send_data($content, $filename, $contenttype = NULL) { // genişletilemez fonksiyon
+    $this->_send_data = [$content, $filename, $contenttype];
   }
 
   final public function redirect_to($url) { // genişletilemez fonksiyon
