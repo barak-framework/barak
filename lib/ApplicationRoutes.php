@@ -54,7 +54,7 @@ class ApplicationRoutes {
             if (count($request_rule) == count($route_rule)) {
               $match = TRUE;
               foreach ($request_rule as $index => $value) {
-                if (($request_rule[$index] != $route_rule[$index]) and ($route_rule[$index] != ApplicationRoute::dynamical_segment)) {
+                if (($request_rule[$index] != $route_rule[$index]) and ($route_rule[$index] != ApplicationRoute::dynamic_segment)) {
                   $match = FALSE;
                   break;
                 }
