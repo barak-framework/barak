@@ -91,8 +91,13 @@ class ApplicationController {
         $filter_action_name = $filter_action[0];
         if (method_exists($this, $filter_action_name)) {
 
-          // her action öncesi locals yükünü boşalt
+          // her action öncesi,
+          // locals yükünü boşalt
           $this->_locals = [];
+          // methodların yüklerini boşalt
+          $this->_render = NULL;
+          $this->_redirect_to = NULL;
+          $this->_send_data = NULL;
 
           if (array_key_exists("only", $filter_action)) {
 
@@ -153,11 +158,11 @@ class ApplicationController {
   private function _run() {
 
     // include helper classes
-    if (isset($this->helpers)) ApplicationHelper::load($this->helpers);
+    if ($this->helpers) ApplicationHelper::load($this->helpers);
 
     // before actions
     // eğer _send_data, _redirect_to, _render herhangi biri atanmışsa çalıştır ve sonlandır
-    if (isset($this->before_actions)) {
+    if ($this->before_actions) {
 
       if ($this->_filter($this->_route->action, $this->before_actions)) {
 
@@ -182,7 +187,7 @@ class ApplicationController {
 
     // after actions
     // eğer _send_data, _redirect_to, _render herhangi biri atanmışsa çalıştır ve sonlandır
-    if (isset($this->after_actions)) {
+    if ($this->after_actions) {
       if ($this->_filter($this->_route->action, $this->after_actions)) {
         if ($this->_send_data)   return self::_send_data();
         if ($this->_redirect_to) return self::_redirect_to();
@@ -191,18 +196,18 @@ class ApplicationController {
     }
 
     // main action için daha önce saklanan _send_data verisini çalıştır ve sonlandır
-    if ($main_send_data != NULL) {
+    if ($main_send_data) {
       $this->_send_data = $main_send_data;
       return self::_send_data();
     }
     // main action için daha önce saklanan _redirect_to verisini çalıştır ve sonlandır
-    if ($main_redirect_to != NULL) {
+    if ($main_redirect_to) {
       $this->_redirect_to = $main_redirect_to;
       return self::_redirect_to();
     }
 
     // main action için daha önce saklanan _locals ile _render verilerini çalıştır ve sonlandır
-    if ($main_render != NULL) {
+    if ($main_render) {
       $this->_locals = $main_locals;
       $this->_render = $main_render;
       return self::_render();
