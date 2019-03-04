@@ -80,12 +80,12 @@ class ApplicationModel {
   public static function draft($sets = null) {
 
     // check sets
-    $table = self::tablename();
-    $object = self::instance_model_new($table);
+    $table = self::_tablename();
+    $object = self::_instance_model_new($table);
 
     if ($sets) {
       foreach ($sets as $field => $value) {
-        self::check_field($field, $object->_table);
+        self::_check_field($field, $object->_table);
         $object->$field = $value;
       }
     }
@@ -101,7 +101,7 @@ class ApplicationModel {
 
     if (!$this->_new_record_state) {
 
-      ApplicationSql::update($this->_table, $this->_fields, [self::set_to_where("id", intval($this->_fields["id"]))], 1);
+      ApplicationSql::update($this->_table, $this->_fields, [self::_set_to_where("id", intval($this->_fields["id"]))], 1);
 
     } else {
 
@@ -119,7 +119,7 @@ class ApplicationModel {
   }
 
   public function destroy() {
-    ApplicationSql::delete($this->_table, [self::set_to_where("id", intval($this->_fields["id"]))], 1);
+    ApplicationSql::delete($this->_table, [self::_set_to_where("id", intval($this->_fields["id"]))], 1);
   }
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -127,8 +127,8 @@ class ApplicationModel {
   ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   public static function load() {
-    $table = self::tablename();
-    return self::instance_query($table);
+    $table = self::_tablename();
+    return self::_instance_query($table);
   }
 
   public function select() {
@@ -170,7 +170,7 @@ class ApplicationModel {
     if (!in_array($logic, ApplicationSql::$where_logics))
       throw new Exception("WHERE de tanımlı böyle bir bağlayıcı bulunamadı → " . $logic);
 
-    $this->_where[] = self::set_to_where($field, $value, $mark, $logic);
+    $this->_where[] = self::_set_to_where($field, $value, $mark, $logic);
 
     return $this;
   }
@@ -185,14 +185,14 @@ class ApplicationModel {
     // like for single variable : Category::load()->joins("article")->get_all();
     if (!is_array($belong_tables)) $belong_tables = [$belong_tables];
 
-    ($table) ? self::check_table($table) : ($table = $this->_table);
+    ($table) ? self::_check_table($table) : ($table = $this->_table);
 
     foreach ($belong_tables as $key => $value) {
 
       // find belong table
       list($belong_table, $belong_tables) = (is_array($value)) ? [$key, $value] : [$value, null];
 
-      self::check_table($belong_table);
+      self::_check_table($belong_table);
       $belong_table_fieldnames = ApplicationSql::fieldnames($belong_table);
       $foreign_key = strtolower($table) . "_id";
 
@@ -263,7 +263,7 @@ class ApplicationModel {
 
   public function get() {
     if ($record = ApplicationSql::read($this->_select, $this->_table, $this->_where)) {
-      return self::instance_model_old($this->_table, $record);
+      return self::_instance_model_old($this->_table, $record);
     }
     return null;
   }
@@ -274,7 +274,7 @@ class ApplicationModel {
     if ($records) {
       $objects = [];
       foreach ($records as $record)
-        $objects[] = self::instance_model_old($this->_table, $record);
+        $objects[] = self::_instance_model_old($this->_table, $record);
       return $objects;
     } else {
       return null;
@@ -308,7 +308,7 @@ class ApplicationModel {
   public function update_all($sets) {
     // check sets
     foreach ($sets as $field => $value)
-      self::check_field($field, $this->_table);
+      self::_check_field($field, $this->_table);
 
     ApplicationSql::update($this->_table, $sets, $this->_where, $this->_limit);
   }
@@ -377,7 +377,7 @@ class ApplicationModel {
     // check sets
     $object = self::load();
     foreach ($sets as $field => $value)
-      self::check_field($field, $object->_table);
+      self::_check_field($field, $object->_table);
 
     // find record and set fields
     if ($record = $object->where("id", intval($id))->get()) {
@@ -407,11 +407,11 @@ class ApplicationModel {
 
     if (strpos($field, '.') !== false) {
       list($table, $field) = array_map('trim', explode('.', $field));
-      self::check_table($table);
-      self::check_field($field, $table);
+      self::_check_table($table);
+      self::_check_field($field, $table);
     } else {
       $table = $this->_table;
-      self::check_field($field, $table);
+      self::_check_field($field, $table);
     }
     return strtolower("$table.$field");
   }
@@ -423,21 +423,21 @@ class ApplicationModel {
   }
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // Private Static Methods |Main| : tablename, instance_query, instance_model_new, instance_model_old
+  // Private Static Methods |Main| : _tablename, _instance_query, _instance_model_new, _instance_model_old
   ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  private static function tablename() {
+  private static function _tablename() {
     $table = strtolower(get_called_class());
-    self::check_table($table);
+    self::_check_table($table);
     return $table;
   }
 
-  private static function instance_query($modelname) {
+  private static function _instance_query($modelname) {
     $object = new $modelname($modelname);
     return $object;
   }
 
-  private static function instance_model_new($modelname) {
+  private static function _instance_model_new($modelname) {
     $object = new $modelname($modelname);
     $object->_new_record_state = true;
     foreach (ApplicationSql::fieldnames($modelname) as $fieldname)
@@ -445,7 +445,7 @@ class ApplicationModel {
     return $object;
   }
 
-  private static function instance_model_old($modelname, $fields) {
+  private static function _instance_model_old($modelname, $fields) {
     $object = new $modelname($modelname);
     $object->_new_record_state = false;
     $object->_fields = $fields;
@@ -453,19 +453,19 @@ class ApplicationModel {
   }
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // Private Static Methods |Helper| : set_to_where, check_table, check_field
+  // Private Static Methods |Helper| : _set_to_where, _check_table, _check_field
   ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  private static function set_to_where($field = null, $value = null, $mark = "=", $logic = "AND") {
+  private static function _set_to_where($field = null, $value = null, $mark = "=", $logic = "AND") {
     return compact("field", "value", "mark", "logic");
   }
 
-  private static function check_table($table) { // $table = $this->_table or static table
+  private static function _check_table($table) { // $table = $this->_table or static table
     if (!in_array($table, ApplicationSql::tablenames()))
       throw new Exception("Veritabanında böyle bir tablo mevcut değil → " . $table);
   }
 
-  private static function check_field($field, $table) {
+  private static function _check_field($field, $table) {
     $fields = ApplicationSql::fieldnames($table);
     if (!in_array($field, $fields))
       throw new Exception("| $table | tablosunda böyle bir anahtar mevcut değil → " . $field);
