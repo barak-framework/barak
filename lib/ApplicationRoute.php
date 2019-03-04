@@ -3,7 +3,7 @@
 class ApplicationRoute {
 
   // change name for :id/:action
-  const dynamical_segment = "_dynamical_segment_";
+  const dynamic_segment = "_dynamic_segment_";
 
   // router'in localslarını(sayfadan :id, çekmek için),
   // controller'dan gelen localslara yüklemek için sakla
@@ -27,7 +27,7 @@ class ApplicationRoute {
       // Ör.: get("users/show/:id", "users#show"); // controller: users, action:show
 
       list($controller, $action) = self::_spliter_struct($target, "#");
-      self::set($method, "/{$path}{$rule}", "/$path" . preg_replace("|:[\w]+|", self::dynamical_segment, $rule), $controller, $action, $path);
+      $this->_set($method, "/{$path}{$rule}", "/$path" . preg_replace("|:[\w]+|", self::dynamic_segment, $rule), $controller, $action, $path);
 
     } else {
 
@@ -38,7 +38,7 @@ class ApplicationRoute {
         // Ör.: get("users/index", "home#about"); // controller: users, action:about
 
         list($controller, $action) = self::_spliter_struct($target, "#");
-        self::set($method, "", "/{$path}{$rule}", $controller, $action, $path);
+        $this->_set($method, "", "/{$path}{$rule}", $controller, $action, $path);
 
       } else {
 
@@ -46,7 +46,7 @@ class ApplicationRoute {
 
         list($controller, $action) = self::_spliter_struct($rule, "/");
 
-        self::set($method, "", "/{$path}{$rule}", $controller, $action, $path);
+        $this->_set($method, "", "/{$path}{$rule}", $controller, $action, $path);
 
       }
 
@@ -62,7 +62,7 @@ class ApplicationRoute {
     return [$rota[1], $rota[2]];
   }
 
-  private function set($method, $match_rule, $rule, $controller, $action, $path) {
+  private function _set($method, $match_rule, $rule, $controller, $action, $path) {
     $this->method = strtoupper($method);
     $this->match_rule = $match_rule;
     $this->rule = $rule;
