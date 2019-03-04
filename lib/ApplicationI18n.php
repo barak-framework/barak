@@ -12,20 +12,20 @@ class ApplicationI18n {
   }
 
   public static function init($locale) {
-    if (isset($_SESSION[self::storage_key()])) {
-      if ($_SESSION[self::storage_key()]->_locale)
+    if (isset($_SESSION[self::_storage_key()])) {
+      if ($_SESSION[self::_storage_key()]->_locale)
         return;
     }
-    $_SESSION[self::storage_key()] = new ApplicationI18n($locale);
+    $_SESSION[self::_storage_key()] = new ApplicationI18n($locale);
   }
 
   public static function locale($locale) {
-    $_SESSION[self::storage_key()]->_locale = $locale;
-    $_SESSION[self::storage_key()]->_words = ApplicationConfig::i18n($locale);
+    $_SESSION[self::_storage_key()]->_locale = $locale;
+    $_SESSION[self::_storage_key()]->_words = ApplicationConfig::i18n($locale);
   }
 
   public static function get_locale() {
-    return $_SESSION[self::storage_key()]->_locale;
+    return $_SESSION[self::_storage_key()]->_locale;
   }
 
   public static function translate($words) {
@@ -37,14 +37,14 @@ class ApplicationI18n {
   }
 
   private static function get_first_word($word) {
-    $words = $_SESSION[self::storage_key()]->_words;
+    $words = $_SESSION[self::_storage_key()]->_words;
 
     if (!isset($words[$word]))
       throw new Exception("Yerel ayar dosyasında böyle bir kelime mevcut değil → " . $word);
     return $words[$word];
   }
 
-  private static function storage_key() {
+  private static function _storage_key() {
     return '_i18n';
   }
 
