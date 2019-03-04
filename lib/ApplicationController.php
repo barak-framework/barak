@@ -46,39 +46,18 @@ class ApplicationController {
   }
 
   public static function get_content(ApplicationRoute $route) {
-    // $_path = $route->path;
-    // $str_paths = trim($_path, "/");
-    // $paths = explode("/", $str_paths);
-
-    // if ($route->path != "/") {
-
-
-    //   $_old_path = "";
-    //   $_path = $paths[0];
-    //   echo "<br/>yeni path: >" .$_path;
-    //   self::_load($_path, $_old_path);
-
-    //   $_old_path = $_path;
-    //   $_path = substr($_path, strlen($_path));
-    //   echo "<br/>yeni path: >" .$_path;
-
-
-    //   self::_load($_path, $_old_path);
-
-    //   if ($_path == null) echo "event";
-    //   echo "<br/>x" .$_path . "x";
-
-    //   // self::_load(trim($route->path, "/")); // for superclass
-
-    // } else {
-
-    // }
-
-    self::_load($route->controller);
-
+    if ($route->path != "") {
+      $_before_path = "";
+      $_paths = explode("/", trim($route->path, "/"));
+      foreach ($_paths as $_path) {
+        self::_load($_path, $_before_path);
+        $_before_path = "{$_path}/";
+      }
+    }
+    // main class
+    self::_load($route->controller, $route->path);
     // run controller class and before_actions, before_afters, helper functions
     $controller_class = ucwords($route->controller) . self::CONTROLLERSUBNAME;
-
     $c = new $controller_class($route);
     return $c->_run();
   }
