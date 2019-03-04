@@ -76,19 +76,19 @@ class ApplicationView {
 
     } elseif (isset($this->_file)) {
 
-      $content = self::render_file($this->_file, $this->_locals);
+      $content = self::_render_file($this->_file, $this->_locals);
 
     } elseif (isset($this->_partial)) {
 
-      $content = self::render_file(self::VIEWPATH . preg_replace("~/(?!.*/)~", "/_", $this->_partial) . ".php", $this->_locals);
+      $content = self::_render_file(self::VIEWPATH . preg_replace("~/(?!.*/)~", "/_", $this->_partial) . ".php", $this->_locals);
 
     } elseif ($this->_layout) { // layout : is not false?
 
-      $content = self::render_file(self::layout_file(), ["yield" => self::render_file(self::template_file(), $this->_locals)]);
+      $content = self::_render_file(self::_layout_file(), ["yield" => self::_render_file(self::_template_file(), $this->_locals)]);
 
     } else { // layout : is false?
 
-      $content = self::render_file(self::template_file(), $this->_locals);
+      $content = self::_render_file(self::_template_file(), $this->_locals);
 
     }
 
@@ -96,7 +96,7 @@ class ApplicationView {
     return $content;
   }
 
-  private function layout_file() {
+  private function _layout_file() {
 
     $layout_path = self::LAYOUTPATH . trim($this->_layout, "/") . ".php";
 
@@ -106,7 +106,7 @@ class ApplicationView {
     return $layout_path;
   }
 
-  private function template_file($path = self::VIEWPATH) {
+  private function _template_file($path = self::VIEWPATH) {
 
     $template_path = $path . trim($this->_template, "/") . ".php";
 
@@ -116,7 +116,7 @@ class ApplicationView {
     return $template_path;
   }
 
-  private function render_file($file = null, $locals = null) {
+  private function _render_file($file = null, $locals = null) {
 
     // https://github.com/betephp/framework/blob/master/src/Bete/View/View.php#L100
     if (!file_exists($file))
