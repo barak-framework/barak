@@ -6,10 +6,18 @@ class ApplicationController {
 
   const CONTROLLERSUBNAME = "Controller";
 
+  // controller locals
   private $_locals = [];
+
+  // methods
   private $_render = NULL;
   private $_redirect_to = NULL;
   private $_send_data = NULL;
+
+  // options
+  protected $helpers = NULL;
+  protected $before_actions = NULL;
+  protected $after_actions = NULL;
 
   private $_route;
 
