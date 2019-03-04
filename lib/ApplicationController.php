@@ -122,12 +122,12 @@ class ApplicationController {
     // render template
     if ($this->_route->path) { // have path? for scope, resouce, resouces
 
-      $v->set(["layout" => $this->_route->path]);
-      $v->set(["view" => "/" . $this->_route->path . $this->_route->controller, "action" => $this->_route->action]);
+      $v->set(["layout" => trim($this->_route->path, "/")]);
+      $v->set(["view" => $this->_route->path . $this->_route->controller, "action" => $this->_route->action]);
 
     } else { // normal path
 
-      $v->set(["view" => "/" . $this->_route->controller, "action" => $this->_route->action]);
+      $v->set(["view" => $this->_route->controller, "action" => $this->_route->action]);
 
     }
 
