@@ -47,7 +47,7 @@ class ApplicationResponse {
   }
 
   private function _redirect() {
-    exit(header("Location: http://" . $_SERVER['SERVER_NAME'] . "/" . trim($this->_body, "/"), FALSE, 302));
+    exit(header("Location: http://" . $_SERVER['SERVER_NAME'] . "/{$this->_body}", FALSE, 302));
   }
 
   private function _send_data() {
