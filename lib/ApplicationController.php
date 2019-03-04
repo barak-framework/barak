@@ -123,7 +123,7 @@ class ApplicationController {
     if ($this->_route->path) { // have path? for scope, resouce, resouces
 
       $v->set(["layout" => $this->_route->path]);
-      $v->set(["view" => $this->_route->path . "/" . $this->_route->controller, "action" => $this->_route->action]);
+      $v->set(["view" => "/" . $this->_route->path . $this->_route->controller, "action" => $this->_route->action]);
 
     } else { // normal path
 
