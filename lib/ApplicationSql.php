@@ -22,7 +22,7 @@ class ApplicationSql {
 
     foreach ($_fields as $field => $value) if ($value == null) unset($_fields[$field]);
 
-    list($field_keys, $field_symbols, $field_symbolvalues) = static::hash_to_key_symbol_symbolvalue($_fields);
+    list($field_keys, $field_symbols, $field_symbolvalues) = static::_hash_to_key_symbol_symbolvalue($_fields);
 
     $_query = "INSERT INTO `$_table` ( $field_keys ) VALUES ( $field_symbols )";
 
@@ -30,7 +30,7 @@ class ApplicationSql {
       $field_symbolvalues
       );
 
-    $query = self::query_execute($_query, $_symbolvalues);
+    $query = self::_query_execute($_query, $_symbolvalues);
 
     $connection = ApplicationDatabase::connect();
     return intval($connection->lastInsertId());
@@ -38,7 +38,7 @@ class ApplicationSql {
 
   public static function read($_select = [], $_table = "", $_where = []) {
     $_select_fields = (!empty($_select)) ? implode(",", $_select) : "*";
-    list($where_commands, $where_symbols, $where_symbolvalues) = static::where_to_command_symbol_symbolvalue($_where);
+    list($where_commands, $where_symbols, $where_symbolvalues) = static::_where_to_command_symbol_symbolvalue($_where);
 
     $_symbolvalues = array_merge(
       $where_symbolvalues
@@ -46,7 +46,7 @@ class ApplicationSql {
 
     $_query = "SELECT $_select_fields FROM `$_table` $where_commands LIMIT 1";
 
-    $query = self::query_execute($_query, $_symbolvalues);
+    $query = self::_query_execute($_query, $_symbolvalues);
 
     return $query->fetch(PDO::FETCH_ASSOC);
   }
@@ -66,9 +66,9 @@ class ApplicationSql {
       $_join_fields = "";
     }
 
-    list($where_commands, $where_symbols, $where_symbolvalues) = static::where_to_command_symbol_symbolvalue($_where);
-    list($limit_command,  $limit_symbol,  $limit_symbolvalue)  = static::var_to_command_symbol_value($_limit,  "LIMIT");
-    list($offset_command, $offset_symbol, $offset_symbolvalue) = static::var_to_command_symbol_value($_offset, "OFFSET");
+    list($where_commands, $where_symbols, $where_symbolvalues) = static::_where_to_command_symbol_symbolvalue($_where);
+    list($limit_command,  $limit_symbol,  $limit_symbolvalue)  = static::_var_to_command_symbol_value($_limit,  "LIMIT");
+    list($offset_command, $offset_symbol, $offset_symbolvalue) = static::_var_to_command_symbol_value($_offset, "OFFSET");
 
     $_query = "
     SELECT $_select_fields
@@ -86,16 +86,16 @@ class ApplicationSql {
       $offset_symbolvalue
       );
 
-    $query = self::query_execute($_query, $_symbolvalues);
+    $query = self::_query_execute($_query, $_symbolvalues);
 
     return $query->fetchAll(PDO::FETCH_ASSOC);
   }
 
   public static function update($_table = "", $_sets = [], $_where = [], $_limit = null) {
 
-    list($set_keysymbols, $set_symbolvalues) = static::hash_to_keysymbol_symbolvalue($_sets);
-    list($where_commands, $where_symbols, $where_symbolvalues) = static::where_to_command_symbol_symbolvalue($_where);
-    list($limit_command, $limit_symbol, $limit_symbolvalue)  = static::var_to_command_symbol_value($_limit, "LIMIT");
+    list($set_keysymbols, $set_symbolvalues) = static::_hash_to_keysymbol_symbolvalue($_sets);
+    list($where_commands, $where_symbols, $where_symbolvalues) = static::_where_to_command_symbol_symbolvalue($_where);
+    list($limit_command, $limit_symbol, $limit_symbolvalue)  = static::_var_to_command_symbol_value($_limit, "LIMIT");
 
     $_query = "UPDATE `$_table` SET $set_keysymbols $where_commands $limit_command";
 
@@ -105,13 +105,13 @@ class ApplicationSql {
       $limit_symbolvalue
       );
 
-    $query = self::query_execute($_query, $_symbolvalues);
+    $query = self::_query_execute($_query, $_symbolvalues);
   }
 
   public static function delete($_table = "", $_where = [], $_limit = null) {
 
-    list($where_commands, $where_symbols, $where_symbolvalues) = static::where_to_command_symbol_symbolvalue($_where);
-    list($limit_command, $limit_symbol, $limit_symbolvalue)  = static::var_to_command_symbol_value($_limit, "LIMIT");
+    list($where_commands, $where_symbols, $where_symbolvalues) = static::_where_to_command_symbol_symbolvalue($_where);
+    list($limit_command, $limit_symbol, $limit_symbolvalue)  = static::_var_to_command_symbol_value($_limit, "LIMIT");
 
     $_query = "DELETE FROM `$_table` $where_commands $limit_command";
 
@@ -120,7 +120,7 @@ class ApplicationSql {
       $limit_symbolvalue
       );
 
-    $query = self::query_execute($_query, $_symbolvalues);
+    $query = self::_query_execute($_query, $_symbolvalues);
   }
 
   public static function tablenames() {
@@ -141,13 +141,13 @@ class ApplicationSql {
   // Private Functions
   //////////////////////////////////////////////////
 
-  private static function query_execute($_query, $_symbolvalues) {
+  private static function _query_execute($_query, $_symbolvalues) {
     try {
       $connection = ApplicationDatabase::connect();
       $query = $connection->prepare($_query);
 
       foreach ($_symbolvalues as $symbol => $value)
-        $query->bindValue($symbol, $value, self::bindtype($value));
+        $query->bindValue($symbol, $value, self::_bindtype($value));
 
       // kick query
       $query->execute();
@@ -160,7 +160,7 @@ class ApplicationSql {
     return $query;
   }
 
-  private static function bindtype($value) {
+  private static function _bindtype($value) {
     if     (is_int($value))  return PDO::PARAM_INT;
     elseif (is_bool($value)) return PDO::PARAM_BOOL;
     elseif (is_null($value)) return PDO::PARAM_NULL;
@@ -220,7 +220,7 @@ class ApplicationSql {
   //   )
   // )
 
-  private static function where_to_command_symbol_symbolvalue($_list) {
+  private static function _where_to_command_symbol_symbolvalue($_list) {
 
     if (!empty($_list)) {
 
@@ -240,19 +240,19 @@ class ApplicationSql {
 
         } elseif (in_array($hash["mark"], static::$where_marks_in)) {
 
-          list($in_command, $in_symbols, $in_symbolvalues) = static::list_to_command_symbol_symbolvalue($hash["value"], $unique_symbol_prefix);
+          list($in_command, $in_symbols, $in_symbolvalues) = static::_list_to_command_symbol_symbolvalue($hash["value"], $unique_symbol_prefix);
           $symbols .= $logic . $hash["field"] . " " . $hash["mark"] . " " . "(" . $in_symbols . ")";
           $symbol_and_values = array_merge($symbol_and_values, $in_symbolvalues);
 
         } elseif (in_array($hash["mark"], static::$where_marks_between)) {
 
-          list($between_command, $between_symbols, $between_symbolvalues) = static::list_to_command_symbol_symbolvalue($hash["value"], $unique_symbol_prefix, "AND");
+          list($between_command, $between_symbols, $between_symbolvalues) = static::_list_to_command_symbol_symbolvalue($hash["value"], $unique_symbol_prefix, "AND");
           $symbols .= $logic . $hash["field"] . " " . $hash["mark"] . " " . $between_symbols;
           $symbol_and_values = array_merge($symbol_and_values, $between_symbolvalues);
 
         } else {
 
-          list($field_command, $field_symbol, $field_symbolvalue) = static::list_to_command_symbol_symbolvalue([$hash["value"]], $unique_symbol_prefix);
+          list($field_command, $field_symbol, $field_symbolvalue) = static::_list_to_command_symbol_symbolvalue([$hash["value"]], $unique_symbol_prefix);
           $symbols .= $logic . $hash["field"] . " " . $hash["mark"] . " " . $field_symbol;
           $symbol_and_values = array_merge($symbol_and_values, $field_symbolvalue);
 
@@ -278,7 +278,7 @@ class ApplicationSql {
   //    )
   // )
 
-  private static function hash_to_key_symbol_symbolvalue($_hash, $_command = "", $_delimiter = ",") {
+  private static function _hash_to_key_symbol_symbolvalue($_hash, $_command = "", $_delimiter = ",") {
 
     if (!empty($_hash)) {
 
@@ -312,7 +312,7 @@ class ApplicationSql {
   //   )
   // )
 
-  private static function hash_to_keysymbol_symbolvalue($_hash, $_command = "", $delimiter = ",") {
+  private static function _hash_to_keysymbol_symbolvalue($_hash, $_command = "", $delimiter = ",") {
 
     if (!empty($_hash)) {
 
@@ -343,7 +343,7 @@ class ApplicationSql {
   //   )
   // )
 
-  private static function list_to_command_symbol_symbolvalue($_list, $_command = "", $_delimiter = ",") {
+  private static function _list_to_command_symbol_symbolvalue($_list, $_command = "", $_delimiter = ",") {
 
     if (!empty($_list)) {
 
@@ -381,7 +381,7 @@ class ApplicationSql {
   //    )
   // )
 
-  private static function var_to_command_symbol_value($_value, $_command = "") {
+  private static function _var_to_command_symbol_value($_value, $_command = "") {
 
     if (isset($_value)) {
       $symbol = ":" . str_replace(" ", "", $_command); // ORDER BY => ORDERBY, GROUP BY => GROUPBY
