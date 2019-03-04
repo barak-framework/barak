@@ -91,7 +91,7 @@ class ApplicationRoutes {
 
   public static function scope($path, callable $_functions) {
     // path daha önce ilklendirildiyse (scope içinde scope varsa gibi) pathe ekleme yap yoksa path'i ata
-    static::$_path =  static::$_path . "/$path";
+    static::$_path =  static::$_path . "/{$path}";
     // scope içindeki fonksiyonları çalıştır
     $_functions();
     // https://stackoverflow.com/questions/2430208/php-how-to-remove-last-part-of-a-path
@@ -101,33 +101,33 @@ class ApplicationRoutes {
 
   public static function resource($table, $path = "") {
     ApplicationRoutes::get("$table",          "$table#index", $path);
-    ApplicationRoutes::get("$table/create",   FALSE,          $path);
-    ApplicationRoutes::post("$table/save",    FALSE,          $path);
-    ApplicationRoutes::get("$table/show/",    FALSE,          $path);
-    ApplicationRoutes::get("$table/edit/",    FALSE,          $path);
-    ApplicationRoutes::post("$table/update",  FALSE,          $path);
-    ApplicationRoutes::post("$table/destroy", FALSE,          $path);
+    ApplicationRoutes::get("$table/create",   NULL,           $path);
+    ApplicationRoutes::post("$table/save",    NULL,           $path);
+    ApplicationRoutes::get("$table/show/",    NULL,           $path);
+    ApplicationRoutes::get("$table/edit/",    NULL,           $path);
+    ApplicationRoutes::post("$table/update",  NULL,           $path);
+    ApplicationRoutes::post("$table/destroy", NULL,           $path);
   }
 
   public static function resources($table, $path = "") {
     ApplicationRoutes::get("$table",          "$table#index", $path);
-    ApplicationRoutes::get("$table/create",   FALSE,          $path);
-    ApplicationRoutes::post("$table/save",    FALSE,          $path);
+    ApplicationRoutes::get("$table/create",   NULL,           $path);
+    ApplicationRoutes::post("$table/save",    NULL,           $path);
     ApplicationRoutes::get("$table/show/:id", "$table#show",  $path);
     ApplicationRoutes::get("$table/edit/:id", "$table#edit",  $path);
-    ApplicationRoutes::post("$table/update",  FALSE,          $path);
-    ApplicationRoutes::post("$table/destroy", FALSE,          $path);
+    ApplicationRoutes::post("$table/update",  NULL,           $path);
+    ApplicationRoutes::post("$table/destroy", NULL,           $path);
   }
 
-  public static function root($target = FALSE, $path = "") {
+  public static function root($target = NULL, $path = "") {
     ApplicationRoutes::get("", $target, $path);
   }
 
-  private static function _get($rule, $target = FALSE, $path = "") {
-    return new ApplicationRoute("get",  $rule, $target, $path);
+  private static function _get($rule, $target = NULL, $path = "") {
+    return new ApplicationRoute("get",  $rule, $target, "$path");
   }
 
-  private static function _post($rule, $target = FALSE, $path = "") {
+  private static function _post($rule, $target = NULL, $path = "") {
     return new ApplicationRoute("post", $rule, $target, $path);
   }
 

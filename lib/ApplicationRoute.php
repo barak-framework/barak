@@ -16,36 +16,37 @@ class ApplicationRoute {
   public $controller;
   public $action;
 
-  final public function __construct($method, $rule, $target = FALSE, $path = "") { // genişletilemez fonksiyon
+  final public function __construct($method, $rule, $target = NULL, $path = "") { // genişletilemez fonksiyon
 
     // Dinamik denetleyici tanımlaması mı ? :id/:action gibi
     if (strpos($rule, ":")) {
 
-      if (!$target)
+      if ($target == NULL)
         throw new Exception("Dinamik route özelliğinde hedef (controller#action) belirtilmek zorundadır! → " . $rule);
 
       // Ör.: get("users/show/:id", "users#show"); // controller: users, action:show
 
       list($controller, $action) = self::_spliter_struct($target, "#");
-      self::set($method, "{$path}/{$rule}", "$path/" . preg_replace("|:[\w]+|", self::dynamical_segment, $rule), $controller, $action, $path);
+      self::set($method, "/{$path}{$rule}", "$path" . preg_replace("|:[\w]+|", self::dynamical_segment, $rule), $controller, $action, $path);
 
     } else {
 
       // Hedefi olan denetleyici mi ? controller#action gibi
       if ($target) {
 
-        // Ör.: get("users",       "home#index"); // controller: users, action:about
+        // Ör.: get("users",       "home#index"); // controller: users, action:index
         // Ör.: get("users/index", "home#about"); // controller: users, action:about
 
         list($controller, $action) = self::_spliter_struct($target, "#");
-        self::set($method, "", "{$path}/{$rule}", $controller, $action, $path);
+        self::set($method, "", "/{$path}{$rule}", $controller, $action, $path);
 
       } else {
 
         // Ör.: get("users/index"); // controller: users, action:index
 
         list($controller, $action) = self::_spliter_struct($rule, "/");
-        self::set($method, "", "{$path}/{$rule}", $controller, $action, $path);
+
+        self::set($method, "", "/{$path}{$rule}", $controller, $action, $path);
 
       }
 

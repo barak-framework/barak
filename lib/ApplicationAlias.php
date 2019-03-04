@@ -10,23 +10,23 @@ class ApplicationAlias {
       return ApplicationRoutes::scope($path, $routes);
     }
 
-    function resource($table, $path = null) {
+    function resource($table, $path = "") {
       return ApplicationRoutes::resource($table, $path);
     }
 
-    function resources($table, $path = null) {
+    function resources($table, $path = "") {
       return ApplicationRoutes::resources($table, $path);
     }
 
-    function root($target = false, $path = null) {
+    function root($target = FALSE, $path = "") {
       return ApplicationRoutes::root($target, $path);
     }
 
-    function post($rule, $target = false, $path = null) {
+    function post($rule, $target = FALSE, $path = "") {
       return ApplicationRoutes::post($rule, $target, $path);
     }
 
-    function get($rule, $target = false, $path = null) {
+    function get($rule, $target = FALSE, $path = "") {
       return ApplicationRoutes::get($rule, $target, $path);
     }
 
@@ -39,7 +39,7 @@ class ApplicationAlias {
     // LAYOUT and TEMPLATE
     // for app/views/VIEW/ACTION.php and app/views/layouts/VIEW.php
 
-    function render($options = null) {
+    function render($options = NULL) {
       if ($options) {
         $v = new ApplicationView();
         $v->set($options);

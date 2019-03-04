@@ -46,12 +46,35 @@ class ApplicationController {
   }
 
   public static function get_content(ApplicationRoute $route) {
-    if ($route->path) {
-      self::_load(trim($route->path, "/")); // for superclass
-      self::_load($route->controller, $route->path);
-    } else {
-      self::_load($route->controller);
-    }
+    // $_path = $route->path;
+    // $str_paths = trim($_path, "/");
+    // $paths = explode("/", $str_paths);
+
+    // if ($route->path != "/") {
+
+
+    //   $_old_path = "";
+    //   $_path = $paths[0];
+    //   echo "<br/>yeni path: >" .$_path;
+    //   self::_load($_path, $_old_path);
+
+    //   $_old_path = $_path;
+    //   $_path = substr($_path, strlen($_path));
+    //   echo "<br/>yeni path: >" .$_path;
+
+
+    //   self::_load($_path, $_old_path);
+
+    //   if ($_path == null) echo "event";
+    //   echo "<br/>x" .$_path . "x";
+
+    //   // self::_load(trim($route->path, "/")); // for superclass
+
+    // } else {
+
+    // }
+
+    self::_load($route->controller);
 
     // run controller class and before_actions, before_afters, helper functions
     $controller_class = ucwords($route->controller) . self::CONTROLLERSUBNAME;
@@ -62,13 +85,12 @@ class ApplicationController {
 
   private static function _load($file, $path = "") {
     $controller_class = ucwords($file) . self::CONTROLLERSUBNAME;
-    $controller_path  = self::CONTROLLERPATH . trim($path,"/") . "/" . $controller_class . '.php';
+    $controller_file  = self::CONTROLLERPATH . $path . "{$controller_class}.php";
 
-    if (!file_exists($controller_path))
-      throw new Exception("Controller dosyası mevcut değil → " . $controller_path);
+    if (!file_exists($controller_file))
+      throw new Exception("Controller dosyası mevcut değil → " . $controller_file);
 
-    require_once $controller_path;
-
+    require_once $controller_file;
     if (!class_exists($controller_class))
       throw new Exception("Controller sınıfı yüklenemedi → " . $controller_class);
   }
