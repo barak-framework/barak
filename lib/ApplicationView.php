@@ -98,7 +98,7 @@ class ApplicationView {
 
   private function _layout_file() {
 
-    $layout_file = self::LAYOUTPATH . trim($this->_layout, "/") . ".php";
+    $layout_file = self::LAYOUTPATH . $this->_layout . ".php";
 
     if (!file_exists($layout_file))
       throw new Exception("Layout dosyası mevcut değil → " . $layout_file);
