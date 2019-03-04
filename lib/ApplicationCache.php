@@ -15,7 +15,7 @@ class ApplicationCache {
     // struct of key
     $data = [ 'time' => time(), 'expire' => self::$_expiration, 'value' => serialize($value) ];
 
-    $filename = self::filename_format($key);
+    $filename = self::_filename_format($key);
 
     if (!($fh = fopen($filename, 'w')))
       throw new Exception("Cache bellek açılamadı → " . $filename);
@@ -28,7 +28,7 @@ class ApplicationCache {
   public static function read($key) {
 
     // get filename
-    $filename = self::filename_format($key);
+    $filename = self::_filename_format($key);
     if (file_exists($filename)) {
 
       // check expire time ? get or delete
@@ -42,13 +42,13 @@ class ApplicationCache {
   }
 
   public static function delete($key) {
-    $filename = self::filename_format($key);
+    $filename = self::_filename_format($key);
     if (file_exists($filename))
       unlink($filename);
   }
 
   public static function exists($key) {
-    return (file_exists(self::filename_format($key))) ? true : false;
+    return (file_exists(self::_filename_format($key))) ? true : false;
   }
 
   public static function reset() {
@@ -56,7 +56,7 @@ class ApplicationCache {
       unlink($filename);
   }
 
-  private static function filename_format($key) {
+  private static function _filename_format($key) {
     $requesturi = preg_replace('/[^0-9a-z\.\_\-]/i', '', strtolower($_SERVER["REQUEST_URI"]));
     return self::CACHEDIR . md5($requesturi . $key);
   }
