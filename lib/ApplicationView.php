@@ -98,22 +98,22 @@ class ApplicationView {
 
   private function _layout_file() {
 
-    $layout_path = self::LAYOUTPATH . trim($this->_layout, "/") . ".php";
+    $layout_file = self::LAYOUTPATH . trim($this->_layout, "/") . ".php";
 
-    if (!file_exists($layout_path))
-      throw new Exception("Layout dosyası mevcut değil → " . $layout_path);
+    if (!file_exists($layout_file))
+      throw new Exception("Layout dosyası mevcut değil → " . $layout_file);
 
-    return $layout_path;
+    return $layout_file;
   }
 
-  private function _template_file($path = self::VIEWPATH) {
+  private function _template_file() {
 
-    $template_path = $path . trim($this->_template, "/") . ".php";
+    $template_file = self::VIEWPATH . $this->_template . ".php";
 
-    if (!file_exists($template_path))
-      throw new Exception("Template dosyası mevcut değil → " . $template_path);
+    if (!file_exists($template_file))
+      throw new Exception("Template dosyası mevcut değil → " . $template_file);
 
-    return $template_path;
+    return $template_file;
   }
 
   private function _render_file($file = null, $locals = null) {
