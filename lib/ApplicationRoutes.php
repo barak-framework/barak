@@ -91,12 +91,12 @@ class ApplicationRoutes {
 
   public static function scope($path, callable $_functions) {
     // path daha önce ilklendirildiyse (scope içinde scope varsa gibi) pathe ekleme yap yoksa path'i ata
-    static::$_path =  static::$_path . "/{$path}";
+    static::$_path =  static::$_path . "{$path}/";
     // scope içindeki fonksiyonları çalıştır
     $_functions();
     // https://stackoverflow.com/questions/2430208/php-how-to-remove-last-part-of-a-path
     // var olan path'de son parçayı sil (scope ile işimiz bitti)
-    static::$_path = preg_replace("/\/\w+$/i", "", static::$_path);
+    static::$_path = preg_replace("/\w+\/$/i", "", static::$_path);
   }
 
   public static function resource($table, $path = "") {
