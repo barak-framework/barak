@@ -3,32 +3,39 @@
 class TurkishHelper {
 
   public static function days($index) {
-    $_days = array("Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar");
+    $_days = ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"];
     return $_days[$index];
   }
 
   public static function months($index) {
-    $_months = array(
-      "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
-      "Temmuz", "Ağustos", "Eylül", "Ekim ", "Kasım ", "Aralık",
-    );
+    $_months = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim ", "Kasım ", "Aralık"];
     return $_months[$index];
   }
 
   public static function strtoupper($string) {
-    $upper = array(
-      'i' => 'İ', 'ı' => 'I', 'ğ' => 'Ğ', 'ü' => 'Ü',
-      'ş' => 'Ş', 'ö' => 'Ö', 'ç' => 'Ç',
-    );
-    return strtoupper(strtr($string, $upper));
+    $_upper = [
+      'i' => 'İ',
+      'ı' => 'I',
+      'ğ' => 'Ğ',
+      'ü' => 'Ü',
+      'ş' => 'Ş',
+      'ö' => 'Ö',
+      'ç' => 'Ç'
+    ];
+    return strtoupper(strtr($string, $_upper));
   }
   
   public static function strtolower($string) {
-    $lower = array(
-      'İ' => 'i', 'I' => 'ı', 'Ğ' => 'ğ', 'Ü' => 'ü',
-      'Ş' => 'ş', 'Ö' => 'ö', 'Ç' => 'ç',
-    );
-    return strtolower(strtr($string, $lower));
+    $_lower = [
+      'İ' => 'i',
+      'I' => 'ı',
+      'Ğ' => 'ğ',
+      'Ü' => 'ü',
+      'Ş' => 'ş',
+      'Ö' => 'ö',
+      'Ç' => 'ç'
+    ];
+    return strtolower(strtr($string, $_lower));
   }
 
   public static function strcmp($string1, $string2) {
