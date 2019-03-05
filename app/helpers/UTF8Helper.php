@@ -1,6 +1,6 @@
 <?php
 
-class UTF8Helper {
+class TurkishHelper {
 
   public static function days($index) {
     $_days = array("Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar");
@@ -15,7 +15,15 @@ class UTF8Helper {
     return $_months[$index];
   }
 
-  public static function strtolower_turkish($string) {
+  public static function strtoupper($string) {
+    $upper = array(
+      'i' => 'İ', 'ı' => 'I', 'ğ' => 'Ğ', 'ü' => 'Ü',
+      'ş' => 'Ş', 'ö' => 'Ö', 'ç' => 'Ç',
+    );
+    return strtoupper(strtr($string, $upper));
+  }
+  
+  public static function strtolower($string) {
     $lower = array(
       'İ' => 'i', 'I' => 'ı', 'Ğ' => 'ğ', 'Ü' => 'ü',
       'Ş' => 'ş', 'Ö' => 'ö', 'Ç' => 'ç',
@@ -23,8 +31,8 @@ class UTF8Helper {
     return strtolower(strtr($string, $lower));
   }
 
-  public static function strcmp_turkish($string1, $string2) {
-    return self::strtolower_turkish($string1) == self::strtolower_turkish($string2);
+  public static function strcmp($string1, $string2) {
+    return self::strtolower($string1) == self::strtolower($string2);
   }
 
   // Kaynak: is_tc(): http://www.kodaman.org/yazi/t-c-kimlik-no-algoritmasi
