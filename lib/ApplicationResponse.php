@@ -16,12 +16,24 @@ class ApplicationResponse {
 
   private $_statuscode;
   private $_status; // status code and status text
+  private $_header;
   private $_body;
 
   final public function __construct($statuscode = 200, $body = NULL) { // genişletilemez fonksiyon
     $this->_statuscode = $statuscode;
     $this->_status = $statuscode . " " . self::STATUS[$statuscode];
     $this->_body = $body;
+
+    // default security headers:
+    // source : https://guides.rubyonrails.org/security.html#default-headers
+    $this->_header = [
+      'X-Frame-Options' => 'SAMEORIGIN',
+      'X-XSS-Protection' => '1; mode=block',
+      'X-Content-Type-Options' => 'nosniff',
+      'X-Download-Options' => 'noopen',
+      'X-Permitted-Cross-Domain-Policies' => 'none',
+      'Referrer-Policy' => 'strict-origin-when-cross-origin'
+    ];
   }
 
   final public function status() {
@@ -43,6 +55,11 @@ class ApplicationResponse {
   private function _write() {
     header("Content-Type: text/html; charset=utf-8");
     header("HTTP/1.1 {$this->_status}");
+
+    foreach ($this->_header as $name => $value) {
+      header($name . ': ' . $value);
+    }
+
     echo $this->_body;
   }
 
@@ -53,6 +70,10 @@ class ApplicationResponse {
   private function _send_data() {
     list($body, $filename, $type) = $this->_body;
     $type = ($type) ?: "application/octet-stream";
+    
+    foreach ($this->_header as $name => $value) {
+      header($name . ': ' . $value);
+    }
 
     header("Content-Type: $type; charset=utf-8");
     header("Content-Disposition: attachment; filename='{$filename}'", FALSE, 200);
