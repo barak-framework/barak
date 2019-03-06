@@ -56,9 +56,8 @@ class ApplicationResponse {
     header("Content-Type: text/html; charset=utf-8");
     header("HTTP/1.1 {$this->_status}");
 
-    foreach ($this->_header as $name => $value) {
-      header($name . ': ' . $value);
-    }
+    foreach ($this->_header as $name => $value)
+      header("{$name}: {$value}");
 
     echo $this->_body;
   }
@@ -71,9 +70,8 @@ class ApplicationResponse {
     list($body, $filename, $type) = $this->_body;
     $type = ($type) ?: "application/octet-stream";
     
-    foreach ($this->_header as $name => $value) {
-      header($name . ': ' . $value);
-    }
+    foreach ($this->_header as $name => $value)
+      header("{$name}: {$value}");
 
     header("Content-Type: $type; charset=utf-8");
     header("Content-Disposition: attachment; filename='{$filename}'", FALSE, 200);
