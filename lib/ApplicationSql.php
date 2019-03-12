@@ -137,6 +137,17 @@ class ApplicationSql {
     return $connection->query("DESCRIBE $table")->fetchAll(PDO::FETCH_COLUMN);
   }
 
+  public static function check_table($table) {
+    if (!in_array($table, ApplicationSql::tablenames()))
+      throw new Exception("Veritabanında böyle bir tablo mevcut değil → " . $table);
+  }
+
+  public static function check_field($field, $table) {
+    $fields = ApplicationSql::fieldnames($table);
+    if (!in_array($field, $fields))
+      throw new Exception("| $table | tablosunda böyle bir anahtar mevcut değil → " . $field);
+  }
+
   //////////////////////////////////////////////////
   // Private Functions
   //////////////////////////////////////////////////
