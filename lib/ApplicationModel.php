@@ -2,31 +2,25 @@
 
 class ApplicationModel {
 
-  // Query
-
-  private $_select = [];   // list
-  private $_table  = "";   // string
-  private $_where  = [];   // hash
-  private $_join   = [];   // hash
-  private $_order  = [];   // list
-  private $_group  = [];   // list
-  private $_limit  = null; // int
-  private $_offset = null; // int
-
   // One Record
 
+  private $_table = "";
   private $_fields = [];      // for only one record CRUD
   private $_new_record_state; // for only one record state new/old ?
 
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // |Magic Methods| : __construct, _get, _set, __call, __callStatic
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // |Magic Methods| : __construct, __debugInfo, __get, __set, __call, __callStatic
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  private function __construct($tablename) {
-    $this->_table = $tablename;
+  private function __construct($table, $fields = NULL) {
+    $this->_table = $table;
   }
 
-  public function __get($field) {
+  final public function __debugInfo() {
+    return $this->_fields;
+  }
+
+  final public function __get($field) {
 
     if (array_key_exists($field, $this->_fields)) {
       return $this->_fields[$field];
@@ -58,34 +52,34 @@ class ApplicationModel {
     throw new Exception("Modele ait böyle bir anahtar mevcut değil → " . $field);
   }
 
-  public function __set($field, $value) {
+  final public function __set($field, $value) {
     if (array_key_exists($field, $this->_fields))
       $this->_fields[$field] = $value;
     else
       throw new Exception("Tabloda yüklenecek böyle bir anahtar mevcut değil → " . $field);
   }
 
-  public function __call($method, $args) {
+  final public function __call($method, $args) {
     throw new Exception("Modelde böyle bir method bulunamadı → " . $method);
   }
 
-  public static function __callStatic($method, $args) {
+  final public static function __callStatic($method, $args) {
     throw new Exception("Modelde böyle bir static method bulunamadı → " . $method);
   }
 
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // |One Record Methods| : draft, create, save, destroy
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // |Model Record Methods| : draft, create, save, destroy
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public static function draft($sets = null) {
+  final public static function draft($fields = null) {
 
     // check sets
     $table = self::_tablename();
-    $object = self::_instance_model_new($table);
+    $object = ApplicationModel::instance_new($table);
 
-    if ($sets) {
-      foreach ($sets as $field => $value) {
-        self::_check_field($field, $object->_table);
+    if ($fields) {
+      foreach ($fields as $field => $value) {
+        ApplicationSql::check_field($field, $object->_table);
         $object->$field = $value;
       }
     }
@@ -93,11 +87,11 @@ class ApplicationModel {
     return $object;
   }
 
-  public static function create($fields) {
+  final public static function create($fields) {
     return self::draft($fields)->save();
   }
 
-  public function save() {
+  final public function save() {
 
     if (!$this->_new_record_state) {
 
@@ -118,230 +112,29 @@ class ApplicationModel {
     }
   }
 
-  public function destroy() {
+  final public function destroy() {
     ApplicationSql::delete($this->_table, [self::_set_to_where("id", intval($this->_fields["id"]))], 1);
   }
 
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // |Query Methods| : load, select, where, or_where, joins, order, group, limit, offset
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // |ModelQuery Kick Method| : load
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public static function load() {
+  final public static function load() {
     $table = self::_tablename();
-    return self::_instance_query($table);
+    $object = new ApplicationQuery($table);
+    return $object;
   }
 
-  public function select() {
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Public Static |Alias Methods of ModelQuery| : all, create, unique, find, find_all, exists, update, delete
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    $fields = func_get_args();
-
-    // merge field with table
-    $fields = $this->_merge_fields_with_table($fields);
-
-    // varsayılan olarak ekle, objeler yüklenirken her zaman id olmalıdır.
-    $this->_select = array_merge($fields, [$this->_table . ".id"]);
-
-    return $this;
-  }
-
-  public function where($field = null, $value = null, $mark = "=", $logic = "AND") {
-    $field = $this->_merge_field_with_table($field);
-
-    // mark control
-    $mark = strtoupper(trim($mark));
-    if (is_null($value)) {
-      $mark = ApplicationSql::$where_marks_null[0]; // "IS NULL";
-      $value = NULL;
-    } elseif (in_array($value, ApplicationSql::$where_marks_null, true)) {
-      $mark = $value;
-      $value = NULL;
-    } elseif (in_array($mark, ApplicationSql::$where_marks_in)) {
-      if (!is_array($value))
-        throw new Exception(sprintf("WHERE %s için değer list olmalıdır → ", implode(',', ApplicationSql::$where_marks_in)) . $value);
-    } elseif (in_array($mark, ApplicationSql::$where_marks_between)) {
-      if (!is_array($value) or (is_array($value) and count($value) != 2))
-        throw new Exception(sprintf("WHERE %s için değer list ve 2 değerli olmalıdır → ", implode(',', ApplicationSql::$where_marks_in)) . $value);
-    } elseif (!in_array($mark, array_merge(ApplicationSql::$where_marks_other, ApplicationSql::$where_marks_like))) {
-      throw new Exception("WHERE için tanımlı böyle bir işaretçi bulunamadı → " . $mark);
-    }
-
-    // logic control
-    $logic = strtoupper(trim($logic));
-    if (!in_array($logic, ApplicationSql::$where_logics))
-      throw new Exception("WHERE de tanımlı böyle bir bağlayıcı bulunamadı → " . $logic);
-
-    $this->_where[] = self::_set_to_where($field, $value, $mark, $logic);
-
-    return $this;
-  }
-
-  public function or_where($field, $value = null, $mark = "=") {
-    return $this->where($field, $value, $mark, "OR");
-  }
-
-  // #TODO INNER OR LEFT OUTER
-  public function joins($belong_tables, $table = null) {
-
-    // like for single variable : Category::load()->joins("article")->get_all();
-    if (!is_array($belong_tables)) $belong_tables = [$belong_tables];
-
-    ($table) ? self::_check_table($table) : ($table = $this->_table);
-
-    foreach ($belong_tables as $key => $value) {
-
-      // find belong table
-      list($belong_table, $belong_tables) = (is_array($value)) ? [$key, $value] : [$value, null];
-
-      self::_check_table($belong_table);
-      $belong_table_fieldnames = ApplicationSql::fieldnames($belong_table);
-      $foreign_key = strtolower($table) . "_id";
-
-      // join işlemi için user.id = comment.user_id gibi where'ye eklemeler yap
-      $this->_join[$belong_table] = $belong_table . "." . $foreign_key . "=" . str_replace("_", ".", $foreign_key);
-
-      // have a more belong tables ?
-      if ($belong_tables)
-        $this->joins($belong_tables, $belong_table);
-
-      // ilk tablo sütunları hariç join işleminde select çakışmasını önle. (Ör.: user.first_name as user_first_name gibi)
-      // select kullanılmamışsa
-      foreach ($belong_table_fieldnames as $field)
-        $this->_select[] = $belong_table . "." . "$field as $belong_table" . "_" . $field;
-        // $this->_select[] = $belong_table . "." . $field;
-    }
-
-    // ilk tablonun kendi select'i için eklemeler yap. (Ör.: user.first_name gibi)
-    // select kullanılmamışsa
-    foreach (ApplicationSql::fieldnames($this->_table) as $fieldname)
-      $this->_select[] = $this->_table . "." . $fieldname;
-
-    return $this;
-  }
-
-  public function order($field, $sort_type = "ASC") {
-    $field = $this->_merge_field_with_table($field);
-
-    // sort_type control
-    $sort_type = strtoupper(trim($sort_type));
-    if (!in_array($sort_type, ApplicationSql::$order_sort_type))
-      throw new Exception("Order sorgusunda bilinmeyen parametre → " . $sort_type);
-
-    $this->_order[] = "$field $sort_type";
-    return $this;
-  }
-
-  public function group() {
-
-    $fields = func_get_args();
-
-    // merge field with table
-    $fields = $this->_merge_fields_with_table($fields);
-
-    $this->_group = $fields;
-    return $this;
-  }
-
-  public function limit($limit = 1) {
-    $limit = intval($limit);
-
-    // limit control
-    if ($limit < 0)
-      throw new Exception("LİMİT'de değer, sıfır veya üstü olmalıdır → " . $limit);
-
-    $this->_limit = $limit;
-    return $this;
-  }
-
-  public function offset($offset = null) {
-    $this->_offset = intval($offset);
-    return $this;
-  }
-
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // | Public Execute Methods | : get, get_all, pluck, count, update_all, delete_all, first, last
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-  public function get() {
-    if ($record = ApplicationSql::read($this->_select, $this->_table, $this->_where)) {
-      return self::_instance_model_old($this->_table, $record);
-    }
-    return null;
-  }
-
-  public function get_all() {
-    $records = $this->_read_all();
-
-    if ($records) {
-      $objects = [];
-      foreach ($records as $record)
-        $objects[] = self::_instance_model_old($this->_table, $record);
-      return $objects;
-    } else {
-      return null;
-    }
-  }
-
-  public function pluck($field) {
-    $this->_select = [$this->_merge_field_with_table($field)];
-    $records = $this->_read_all();
-
-    if ($records) {
-      foreach ($records as $record)
-        $values[] = $record[$field];
-      return $values;
-    }
-    return null;
-  }
-
-  public function count() {
-    $field = "count(*)";
-    if (empty($this->_group)) {
-      $record = ApplicationSql::read([$field], $this->_table, $this->_where);
-      return $record[$field] ?: null;
-    } else {
-      $this->_select = array_merge([$field], $this->_group);
-      $records = $this->_read_all();
-      return $records ?: null;
-    }
-  }
-
-  public function update_all($sets) {
-    // check sets
-    foreach ($sets as $field => $value)
-      self::_check_field($field, $this->_table);
-
-    ApplicationSql::update($this->_table, $sets, $this->_where, $this->_limit);
-  }
-
-  public function delete_all() {
-    ApplicationSql::delete($this->_table, $this->_where, $this->_limit);
-  }
-
-  public function first($limit = 1) {
-    $this->order("id", "ASC");
-    $this->limit($limit);
-    if ($this->_limit != 1)
-      return self::get_all();
-    return self::get();
-  }
-
-  public function last($limit = 1) {
-  	$this->order("id", "DESC");
-    $this->limit($limit);
-    if ($this->_limit != 1)
-      return self::get_all();
-    return self::get();
-  }
-
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // |Query Helper Methods| : all, create, unique, find, find_all, exists, update, delete
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-  public static function all() {
+  final public static function all() {
     return self::load()->get_all();
   }
 
-  public static function unique($sets = null) {
+  final public static function unique($sets = null) {
     $record = self::load();
 
     // check and where sets
@@ -351,11 +144,11 @@ class ApplicationModel {
     return $record->get();
   }
 
-  public static function find($id) {
+  final public static function find($id) {
     return self::load()->where("id", intval($id))->get();
   }
 
-  public static function find_all($ids = null) {
+  final public static function find_all($ids = null) {
 
     // array control
     if (!is_array($ids))
@@ -368,16 +161,16 @@ class ApplicationModel {
     return self::load()->where("id", $ids, "IN")->get_all();
   }
 
-  public static function exists($id) {
+  final public static function exists($id) {
     return self::load()->where("id", intval($id))->get() ? true : false;
   }
 
-  public static function update($id, $sets) {
+  final public static function update($id, $sets) {
 
     // check sets
     $object = self::load();
     foreach ($sets as $field => $value)
-      self::_check_field($field, $object->_table);
+      ApplicationSql::check_field($field, $object->_table);
 
     // find record and set fields
     if ($record = $object->where("id", intval($id))->get()) {
@@ -389,86 +182,52 @@ class ApplicationModel {
     return $record;
   }
 
-  public static function delete($id) {
+  final public static function delete($id) {
     // find record and destroy
     if ($record = self::load()->where("id", intval($id))->get())
       $record->destroy();
   }
 
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // Private Helper Methods |Main| : _read_all, _merge_field_with_table, _merge_fields_with_table
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Public Static |Instance Methods| : instance_model_new, instance_model_old
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  private function _read_all($all = false) {
-    return ApplicationSql::read_all($this->_select, $this->_table, $this->_join, $this->_where, $this->_order, $this->_group, $this->_limit, $this->_offset);
-  }
-
-  private function _merge_field_with_table($field) {
-
-    if (strpos($field, '.') !== false) {
-      list($table, $field) = array_map('trim', explode('.', $field));
-      self::_check_table($table);
-      self::_check_field($field, $table);
-    } else {
-      $table = $this->_table;
-      self::_check_field($field, $table);
-    }
-    return strtolower("$table.$field");
-  }
-
-  private function _merge_fields_with_table($fields) {
-    foreach ($fields as $index => $field)
-      $fields[$index] = $this->_merge_field_with_table($field);
-    return $fields;
-  }
-
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // Private Static Methods |Main| : _tablename, _instance_query, _instance_model_new, _instance_model_old
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-  private static function _tablename() {
-    $table = strtolower(get_called_class());
-    self::_check_table($table);
-    return $table;
-  }
-
-  private static function _instance_query($modelname) {
+  final public static function instance_new($modelname) {
     $object = new $modelname($modelname);
+    $object->_new_record_state = TRUE;
+    foreach (ApplicationSql::fieldnames($modelname) as $field)
+      $object->_fields[$field] = NULL;
     return $object;
   }
 
-  private static function _instance_model_new($modelname) {
+  /*
+  ApplicationModelQuery verdiği verilerde
+  tablo ve alan bilgileri kontrol edildiği için
+  direk yüklenmesini sağlayan fonksyion
+  */
+  final public static function instance_old($modelname, $fields) {
     $object = new $modelname($modelname);
-    $object->_new_record_state = true;
-    foreach (ApplicationSql::fieldnames($modelname) as $fieldname)
-      $object->_fields[$fieldname] = null;
-    return $object;
-  }
-
-  private static function _instance_model_old($modelname, $fields) {
-    $object = new $modelname($modelname);
-    $object->_new_record_state = false;
+    $object->_new_record_state = FALSE;
     $object->_fields = $fields;
     return $object;
   }
 
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // Private Static Methods |Helper| : _set_to_where, _check_table, _check_field
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Private Static |Main Methods| : _tablename
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  private static function _tablename() {
+    $table = strtolower(get_called_class());
+    ApplicationSql::check_table($table);
+    return $table;
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Private Static |Helper Methods| : _set_to_where
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   private static function _set_to_where($field = null, $value = null, $mark = "=", $logic = "AND") {
     return compact("field", "value", "mark", "logic");
-  }
-
-  private static function _check_table($table) { // $table = $this->_table or static table
-    if (!in_array($table, ApplicationSql::tablenames()))
-      throw new Exception("Veritabanında böyle bir tablo mevcut değil → " . $table);
-  }
-
-  private static function _check_field($field, $table) {
-    $fields = ApplicationSql::fieldnames($table);
-    if (!in_array($field, $fields))
-      throw new Exception("| $table | tablosunda böyle bir anahtar mevcut değil → " . $field);
   }
 
 }
