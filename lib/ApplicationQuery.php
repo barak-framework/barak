@@ -44,7 +44,7 @@ class ApplicationQuery {
     $fields = func_get_args();
 
     // merge field with table
-    $fields = $this->_merge_fields_with_table($fields);
+    $fields = $this->_merge_table_with_fields($fields);
 
     // varsayılan olarak ekle, objeler yüklenirken her zaman id olmalıdır.
     $fields[] = $this->_table . ".id";
@@ -54,7 +54,7 @@ class ApplicationQuery {
   }
 
   public function where($field = null, $value = null, $mark = "=", $logic = "AND") {
-    $field = $this->_merge_field_with_table($field);
+    $field = $this->_merge_table_with_field($field);
 
     // mark control
     $mark = strtoupper(trim($mark));
@@ -128,7 +128,7 @@ class ApplicationQuery {
   }
 
   public function order($field, $sort_type = "ASC") {
-    $field = $this->_merge_field_with_table($field);
+    $field = $this->_merge_table_with_field($field);
 
     // sort_type control
     $sort_type = strtoupper(trim($sort_type));
@@ -144,7 +144,7 @@ class ApplicationQuery {
     $fields = func_get_args();
 
     // merge field with table
-    $fields = $this->_merge_fields_with_table($fields);
+    $fields = $this->_merge_table_with_fields($fields);
 
     $this->_group = $fields;
     return $this;
@@ -191,7 +191,7 @@ class ApplicationQuery {
   }
 
   public function pluck($field) {
-    $this->_select = [$this->_merge_field_with_table($field)];
+    $this->_select = [$this->_merge_table_with_field($field)];
     $records = $this->_read_all();
 
     if ($records) {
@@ -243,14 +243,14 @@ class ApplicationQuery {
   }
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // Private Helper Methods |Main| : _read_all, _merge_field_with_table, _merge_fields_with_table
+  // Private Helper Methods |Main| : _read_all, _merge_table_with_field, _merge_table_with_fields
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   private function _read_all($all = false) {
     return ApplicationSql::read_all($this->_select, $this->_table, $this->_join, $this->_where, $this->_order, $this->_group, $this->_limit, $this->_offset);
   }
 
-  private function _merge_field_with_table($field) {
+  private function _merge_table_with_field($field) {
 
     if (strpos($field, '.') !== false) {
       list($table, $field) = array_map('trim', explode('.', $field));
@@ -263,9 +263,9 @@ class ApplicationQuery {
     return strtolower("$table.$field");
   }
 
-  private function _merge_fields_with_table($fields) {
+  private function _merge_table_with_fields($fields) {
     foreach ($fields as $index => $field)
-      $fields[$index] = $this->_merge_field_with_table($field);
+      $fields[$index] = $this->_merge_table_with_field($field);
     return $fields;
   }
 
