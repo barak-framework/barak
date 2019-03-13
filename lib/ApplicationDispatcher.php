@@ -1,11 +1,17 @@
 <?php
 
-class ApplicationDispatcher {
+class ApplicationDispatcher extends ApplicationAtimer {
 
   public static function dispatch() {
+    $d = new ApplicationDispatcher();
+    $d->run();
+  }
+
+  public function run() {
 
     // info for request/requester
     $request = new ApplicationRequest();
+    // $time_start = microtime(true);
 
     ApplicationLogger::info("Started {$request->method} '{$request->rule}' for {$request->ip} at {$request->datetime}");
 
@@ -25,7 +31,13 @@ class ApplicationDispatcher {
       $response->status_code = 404;
     }
 
+    // run!
     $response->send();
+
+    // for ApplicationTimer class
+    $this->_timer_message = "Completed {$response->status()}";
+    // ApplicationLogger::info("Completed {$response->status()}" . sprintf ("(%.2f ms)", (microtime(true) - $time_start) * 1000));
+
   }
 
 }
