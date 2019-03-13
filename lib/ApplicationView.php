@@ -6,16 +6,21 @@ class ApplicationView {
   const VIEWPATH   = "app/views/";
 
   private $_layout;
-  private $_template;
+  private $_locals;
 
+  // (view & action) || template
+  private $_template;
   private $_view;
   private $_action;
 
-  private $_text;
+  // file
   private $_file;
+
+  // partial
   private $_partial;
 
-  private $_locals;
+  // text
+  private $_text;
 
   private $_time_start;
 
