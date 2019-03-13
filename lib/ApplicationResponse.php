@@ -109,7 +109,6 @@ class ApplicationResponse {
 
   final public function send() { // genişletilemez method
 
-
     if (!is_array($this->headers))
       throw new Exception("Headers list olmalıdır → " . $this->headers);
 
