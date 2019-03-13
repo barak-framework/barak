@@ -28,9 +28,9 @@ class ApplicationView {
     $this->_time_start = microtime(true);
   }
 
-  public function set($option) {
+  public function set($options) {
 
-    if (is_array(($options))) {
+    if (is_array($options)) {
 
       foreach ($options as $key => $value) {
         switch ($key) {
