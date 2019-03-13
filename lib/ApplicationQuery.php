@@ -2,6 +2,8 @@
 
 class ApplicationQuery {
 
+  // Query
+
   private $_select = [];   // list
   private $_table  = "";   // string
   private $_where  = [];   // hash
@@ -47,7 +49,8 @@ class ApplicationQuery {
     $fields = $this->_merge_fields_with_table($fields);
 
     // varsayılan olarak ekle, objeler yüklenirken her zaman id olmalıdır.
-    $this->_select = array_merge($fields, [$this->_table . ".id"]);
+    $fields[] = $this->_table . ".id";
+    $this->_select = $fields;
 
     return $this;
   }
@@ -275,5 +278,6 @@ class ApplicationQuery {
   private static function _set_to_where($field = null, $value = null, $mark = "=", $logic = "AND") {
     return compact("field", "value", "mark", "logic");
   }
+
 }
 ?>
