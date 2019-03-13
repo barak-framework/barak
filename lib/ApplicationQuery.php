@@ -2,8 +2,6 @@
 
 class ApplicationQuery {
 
-  // Query
-
   private $_select = [];   // list
   private $_table  = "";   // string
   private $_where  = [];   // hash
