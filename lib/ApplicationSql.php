@@ -51,7 +51,7 @@ class ApplicationSql {
     return $query->fetch(PDO::FETCH_ASSOC);
   }
 
-  public static function read_all($_select = [], $_table = "", $_join = [], $_where = [], $_order = [], $_group = [], $_limit = null, $_offset = null) {
+  public static function read_all($_select = [], $_table = "", $_join = [], $_where = [], $_group = [], $_order = [], $_limit = null, $_offset = null) {
 
     $_select_fields = (!empty($_select)) ? implode(",", $_select) : "*";
     $_order_fields  = (!empty($_order))  ? "ORDER BY " . implode(",", $_order) : "";
