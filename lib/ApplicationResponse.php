@@ -11,56 +11,56 @@ class ApplicationResponse {
 
   const STATUS =
   [
-    0   => "",
-    100 => "Continue",
-    101 => "Switching Protocols",
-    102 => "Processing",
-    200 => "OK",
-    201 => "Created",
-    202 => "Accepted",
-    203 => "Non-Authoritative Information",
-    204 => "No Content",
-    205 => "Reset Content",
-    206 => "Partial Content",
-    207 => "Multi-Status",
-    226 => "IM Used",
-    300 => "Multiple Choices",
-    301 => "Moved Permanently",
-    302 => "Found",
-    303 => "See Other",
-    304 => "Not Modified",
-    305 => "Use Proxy",
-    307 => "Temporary Redirect",
-    400 => "Bad Request",
-    401 => "Unauthorized",
-    402 => "Payment Required",
-    403 => "Forbidden",
-    404 => "Not Found",
-    405 => "Method Not Allowed",
-    406 => "Not Acceptable",
-    407 => "Proxy Authentication Required",
-    408 => "Request Timeout",
-    409 => "Conflict",
-    410 => "Gone",
-    411 => "Length Required",
-    412 => "Precondition Failed",
-    413 => "Request Entity Too Large",
-    414 => "Request-URI Too Long",
-    415 => "Unsupported Media Type",
-    416 => "Requested Range Not Satisfiable",
-    417 => "Expectation Failed",
-    422 => "Unprocessable Entity",
-    423 => "Locked",
-    424 => "Failed Dependency",
-    426 => "Upgrade Required",
-    500 => "Internal Server Error",
-    501 => "Not Implemented",
-    502 => "Bad Gateway",
-    503 => "Service Unavailable",
-    504 => "Gateway Timeout",
-    505 => "HTTP Version Not Supported",
-    507 => "Insufficient Storage",
-    510 => "Not Extended"
+  0   => "",
+  100 => "Continue",
+  101 => "Switching Protocols",
+  102 => "Processing",
+  200 => "OK",
+  201 => "Created",
+  202 => "Accepted",
+  203 => "Non-Authoritative Information",
+  204 => "No Content",
+  205 => "Reset Content",
+  206 => "Partial Content",
+  207 => "Multi-Status",
+  226 => "IM Used",
+  300 => "Multiple Choices",
+  301 => "Moved Permanently",
+  302 => "Found",
+  303 => "See Other",
+  304 => "Not Modified",
+  305 => "Use Proxy",
+  307 => "Temporary Redirect",
+  400 => "Bad Request",
+  401 => "Unauthorized",
+  402 => "Payment Required",
+  403 => "Forbidden",
+  404 => "Not Found",
+  405 => "Method Not Allowed",
+  406 => "Not Acceptable",
+  407 => "Proxy Authentication Required",
+  408 => "Request Timeout",
+  409 => "Conflict",
+  410 => "Gone",
+  411 => "Length Required",
+  412 => "Precondition Failed",
+  413 => "Request Entity Too Large",
+  414 => "Request-URI Too Long",
+  415 => "Unsupported Media Type",
+  416 => "Requested Range Not Satisfiable",
+  417 => "Expectation Failed",
+  422 => "Unprocessable Entity",
+  423 => "Locked",
+  424 => "Failed Dependency",
+  426 => "Upgrade Required",
+  500 => "Internal Server Error",
+  501 => "Not Implemented",
+  502 => "Bad Gateway",
+  503 => "Service Unavailable",
+  504 => "Gateway Timeout",
+  505 => "HTTP Version Not Supported",
+  507 => "Insufficient Storage",
+  510 => "Not Extended"
   ];
 
   const ERRORPAGE = "public/404.html";
@@ -69,12 +69,12 @@ class ApplicationResponse {
   // default security headers
   // source : https://guides.rubyonrails.org/security.html#default-headers
   const DEFAULTHEADERS = [
-    'X-Frame-Options' => 'SAMEORIGIN',
-    'X-XSS-Protection' => '1; mode=block',
-    'X-Content-Type-Options' => 'nosniff',
-    'X-Download-Options' => 'noopen',
-    'X-Permitted-Cross-Domain-Policies' => 'none',
-    'Referrer-Policy' => 'strict-origin-when-cross-origin'
+  'X-Frame-Options' => 'SAMEORIGIN',
+  'X-XSS-Protection' => '1; mode=block',
+  'X-Content-Type-Options' => 'nosniff',
+  'X-Download-Options' => 'noopen',
+  'X-Permitted-Cross-Domain-Policies' => 'none',
+  'Referrer-Policy' => 'strict-origin-when-cross-origin'
   ];
 
   private $_status; // status code and status text
@@ -108,8 +108,7 @@ class ApplicationResponse {
   }
 
   final public function send() { // genişletilemez method
-    if (!in_array($this->status_code, self::STATUS))
-      throw new Exception("Yanıt vermek için bilinmeyen durum kodu → " . $this->status_code);
+
 
     if (!is_array($this->headers))
       throw new Exception("Headers list olmalıdır → " . $this->headers);
@@ -125,6 +124,10 @@ class ApplicationResponse {
       default:
 
       if (!$this->status_code) $this->status_code(200);
+
+      if (!in_array($this->status_code, self::STATUS))
+        throw new Exception("Yanıt vermek için bilinmeyen durum kodu → " . $this->status_code);
+
       if (!$this->content_type) $this->content_type = "text/html";
 
       // write status code not including: 0, 302, 404, 500
