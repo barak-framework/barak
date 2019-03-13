@@ -66,10 +66,10 @@ class ApplicationQuery {
       $value = NULL;
     } elseif (in_array($mark, ApplicationSql::$where_marks_in)) {
       if (!is_array($value))
-        throw new Exception(sprintf("WHERE %s için değer list olmalıdır → ", implode(',', ApplicationSql::$where_marks_in)) . $value);
+        throw new Exception(sprintf("WHERE %s list olmalıdır → ", implode(',', ApplicationSql::$where_marks_in)) . $value);
     } elseif (in_array($mark, ApplicationSql::$where_marks_between)) {
       if (!is_array($value) or (is_array($value) and count($value) != 2))
-        throw new Exception(sprintf("WHERE %s için değer list ve 2 değerli olmalıdır → ", implode(',', ApplicationSql::$where_marks_in)) . $value);
+        throw new Exception(sprintf("WHERE %s list, 2 değerli olmalıdır → ", implode(',', ApplicationSql::$where_marks_between)) . $value);
     } elseif (!in_array($mark, array_merge(ApplicationSql::$where_marks_other, ApplicationSql::$where_marks_like))) {
       throw new Exception("WHERE için tanımlı böyle bir işaretçi bulunamadı → " . $mark);
     }
