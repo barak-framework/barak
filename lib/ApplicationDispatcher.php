@@ -6,10 +6,8 @@ class ApplicationDispatcher {
 
     // info for request/requester
     $request = new ApplicationRequest();
-    $time_start = microtime(true);
-    $date_now = date("Y-m-d H:i:s");
 
-    ApplicationLogger::info("Started {$request->method} '{$request->rule}' for {$request->ip} at {$date_now}");
+    ApplicationLogger::info("Started {$request->method} '{$request->rule}' for {$request->ip} at {$request->datetime}");
 
     // İstek url ile routes'ı içinden bul ve sevk et
     if ($route = ApplicationRoutes::get_route($request)) {
@@ -27,7 +25,6 @@ class ApplicationDispatcher {
       $response->status_code = 404;
     }
 
-    ApplicationLogger::info("Completed {$response->status()} in " . sprintf ("(%.2f ms)", (microtime(true) - $time_start) * 1000));
     $response->send();
   }
 
