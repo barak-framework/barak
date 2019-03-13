@@ -152,7 +152,7 @@ class ApplicationResponse {
   }
 
   private function _location() {
-    exit(header("Location: http://" . $_SERVER['SERVER_NAME'] . "/{$this->body}", FALSE, 302));
+    header("Location: http://" . $_SERVER['SERVER_NAME'] . "/{$this->body}", FALSE, 302);
   }
 
   private function _write() {
@@ -166,10 +166,6 @@ class ApplicationResponse {
   }
 
   private function _write_404() {
-    ob_get_length() > 0 && ob_get_level() && ob_end_clean();
-    ob_flush();
-    ob_clean();
-    ob_start();
     $v = new ApplicationView();
     if ($this->body) $v->text = $this->body; else $v->file = self::ERRORPAGE;
     $this->body = $v->run();
@@ -177,8 +173,6 @@ class ApplicationResponse {
   }
 
   private function _write_500() {
-    ob_get_length() > 0 && ob_get_level() && ob_end_clean();
-
     $v = new ApplicationView();
     if ($this->body) $v->text = $this->body; else $v->file = self::DEBUGPAGE;
     $this->body = $v->run();
