@@ -155,7 +155,7 @@ class ApplicationResponse {
     header("HTTP/1.1 {$this->_status}");
 
     foreach ($this->headers as $name => $value)
-      header("{$name}: {$value}");
+      header("{$name}: {$value};");
 
     echo $this->body;
   }
