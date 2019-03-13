@@ -109,6 +109,13 @@ class ApplicationResponse {
 
   final public function send() { // genişletilemez method
 
+    // status_code set
+    if (!$this->status_code) $this->_status_code(200);
+
+    if (!array_key_exists($this->status_code, self::STATUS))
+      throw new Exception("Yanıt vermek için bilinmeyen durum kodu → " . $this->status_code);
+
+    // header set
     if (!is_array($this->headers))
       throw new Exception("Headers list olmalıdır → " . $this->headers);
 
@@ -122,11 +129,7 @@ class ApplicationResponse {
       case 500: $this->_write_500();  break;
       default:
 
-      if (!$this->status_code) $this->status_code(200);
-
-      if (!in_array($this->status_code, self::STATUS))
-        throw new Exception("Yanıt vermek için bilinmeyen durum kodu → " . $this->status_code);
-
+      // content_type set
       if (!$this->content_type) $this->content_type = "text/html";
 
       // write status code not including: 0, 302, 404, 500
