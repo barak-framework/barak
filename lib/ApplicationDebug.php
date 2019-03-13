@@ -64,7 +64,9 @@ class ApplicationDebug {
 
     $body = (self::$_debug) ? self::_layout($header, $numbers, $rows, $footer, $line) : NULL;
 
-    $response = new ApplicationResponse(500, $body);
+    $response = new ApplicationResponse();
+    $response->status_code = 500;
+    $response->body = $body;
     $response->send();
     exit();
   }
