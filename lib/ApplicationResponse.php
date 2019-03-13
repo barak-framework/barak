@@ -162,14 +162,14 @@ class ApplicationResponse {
 
   private function _write_404() {
     $v = new ApplicationView();
-    if ($this->body) $v->text = $this->body else $v->file = self::ERRORPAGE;
+    if ($this->body) $v->text = $this->body; else $v->file = self::ERRORPAGE;
     $this->body = $v->run();
     $this->_write();
   }
 
   private function _write_500() {
     $v = new ApplicationView();
-    if ($this->body) $v->text = $this->body else $v->file = self::DEBUGPAGE;
+    if ($this->body) $v->text = $this->body; else $v->file = self::DEBUGPAGE;
     $this->body = $v->run();
     $this->_write();
   }
