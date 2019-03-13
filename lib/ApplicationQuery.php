@@ -36,7 +36,7 @@ class ApplicationQuery {
   }
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // |Query Methods| : select, where, or_where, joins, order, group, limit, offset
+  // |Query Methods| : select, joins, where, or_where, order, group, limit, offset
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   public function select() {
@@ -51,41 +51,6 @@ class ApplicationQuery {
     $this->_select = $fields;
 
     return $this;
-  }
-
-  public function where($field = null, $value = null, $mark = "=", $logic = "AND") {
-    $field = $this->_merge_table_with_field($field);
-
-    // mark control
-    $mark = strtoupper(trim($mark));
-    if (is_null($value)) {
-      $mark = ApplicationSql::$where_marks_null[0]; // "IS NULL";
-      $value = NULL;
-    } elseif (in_array($value, ApplicationSql::$where_marks_null, true)) {
-      $mark = $value;
-      $value = NULL;
-    } elseif (in_array($mark, ApplicationSql::$where_marks_in)) {
-      if (!is_array($value))
-        throw new Exception(sprintf("WHERE %s list olmalıdır → ", implode(',', ApplicationSql::$where_marks_in)) . $value);
-    } elseif (in_array($mark, ApplicationSql::$where_marks_between)) {
-      if (!is_array($value) or (is_array($value) and count($value) != 2))
-        throw new Exception(sprintf("WHERE %s 2 değerli list olmalıdır → ", implode(',', ApplicationSql::$where_marks_between)) . $value);
-    } elseif (!in_array($mark, array_merge(ApplicationSql::$where_marks_other, ApplicationSql::$where_marks_like))) {
-      throw new Exception("WHERE için tanımlı böyle bir işaretçi bulunamadı → " . $mark);
-    }
-
-    // logic control
-    $logic = strtoupper(trim($logic));
-    if (!in_array($logic, ApplicationSql::$where_logics))
-      throw new Exception("WHERE de tanımlı böyle bir bağlayıcı bulunamadı → " . $logic);
-
-    $this->_where[] = self::_set_to_where($field, $value, $mark, $logic);
-
-    return $this;
-  }
-
-  public function or_where($field, $value = null, $mark = "=") {
-    return $this->where($field, $value, $mark, "OR");
   }
 
   // #TODO INNER OR LEFT OUTER
@@ -125,6 +90,41 @@ class ApplicationQuery {
       $this->_select[] = $this->_table . "." . $field;
 
     return $this;
+  }
+
+  public function where($field = null, $value = null, $mark = "=", $logic = "AND") {
+    $field = $this->_merge_table_with_field($field);
+
+    // mark control
+    $mark = strtoupper(trim($mark));
+    if (is_null($value)) {
+      $mark = ApplicationSql::$where_marks_null[0]; // "IS NULL";
+      $value = NULL;
+    } elseif (in_array($value, ApplicationSql::$where_marks_null, true)) {
+      $mark = $value;
+      $value = NULL;
+    } elseif (in_array($mark, ApplicationSql::$where_marks_in)) {
+      if (!is_array($value))
+        throw new Exception(sprintf("WHERE %s list olmalıdır → ", implode(',', ApplicationSql::$where_marks_in)) . $value);
+    } elseif (in_array($mark, ApplicationSql::$where_marks_between)) {
+      if (!is_array($value) or (is_array($value) and count($value) != 2))
+        throw new Exception(sprintf("WHERE %s 2 değerli list olmalıdır → ", implode(',', ApplicationSql::$where_marks_between)) . $value);
+    } elseif (!in_array($mark, array_merge(ApplicationSql::$where_marks_other, ApplicationSql::$where_marks_like))) {
+      throw new Exception("WHERE için tanımlı böyle bir işaretçi bulunamadı → " . $mark);
+    }
+
+    // logic control
+    $logic = strtoupper(trim($logic));
+    if (!in_array($logic, ApplicationSql::$where_logics))
+      throw new Exception("WHERE de tanımlı böyle bir bağlayıcı bulunamadı → " . $logic);
+
+    $this->_where[] = self::_set_to_where($field, $value, $mark, $logic);
+
+    return $this;
+  }
+
+  public function or_where($field, $value = null, $mark = "=") {
+    return $this->where($field, $value, $mark, "OR");
   }
 
   public function order($field, $sort_type = "ASC") {
