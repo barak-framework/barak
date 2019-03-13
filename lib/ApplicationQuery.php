@@ -247,7 +247,16 @@ class ApplicationQuery {
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   private function _read_all($all = false) {
-    return ApplicationSql::read_all($this->_select, $this->_table, $this->_join, $this->_where, $this->_order, $this->_group, $this->_limit, $this->_offset);
+    return ApplicationSql::read_all(
+      $this->_select,
+      $this->_table,
+      $this->_join,
+      $this->_where,
+      $this->_group,
+      $this->_order,
+      $this->_limit,
+      $this->_offset
+    );
   }
 
   private function _merge_table_with_field($field) {
