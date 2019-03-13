@@ -15,8 +15,8 @@ class ApplicationQuery {
   // |Magic Methods| : __construct, _get, _set, __call, __callStatic
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public function __construct($tablename) {
-    $this->_table = $tablename;
+  public function __construct($table) {
+    $this->_table = $table;
   }
 
   public function __get($field) {
