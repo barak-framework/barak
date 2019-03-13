@@ -166,7 +166,7 @@ class ApplicationController {
     // response for body
     $response = new ApplicationResponse();
     $response->body = $body;
-    $response->set($response_options);
+    $response->set($this->_render["response_options"]);
     return $response;
   }
 
