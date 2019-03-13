@@ -12,7 +12,7 @@ class ApplicationAtimer {
   }
 
   final public function __destruct() {
-    ApplicationLogger::info("$this->_timer_message" . sprintf ("(%.2f ms)", (microtime(true) - $this->_start) * 1000));
+    ApplicationLogger::info("$this->_timer_message " . sprintf ("(%.2f ms)", (microtime(true) - $this->_start) * 1000));
   }
 
 }
