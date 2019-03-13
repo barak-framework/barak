@@ -77,14 +77,17 @@ class ApplicationResponse {
   'Referrer-Policy' => 'strict-origin-when-cross-origin'
   ];
 
-  private $_status; // status code and status text
+  private $_status = NULL; // status code and status text
 
   public $headers = [];
   public $status_code = NULL;
   public $content_type = NULL;
   public $body = NULL;
 
+  private $_time_start;
+
   final public function __construct() { // genişletilemez method
+    $this->_time_start = microtime(true);
   }
 
   final public function set($options) { // genişletilemez method
@@ -92,8 +95,8 @@ class ApplicationResponse {
 
       foreach ($options as $key => $value) {
         switch ($key) {
-          case "headers":       $this->headers = $value;     break;
-          case "status_code":  $this->_status_code($value);  break;
+          case "headers":      $this->headers = $value;      break;
+          case "status_code":  $this->status_code = $value;  break;
           case "content_type": $this->content_type = $value; break;
           default:
           throw new Exception("Response ayarlarında bilinmeyen parametre → " . $key);
@@ -103,19 +106,19 @@ class ApplicationResponse {
     }
   }
 
-  final public function status() { // genişletilemez method
-    return $this->_status;
-  }
-
   final public function send() { // genişletilemez method
 
-    // status_code set
-    if (!$this->status_code) $this->_status_code(200);
+    // default status_code set
+    if (!$this->status_code) $this->status_code = 200;
 
+    // check status_code
     if (!array_key_exists($this->status_code, self::STATUS))
       throw new Exception("Yanıt vermek için bilinmeyen durum kodu → " . $this->status_code);
 
-    // header set
+    // status code and status text
+    $this->_status = $this->status_code . " " . self::STATUS[$this->status_code];
+
+    // check headers
     if (!is_array($this->headers))
       throw new Exception("Headers list olmalıdır → " . $this->headers);
 
@@ -135,11 +138,8 @@ class ApplicationResponse {
       // write status code not including: 0, 302, 404, 500
       $this->_write();
     }
-  }
 
-  private function _status_code($status_code) {
-    $this->status_code = $status_code;
-    $this->_status = $status_code . " " . self::STATUS[$status_code];
+    ApplicationLogger::info("Completed {$this->_status} in " . sprintf ("(%.2f ms)", (microtime(true) - $this->_time_start) * 1000));
   }
 
   private function _attachment() {
@@ -166,6 +166,10 @@ class ApplicationResponse {
   }
 
   private function _write_404() {
+    ob_get_length() > 0 && ob_get_level() && ob_end_clean();
+    ob_flush();
+    ob_clean();
+    ob_start();
     $v = new ApplicationView();
     if ($this->body) $v->text = $this->body; else $v->file = self::ERRORPAGE;
     $this->body = $v->run();
@@ -173,6 +177,8 @@ class ApplicationResponse {
   }
 
   private function _write_500() {
+    ob_get_length() > 0 && ob_get_level() && ob_end_clean();
+
     $v = new ApplicationView();
     if ($this->body) $v->text = $this->body; else $v->file = self::DEBUGPAGE;
     $this->body = $v->run();
