@@ -2,11 +2,9 @@
 
 class ApplicationModel {
 
-  // One Record
-
-  private $_table = "";
-  private $_fields = [];      // for only one record CRUD
-  private $_new_record_state; // for only one record state new/old ?
+  private $_table = "";       // record table
+  private $_fields = [];      // record access attributes
+  private $_new_record_state; // record new/old ?
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // |Magic Methods| : __construct, __debugInfo, __get, __set, __call, __callStatic
@@ -200,11 +198,7 @@ class ApplicationModel {
     return $object;
   }
 
-  /*
-  ApplicationModelQuery verdiği verilerde
-  tablo ve alan bilgileri kontrol edildiği için
-  direk yüklenmesini sağlayan fonksyion
-  */
+  // ApplicationQuery verdiği verilerde tablo ve alan bilgileri kontrol edildiği için direk örnek oluştur
   final public static function instance_old($modelname, $fields) {
     $object = new $modelname($modelname);
     $object->_new_record_state = FALSE;
