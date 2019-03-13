@@ -21,39 +21,39 @@ class ApplicationController {
 
   private $_route;
 
-  final public function __construct(ApplicationRoute $route) { // genişletilemez fonksiyon
+  final public function __construct(ApplicationRoute $route) { // genişletilemez method
     $this->_route = $route;
   }
 
-  final public function __get($local) { // genişletilemez fonksiyon
+  final public function __get($local) { // genişletilemez method
     return $this->_locals[$local];
   }
 
-  final public function __set($local, $value) { // genişletilemez fonksiyon
+  final public function __set($local, $value) { // genişletilemez method
     $this->_locals[$local] = $value;
   }
 
-  final public function __isset($local) { // genişletilemez fonksiyon
+  final public function __isset($local) { // genişletilemez method
     return isset($this->_locals[$local]);
   }
 
-  final public function __unset($local) { // genişletilemez fonksiyon
+  final public function __unset($local) { // genişletilemez method
     unset($this->_locals[$local]);
   }
 
-  final public function send_data($content, $filename, $contenttype = NULL) { // genişletilemez fonksiyon
-    $this->_send_data = [$content, $filename, $contenttype];
+  final public function send_data($body, $filename, $content_type = NULL) { // genişletilemez method
+    $this->_send_data = ["options" => [$body, $filename], "content_type" => $content_type];
   }
 
-  final public function redirect_to($url) { // genişletilemez fonksiyon
+  final public function redirect_to($url) { // genişletilemez method
     $this->_redirect_to = $url;
   }
 
-  final public function render($options) { // genişletilemez fonksiyon
-    $this->_render = $options;
+  final public function render($view_options, $response_options = NULL) { // genişletilemez method
+    $this->_render = ["view_options" => $view_options, "response_options" => $response_options];
   }
 
-  public static function get_content(ApplicationRoute $route) {
+  public static function get_response(ApplicationRoute $route) {
     if ($route->path != "") {
       $_before_path = "";
       $_paths = explode("/", trim($route->path, "/"));
@@ -64,7 +64,7 @@ class ApplicationController {
     }
     // main class
     self::_load($route->controller, $route->path);
-    // run controller class and before_actions, before_afters, helper functions
+    // run controller class and before_actions, before_afters, helper methods
     $controller_class = ucwords($route->controller) . self::CONTROLLERSUBNAME;
     $c = new $controller_class($route);
     return $c->_run();
@@ -122,11 +122,18 @@ class ApplicationController {
   }
 
   private function _send_data() {
-    return [NULL, $this->_send_data];
+    $response = new ApplicationResponse();
+    $response->body = $this->_send_data["options"]; // body and filename
+    $response->status_code = NULL;
+    $response->content_type = $this->_send_data["content_type"];
+    return $response;
   }
 
   private function _redirect_to() {
-    return [302, $this->_redirect_to];
+    $response = new ApplicationResponse();
+    $response->body = $this->_redirect_to;
+    $response->status_code = 302;
+    return $response;
   }
 
   private function _render() {
@@ -135,24 +142,32 @@ class ApplicationController {
     // render template
     if ($this->_route->path) { // have path? for scope, resouce, resouces
 
-      $v->set(["layout" => trim($this->_route->path, "/")]);
-      $v->set(["view" => $this->_route->path . $this->_route->controller, "action" => $this->_route->action]);
+      $v->layout = trim($this->_route->path, "/");
+      $v->view = $this->_route->path . $this->_route->controller;
+      $v->action = $this->_route->action;
 
     } else { // normal path
 
-      $v->set(["view" => $this->_route->controller, "action" => $this->_route->action]);
+      $v->view = $this->_route->controller;
+      $v->action = $this->_route->action;
 
     }
 
     // controllerin localsları
     if ($this->_locals)
-      $v->set(["locals" => $this->_locals]);
+      $v->locals = $this->_locals;
 
     // controllerin renderi
     if ($this->_render)
-      $v->set($this->_render);
+      $v->set($this->_render["view_options"]);
 
-    return [200, $v->run()];
+    $body = $v->run();
+
+    // response for body
+    $response = new ApplicationResponse();
+    $response->body = $body;
+    $response->set($response_options);
+    return $response;
   }
 
   private function _run() {
@@ -200,6 +215,7 @@ class ApplicationController {
       $this->_send_data = $main_send_data;
       return self::_send_data();
     }
+
     // main action için daha önce saklanan _redirect_to verisini çalıştır ve sonlandır
     if ($main_redirect_to) {
       $this->_redirect_to = $main_redirect_to;
