@@ -5,22 +5,22 @@ class ApplicationView {
   const LAYOUTPATH = "app/views/layouts/";
   const VIEWPATH   = "app/views/";
 
-  private $_layout;
-  private $_locals;
+  public $layout;
+  public $locals;
 
   // (view & action) || template
-  private $_template;
-  private $_view;
-  private $_action;
+  public $template;
+  public $view;
+  public $action;
 
   // file
-  private $_file;
+  public $file;
 
   // partial
-  private $_partial;
+  public $partial;
 
   // text
-  private $_text;
+  public $text;
 
   private $_time_start;
 
@@ -28,32 +28,32 @@ class ApplicationView {
     $this->_time_start = microtime(true);
   }
 
-  public function set($_render) {
+  public function set($option) {
 
-    if (is_array(($_render))) {
+    if (is_array(($options))) {
 
-      foreach ($_render as $key => $value) {
+      foreach ($options as $key => $value) {
         switch ($key) {
-          case "partial":  $this->_partial  = $value; break;
-          case "locals":   $this->_locals   = $value; break;
-          case "file":     $this->_file     = $value; break;
-          case "text":     $this->_text     = $value; break;
-          case "layout":   $this->_layout   = $value; break;
-          case "view":     $this->_view     = $value; break; // default kesin
-          case "action":   $this->_action   = $value; break; // default kesin
-          case "template": $this->_template = $value; break;
+          case "partial":  $this->partial  = $value; break;
+          case "locals":   $this->locals   = $value; break;
+          case "file":     $this->file     = $value; break;
+          case "text":     $this->text     = $value; break;
+          case "layout":   $this->layout   = $value; break;
+          case "view":     $this->view     = $value; break; // default kesin
+          case "action":   $this->action   = $value; break; // default kesin
+          case "template": $this->template = $value; break;
           default:
           throw new Exception("Render fonksiyonunda bilinmeyen parametre → " . $key);
         }
       }
 
-    } elseif (is_string($_render)) {
+    } elseif (is_string($options)) {
 
-      $url = explode("/", trim($_render, "/"));
-      $this->_template = (isset($url[1])) ? $_render : $this->_view . "/" . $url[0];
+      $url = explode("/", trim($options, "/"));
+      $this->template = (isset($url[1])) ? $options : $this->view . "/" . $url[0];
 
     } else {
-      throw new Exception("Render fonksiyonun bilinmeyen değişken tipi → " . $this->_render);
+      throw new Exception("Render fonksiyonun bilinmeyen değişken tipi → " . $options);
     }
 
   }
@@ -61,39 +61,39 @@ class ApplicationView {
   public function run() {
 
     // sets contiune - start
-    if (!isset($this->_template)) { // is not set ?
-      $this->_template = $this->_view . "/" . $this->_action;
+    if (!isset($this->template)) { // is not set ?
+      $this->template = $this->view . "/" . $this->action;
     }
 
-    if (!isset($this->_layout)) { // is not set ?
-      $this->_layout = $this->_view;
+    if (!isset($this->layout)) { // is not set ?
+      $this->layout = $this->view;
     }
 
-    if (!isset($this->_locals)) { // is not set ?
-      $this->_locals = null;
+    if (!isset($this->locals)) { // is not set ?
+      $this->locals = null;
     }
     // sets contiune - end
 
     // take content!
-    if (isset($this->_text)) {
+    if (isset($this->text)) {
 
-      $content = $this->_text;
+      $content = $this->text;
 
-    } elseif (isset($this->_file)) {
+    } elseif (isset($this->file)) {
 
-      $content = self::_render_file($this->_file, $this->_locals);
+      $content = self::_render_file($this->file, $this->locals);
 
-    } elseif (isset($this->_partial)) {
+    } elseif (isset($this->partial)) {
 
-      $content = self::_render_file(self::VIEWPATH . preg_replace("~/(?!.*/)~", "/_", $this->_partial) . ".php", $this->_locals);
+      $content = self::_render_file(self::VIEWPATH . preg_replace("~/(?!.*/)~", "/_", $this->partial) . ".php", $this->locals);
 
-    } elseif ($this->_layout) { // layout : is not false?
+    } elseif ($this->layout) { // layout : is not false?
 
-      $content = self::_render_file(self::_layout_file(), ["yield" => self::_render_file(self::_template_file(), $this->_locals)]);
+      $content = self::_render_file(self::_layout_file(), ["yield" => self::_render_file(self::_template_file(), $this->locals)]);
 
     } else { // layout : is false?
 
-      $content = self::_render_file(self::_template_file(), $this->_locals);
+      $content = self::_render_file(self::_template_file(), $this->locals);
 
     }
 
@@ -103,7 +103,7 @@ class ApplicationView {
 
   private function _layout_file() {
 
-    $layout_file = self::LAYOUTPATH . $this->_layout . ".php";
+    $layout_file = self::LAYOUTPATH . $this->layout . ".php";
 
     if (!file_exists($layout_file))
       throw new Exception("Layout dosyası mevcut değil → " . $layout_file);
@@ -113,7 +113,7 @@ class ApplicationView {
 
   private function _template_file() {
 
-    $template_file = self::VIEWPATH . $this->_template . ".php";
+    $template_file = self::VIEWPATH . $this->template . ".php";
 
     if (!file_exists($template_file))
       throw new Exception("Template dosyası mevcut değil → " . $template_file);
