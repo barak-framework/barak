@@ -88,7 +88,7 @@ class ApplicationResponse {
   }
 
   final public function set($options) { // genişletilemez method
-    if (is_array(($options))) {
+    if (is_array($options)) {
 
       foreach ($options as $key => $value) {
         switch ($key) {
