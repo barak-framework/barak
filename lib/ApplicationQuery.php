@@ -24,7 +24,7 @@ class ApplicationQuery {
   }
 
   public function __set($field, $value) {
-      throw new Exception("Query içerisinde böyle bir anahtar mevcut değil → " . $field);
+    throw new Exception("Query içerisinde böyle bir anahtar mevcut değil → " . $field);
   }
 
   public function __call($method, $args) {
@@ -256,7 +256,7 @@ class ApplicationQuery {
       $this->_order,
       $this->_limit,
       $this->_offset
-    );
+      );
   }
 
   private function _merge_table_with_field($field) {
