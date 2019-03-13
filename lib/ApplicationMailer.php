@@ -6,8 +6,6 @@ class ApplicationMailer {
 
   private static $_configuration = NULL; // for PHPMailer
 
-  // private static $_mailer;
-
   private $_locals = [];
   private $_mail;
 
