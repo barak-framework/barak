@@ -39,10 +39,10 @@ class ApplicationAlias {
     // LAYOUT and TEMPLATE
     // for app/views/VIEW/ACTION.php and app/views/layouts/VIEW.php
 
-    function render($options = NULL) {
-      if ($options) {
+    function render($view_options = NULL) {
+      if ($view_options) {
         $v = new ApplicationView();
-        $v->set($options);
+        $v->set($view_options);
         return $v->run();
       }
     }
