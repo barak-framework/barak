@@ -2,8 +2,6 @@
 
 class ApplicationQuery {
 
-  // Query
-
   private $_select = [];   // list
   private $_table  = "";   // string
   private $_where  = [];   // hash
@@ -17,7 +15,7 @@ class ApplicationQuery {
   // |Magic Methods| : __construct, _get, _set, __call, __callStatic
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  final public function __construct($tablename) {
+  public function __construct($tablename) {
     $this->_table = $tablename;
   }
 
