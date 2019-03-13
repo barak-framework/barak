@@ -246,7 +246,7 @@ class ApplicationQuery {
   // Private Helper Methods |Main| : _read_all, _merge_table_with_field, _merge_table_with_fields
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  private function _read_all($all = false) {
+  private function _read_all() {
     return ApplicationSql::read_all(
       $this->_select,
       $this->_table,
