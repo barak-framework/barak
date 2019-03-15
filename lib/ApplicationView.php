@@ -1,6 +1,6 @@
 <?php
 
-class ApplicationView extends ApplicationAtimer {
+class ApplicationView {
 
   const LAYOUTPATH = "app/views/layouts/";
   const VIEWPATH   = "app/views/";
@@ -22,13 +22,14 @@ class ApplicationView extends ApplicationAtimer {
   // text
   public $text;
 
-  // private $_time_start;
+  // working time in milliseconds
+  private $_time;
 
-  // public function __construct() {
-  //   $this->_time_start = microtime(true);
-  // }
+  final public function __construct() {
+    $this->_time = microtime(true);
+  }
 
-  public function set($options) {
+  final public function set($options) {
 
     if (is_array($options)) {
 
@@ -58,7 +59,7 @@ class ApplicationView extends ApplicationAtimer {
 
   }
 
-  public function run() {
+  final public function run() {
 
     // sets contiune - start
     if (!isset($this->template)) { // is not set ?
@@ -137,9 +138,7 @@ class ApplicationView extends ApplicationAtimer {
 
     include $file;
 
-    // for ApplicationTimer class
-    $this->_timer_message = "  Rendered $file";
-    // ApplicationLogger::info("  Rendered $file " . sprintf ("(%.2f ms)", (microtime(true) - $this->_time_start) * 1000));
+    ApplicationLogger::info("  Rendered $file " . sprintf ("(%.2f ms)", (microtime(true) - $this->_time) * 1000));
 
     return ob_get_clean();
   }
