@@ -93,7 +93,7 @@ class ApplicationModel {
 
     if (!$this->_new_record_state) {
 
-      ApplicationSql::update($this->_table, $this->_fields, [self::_set_to_where("id", intval($this->_fields["id"]))], 1);
+      ApplicationSql::update($this->_table, $this->_fields, [ApplicationQuery::set_to_where("id", intval($this->_fields["id"]))], 1);
 
     } else {
 
@@ -111,7 +111,7 @@ class ApplicationModel {
   }
 
   final public function destroy() {
-    ApplicationSql::delete($this->_table, [self::_set_to_where("id", intval($this->_fields["id"]))], 1);
+    ApplicationSql::delete($this->_table, [ApplicationQuery::set_to_where("id", intval($this->_fields["id"]))], 1);
   }
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -209,14 +209,6 @@ class ApplicationModel {
     $table = strtolower(get_called_class());
     ApplicationSql::check_table($table);
     return $table;
-  }
-
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // Private Static |Helper Methods| : _set_to_where
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-  private static function _set_to_where($field = null, $value = null, $mark = "=", $logic = "AND") {
-    return compact("field", "value", "mark", "logic");
   }
 
 }
