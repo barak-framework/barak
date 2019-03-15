@@ -21,10 +21,6 @@ class ApplicationController {
 
   private $_route;
 
-  final public function __construct(ApplicationRoute $route) { // genişletilemez method
-    $this->_route = $route;
-  }
-
   final public function __get($local) { // genişletilemez method
     return $this->_locals[$local];
   }
@@ -66,7 +62,8 @@ class ApplicationController {
     self::_load($route->controller, $route->path);
     // run controller class and before_actions, before_afters, helper methods
     $controller_class = ucwords($route->controller) . self::CONTROLLERSUBNAME;
-    $c = new $controller_class($route);
+    $c = new $controller_class();
+    $c->_route = $route;
     return $c->_run();
   }
 
