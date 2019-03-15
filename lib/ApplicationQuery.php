@@ -59,7 +59,7 @@ class ApplicationQuery {
     // like for single variable : Category::load()->joins("article")->get_all();
     if (!is_array($belong_tables)) $belong_tables = [$belong_tables];
 
-    ($table) ? ApplicationSql::check_table($table) : ($table = $this->_table);
+    if ($table) ApplicationSql::check_table($table); else ($table = $this->_table);
 
     foreach ($belong_tables as $key => $value) {
 
