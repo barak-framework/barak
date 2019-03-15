@@ -132,11 +132,11 @@ class ApplicationModel {
     return self::load()->get_all();
   }
 
-  final public static function unique($sets = null) {
+  final public static function unique($fields = null) {
     $record = self::load();
 
-    // check and where sets
-    foreach ($sets as $field => $value)
+    // check and where fields
+    foreach ($fields as $field => $value)
       $record = $record->where($field, $value);
 
     return $record->get();
@@ -150,7 +150,7 @@ class ApplicationModel {
 
     // array control
     if (!is_array($ids))
-      throw new Exception("find_all sorgusunda değer list olmalıdır → " . $sort_type);
+      throw new Exception("find_all sorgusunda değer list olmalıdır → " . $ids);
 
     // int check
     foreach ($ids as $index => $id)
@@ -163,17 +163,12 @@ class ApplicationModel {
     return self::load()->where("id", intval($id))->get() ? true : false;
   }
 
-  final public static function update($id, $sets) {
+  final public static function update($id, $fields) {
 
-    // check sets
-    $object = self::load();
-    foreach ($sets as $field => $value)
-      ApplicationSql::check_field($field, $object->_table);
-
-    // find record and set fields
-    if ($record = $object->where("id", intval($id))->get()) {
-      foreach ($sets as $key => $value)
-        $record->$key = $value;
+    // find record and update fields
+    if ($record = self::load()->where("id", intval($id))->get()) {
+      foreach ($fields as $field => $value)
+        $record->$field = $value;
       $record->save();
     }
 
