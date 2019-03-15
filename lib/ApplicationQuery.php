@@ -118,7 +118,7 @@ class ApplicationQuery {
     if (!in_array($logic, ApplicationSql::$where_logics))
       throw new Exception("WHERE de tanımlı böyle bir bağlayıcı bulunamadı → " . $logic);
 
-    $this->_where[] = self::_set_to_where($field, $value, $mark, $logic);
+    $this->_where[] = self::set_to_where($field, $value, $mark, $logic);
 
     return $this;
   }
@@ -279,10 +279,10 @@ class ApplicationQuery {
   }
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // Private Static Methods |Helper| : _set_to_where
+  // Private Static Methods |Helper| : set_to_where
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  private static function _set_to_where($field = null, $value = null, $mark = "=", $logic = "AND") {
+  public static function set_to_where($field = null, $value = null, $mark = "=", $logic = "AND") {
     return compact("field", "value", "mark", "logic");
   }
 
