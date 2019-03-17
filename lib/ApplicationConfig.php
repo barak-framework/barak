@@ -17,26 +17,26 @@ class ApplicationConfig {
 
     // for $_SESSION hash kick!
     if (!strlen(session_id())) session_start();
-    
+
     // DEFAULT SETTINGS - start
 
     // DEBUG: public/500.html veya hata kodlarını gösterme ayarı, hata kodlarını gösterme
     ApplicationDebug::init(false);
-    
+
     // COOKIE: httponly ile JS'in ilgili cookie'yi okuması engelleme ayarı, JS'yi engelle
     ini_set('session.cookie_httponly', 1);
-    
+
     // DEFAULT SETTINGS - end
 
     // configuration setting
     $app_configuration = parse_ini_file(self::APPFILE);
     foreach ($app_configuration as $key => $value) {
       switch ($key) {
-        case "timezone":                date_default_timezone_set($value);    break;
-        case "debug":                   ApplicationDebug::init($value);       break;
-        case "locale":                  ApplicationI18n::init($value);        break;
-        case "cache_expiration":        ApplicationCache::expiration($value); break;
-        case "session.cookie_httponly": ini_set($key, ($value) ? 1 : 0);      break;
+        case "timezone":               date_default_timezone_set($value);                    break;
+        case "debug":                  ApplicationDebug::init($value);                       break;
+        case "locale":                 ApplicationI18n::init($value);                        break;
+        case "cacheexpiration":        ApplicationCache::expiration($value);                 break;
+        case "session.cookiehttponly": ini_set("session.cookie_httponly", ($value) ? 1 : 0); break;
         default:
         throw new Exception("Uygulama yapılandırma dosyasında bilinmeyen parametre → " . $key);
       }
