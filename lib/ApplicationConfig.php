@@ -15,16 +15,21 @@ class ApplicationConfig {
     if (!file_exists(self::APPFILE))
       throw new Exception("Uygulama yapılandırma ayar dosyası mevcut değil → " . self::APPFILE);
 
-    // for $_SESSION hash kick!
-    if (!strlen(session_id())) session_start();
-
     // DEFAULT SETTINGS - start
+
+    // Session options
+    if (!strlen(session_id())) {
+
+      // COOKIE: httponly ile JS'in ilgili cookie'yi okuması engelleme ayarı, JS'yi engelle
+      ini_set('session.cookie_httponly', 1);
+
+      // for $_SESSION hash kick!
+      session_start();
+
+    }
 
     // DEBUG: public/500.html veya hata kodlarını gösterme ayarı, hata kodlarını gösterme
     ApplicationDebug::init(false);
-
-    // COOKIE: httponly ile JS'in ilgili cookie'yi okuması engelleme ayarı, JS'yi engelle
-    ini_set('session.cookie_httponly', 1);
 
     // DEFAULT SETTINGS - end
 
@@ -32,11 +37,10 @@ class ApplicationConfig {
     $app_configuration = parse_ini_file(self::APPFILE);
     foreach ($app_configuration as $key => $value) {
       switch ($key) {
-        case "timezone":               date_default_timezone_set($value);          break;
-        case "debug":                  ApplicationDebug::init($value);             break;
-        case "locale":                 ApplicationI18n::init($value);              break;
-        case "cacheexpiration":        ApplicationCache::expiration($value);       break;
-        case "session.cookiehttponly": ini_set("session.cookie_httponly", $value); break;
+        case "timezone":        date_default_timezone_set($value);    break;
+        case "debug":           ApplicationDebug::init($value);       break;
+        case "locale":          ApplicationI18n::init($value);        break;
+        case "cacheexpiration": ApplicationCache::expiration($value); break;
         default:
         throw new Exception("Uygulama yapılandırma dosyasında bilinmeyen parametre → " . $key);
       }
