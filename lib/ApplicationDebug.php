@@ -59,15 +59,18 @@ class ApplicationDebug {
   }
 
   private static function _render($header, $numbers, $rows, $footer, $line) {
-    ApplicationLogger::error("$header → $footer");
-    ApplicationLogger::warning(implode(PHP_EOL, $rows));
 
     $body = (self::$_debug) ? self::_layout($header, $numbers, $rows, $footer, $line) : NULL;
 
     $response = new ApplicationResponse();
     $response->status_code = 500;
     $response->body = $body;
-    $response->send();
+    $response->run();
+    // show response status
+    ApplicationResponse::completed($response->status());
+    // write error detail for log
+    ApplicationLogger::error("$header → $footer");
+    ApplicationLogger::warning(implode(PHP_EOL, $rows));
     exit();
   }
 
