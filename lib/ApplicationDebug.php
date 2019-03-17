@@ -67,7 +67,7 @@ class ApplicationDebug {
     $response->body = $body;
     $response->run();
     // show response status
-    ApplicationResponse::completed($response->status());
+    ApplicationDispatcher::completed($response->status());
     // write error detail for log
     ApplicationLogger::error("$header → $footer");
     ApplicationLogger::warning(implode(PHP_EOL, $rows));
