@@ -163,6 +163,10 @@ class ApplicationResponse {
   }
 
   private function _write_404() {
+
+    // content_type set
+    if (!$this->content_type) $this->content_type = "text/html";
+
     $v = new ApplicationView();
     if ($this->body) $v->text = $this->body; else $v->file = self::ERRORPAGE;
     $this->body = $v->run();
@@ -170,6 +174,10 @@ class ApplicationResponse {
   }
 
   private function _write_500() {
+
+    // content_type set
+    if (!$this->content_type) $this->content_type = "text/html";
+
     $v = new ApplicationView();
     if ($this->body) $v->text = $this->body; else $v->file = self::DEBUGPAGE;
     $this->body = $v->run();
