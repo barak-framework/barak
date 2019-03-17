@@ -42,7 +42,7 @@ class ApplicationConfig {
       }
     }
 
-    // I18n: varsayılan olan locales/tr.php dosyasını oku
+    // I18n: varsayılan olan config/locales/tr.php dosyasını oku
     ApplicationI18n::init("tr");
   }
 
