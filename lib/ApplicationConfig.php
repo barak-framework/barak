@@ -32,11 +32,11 @@ class ApplicationConfig {
     $app_configuration = parse_ini_file(self::APPFILE);
     foreach ($app_configuration as $key => $value) {
       switch ($key) {
-        case "timezone":               date_default_timezone_set($value);                    break;
-        case "debug":                  ApplicationDebug::init($value);                       break;
-        case "locale":                 ApplicationI18n::init($value);                        break;
-        case "cacheexpiration":        ApplicationCache::expiration($value);                 break;
-        case "session.cookiehttponly": ini_set("session.cookie_httponly", ($value) ? 1 : 0); break;
+        case "timezone":               date_default_timezone_set($value);          break;
+        case "debug":                  ApplicationDebug::init($value);             break;
+        case "locale":                 ApplicationI18n::init($value);              break;
+        case "cacheexpiration":        ApplicationCache::expiration($value);       break;
+        case "session.cookiehttponly": ini_set("session.cookie_httponly", $value); break;
         default:
         throw new Exception("Uygulama yapılandırma dosyasında bilinmeyen parametre → " . $key);
       }
