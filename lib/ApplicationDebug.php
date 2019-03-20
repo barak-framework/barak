@@ -24,10 +24,11 @@ class ApplicationDebug {
 
     $file_steps = [];
     foreach ($exception->getTrace() as $number => $value) {
-      $fileline = $value["file"] . ":" . $value["line"] . " in ";
-      $file_steps [] = (isset($value["class"])) ? ($fileline . $value["class"] . "#" . $value["function"] ) : $fileline . $value["function"];
+      $file_line = $value["file"] . ":" . $value["line"] . " in ";
+      $file_steps[] = (isset($value["class"])) ? ($file_line . $value["class"] . "#" . $value["function"] ) : $file_line . $value["function"];
     }
 
+    ApplicationLogger::warning(implode(PHP_EOL, $file_steps));
     list($numbers, $rows) = self::_read_in_range_of_file($file, $line);
     self::_render($header, $numbers, $rows, $footer, $line);
   }
