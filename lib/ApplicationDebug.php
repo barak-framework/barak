@@ -16,22 +16,9 @@ class ApplicationDebug {
   */
 
   public static function exception($exception) {
-    $file = $exception->getFile();
-    $line = $exception->getLine();
-
-    $header = $exception->getMessage();
-    $footer = $file . " at line " . $line . PHP_EOL;
-
-    $file_steps = [];
-    foreach ($exception->getTrace() as $number => $value) {
-      $file_line = $value["file"] . ":" . $value["line"] . " in ";
-      $file_steps[] = (isset($value["class"])) ? ($file_line . $value["class"] . "#" . $value["function"] ) : $file_line . $value["function"];
-    }
-
-    ApplicationLogger::warning(implode(PHP_EOL, $file_steps));
-    list($numbers, $rows) = self::_read_in_range_of_file($file, $line);
-    self::_render($header, $numbers, $rows, $footer, $line);
+    self::_render($exception->getMessage(), $exception->getFile(), $exception->getLine(), $exception->getTrace());
   }
+
 
   /*
   echo $a;
@@ -42,26 +29,33 @@ class ApplicationDebug {
   */
 
   public static function error($errno, $message, $file, $line) {
-    $header = $message;
-    $footer = $file . " at line " . $line . PHP_EOL;
-
-    list($numbers, $rows) = self::_read_in_range_of_file($file, $line);
-    self::_render($header, $numbers, $rows, $footer, $line);
+    self::_render($message, $file, $line, debug_backtrace());
   }
 
-  // if a fatal error occurred
+  /*
+  public function index() {}
+  public function index() {}
+  // Cannot redeclare HomeController::index()
+
+  */
 
   public static function shutdown() {
     $error = error_get_last();
-    if (!is_null($error)) {
-      ApplicationLogger::fatal("Sistem çalışmasını engelleyecek hata → " . $error["message"]);
-      self::error($error["type"], $error["message"], $error["file"], $error["line"]);
-    }
+    ApplicationLogger::fatal("Sistem çalışmasını engelleyecek hata → " . $error["message"]);
+    self::error($error["type"], $error["message"], $error["file"], $error["line"]);
   }
 
-  private static function _render($header, $numbers, $rows, $footer, $line) {
+  private static function _render($message, $file, $line, $traces) {
+    $header = $message;
+    $footer = $file . " at line " . $line . PHP_EOL;
 
-    $body = (self::$_debug) ? self::_layout($header, $numbers, $rows, $footer, $line) : NULL;
+    $traces = self::_trace($traces);
+    // hata izleri
+    ApplicationLogger::warning(implode(PHP_EOL, $traces));
+
+    list($numbers, $rows) = self::_read_in_range_of_file($file, $line);
+
+    $body = (self::$_debug) ? self::_layout($header, $numbers, $rows, $footer, $line, $traces) : NULL;
 
     $response = new ApplicationResponse();
     $response->status_code = 500;
@@ -93,6 +87,9 @@ class ApplicationDebug {
       $row = str_replace("<?php", "&lt;?php", $row);
       $row = str_replace("?>", "?&gt;", $row);
 
+      /* save spaces */
+      $row = str_replace(" ", "&nbsp", $row);
+
       $numbers[] = $number + 1;
       $rows[] = $row;
     }
@@ -100,13 +97,35 @@ class ApplicationDebug {
     return [$numbers, $rows];
   }
 
-  private static function _layout($header, $numbers, $rows, $footer, $line) {
+  private static function _trace($trace) {
+    $traces = [];
+    foreach ($trace as $key => $value) {
+
+      $file = isset($value["file"]) ? $value["file"] : "";
+      $line = isset($value["line"]) ? $value["line"] : "";
+      $class = isset($value["class"]) ? $value["class"] : "";
+      $type = isset($value["type"]) ? $value["type"] : "";
+      $function = isset($value["function"]) ? $value["function"] : "";
+      // args is a array, but values object or string
+      // $args = isset($value["args"]) ? $value["args"] : "";
+
+      $traces[] = "{$file}:{$line} in {$class}{$type}{$function}";
+    }
+
+    return $traces;
+  }
+
+  private static function _layout($header, $numbers, $rows, $footer, $line, $traces) {
 
     /* coloring debug and other rows */
     $debug_index = array_search($line, $numbers);
     $_rows = [];
     foreach ($rows as $index => $row)
       $_rows[$index] = ($debug_index == $index) ? "<div class='debugrow'> $row </div>" : "<div class='otherrow'> $row </div>";
+
+    /* traces with index */
+    foreach ($traces as $index => $value)
+      $traces[$index] = "{$index}→ {$value}";
 
     return sprintf("
       <!DOCTYPE html>
@@ -137,23 +156,34 @@ class ApplicationDebug {
       .rows { float: right;  width: 96%%; border-radius: 5px; background-color: white; }
       .debugrow { background-color: #30D5C8; color: #ffffff; display: inline-block; width:100%%; }
       .otherrow { background-color: #ffffff; color: #665f75; display: inline-block; width:100%%; }
+
+      .traces { float: right;  width: 96%%; border-radius: 5px; background-color: #f4f2f8; }
       </style>
       </head>
       <body>
 
       <div class='box'>
+
       <div class='header'>%s</div>
       <div class='content'>
       <div class='numbers'><code>%s</code></div>
       <div class='rows'>%s</div>
       </div>
       <div class='footer'>%s</div>
+
+      </div>
+
+      <div class='box'>
+
+      <div class='header'>Hata İzleri</div>
+      <div class='content'><div class='traces'>%s</div></div>
+
       </div>
 
       </body>
       </html>
       ",
-      $header, implode("<br/>", $numbers), implode("<br/>", $_rows), $footer);
+      $header, implode("<br/>", $numbers), implode("<br/>", $_rows), $footer, implode("<br/>", $traces));
 }
 
 }
