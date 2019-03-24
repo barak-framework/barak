@@ -35,7 +35,7 @@ class ApplicationLogger {
      if (self::$_level <= $level) {
 
       $message = strval($messages[0]);
-      $filename = self::LOGDIR . date("Y-m-d") . ".log";
+      $filename = $_SERVER["DOCUMENT_ROOT"] . "/" . self::LOGDIR . date("Y-m-d") . ".log";
       if (!($fh = fopen($filename, 'a')))
         throw new Exception("Log dosyası açılamadı → " . $filename);
 
