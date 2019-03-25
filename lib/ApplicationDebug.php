@@ -41,8 +41,10 @@ class ApplicationDebug {
 
   public static function shutdown() {
     $error = error_get_last();
-    ApplicationLogger::fatal("Sistem çalışmasını engelleyecek hata → " . $error["message"]);
-    self::error($error["type"], $error["message"], $error["file"], $error["line"]);
+    if ($error) {
+      ApplicationLogger::fatal("Sistem çalışmasını engelleyecek hata → " . $error["message"]);
+      self::error($error["type"], $error["message"], $error["file"], $error["line"]);
+    }
   }
 
   private static function _render($message, $file, $line, $traces) {
@@ -124,8 +126,9 @@ class ApplicationDebug {
       $_rows[$index] = ($debug_index == $index) ? "<div class='debugrow'> $row </div>" : "<div class='otherrow'> $row </div>";
 
     /* traces with index */
+    $count_traces = count($traces);
     foreach ($traces as $index => $value)
-      $traces[$index] = "{$index}→ {$value}";
+      $traces[$index] = $count_traces-- . "→ {$value}";
 
     return sprintf("
       <!DOCTYPE html>
@@ -184,7 +187,7 @@ class ApplicationDebug {
       </html>
       ",
       $header, implode("<br/>", $numbers), implode("<br/>", $_rows), $footer, implode("<br/>", $traces));
-}
+  }
 
 }
 ?>
