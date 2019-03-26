@@ -20,7 +20,7 @@ class ApplicationCache {
     if (!($fh = fopen($filename, 'w')))
       throw new Exception("Cache bellek açılamadı → " . $filename);
 
-    fwrite($fh, json_encode($data));
+    fwrite($fh, json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
 
     fclose($fh);
   }
