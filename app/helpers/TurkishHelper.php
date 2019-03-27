@@ -12,6 +12,14 @@ class TurkishHelper {
     return $_months[$index];
   }
 
+  // Kaynak : https://stackoverflow.com/questions/38126940/php-str-split-and-utf8-polish-characters
+  public static function str_split($word) {
+    $len = mb_strlen($word, 'UTF-8');
+    $chars = [];
+    for ($i = 0; $i < $len; $i++)
+      $chars[] = mb_substr($word, $i, 1, 'UTF-8');
+  }
+
   // Kaynak : https://gist.github.com/hiercelik/8d9f1c66f06e790549435b3a2c2051f3
   public static function strtoupper($string) {
 
