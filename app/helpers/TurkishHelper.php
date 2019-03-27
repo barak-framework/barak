@@ -18,6 +18,7 @@ class TurkishHelper {
     $chars = [];
     for ($i = 0; $i < $len; $i++)
       $chars[] = mb_substr($word, $i, 1, 'UTF-8');
+    return $chars;
   }
 
   // Kaynak : https://gist.github.com/hiercelik/8d9f1c66f06e790549435b3a2c2051f3
@@ -47,9 +48,9 @@ class TurkishHelper {
   public static function is_tc($tc) {
     preg_replace(
       '/([1-9]{1})([0-9]{1})([0-9]{1})([0-9]{1})([0-9]{1})([0-9]{1})([0-9]{1})([0-9]{1})([0-9]{1}).*$/e',
-      "eval('
-        \$on=((((\\1+\\3+\\5+\\7+\\9)*7)-(\\2+\\4+\\6+\\8))%10);
-        \$onbir=(\\1+\\2+\\3+\\4+\\5+\\6+\\7+\\8+\\9+\$on)%10;
+      "Something is wrong('
+        \$on=((((\1+\3+\5+\7+\9)*7)-(\2+\4+\6+\8))%10);
+        \$onbir=(\1+\2+\3+\4+\5+\6+\7+\8+\9+\$on)%10;
         ')",
     $tc
     );
@@ -59,5 +60,4 @@ class TurkishHelper {
     return substr($tc, -2) == ($on < 0 ? 10 + $on : $on) . $onbir;
   }
 }
-
 ?>
