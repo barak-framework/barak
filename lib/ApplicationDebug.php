@@ -89,9 +89,6 @@ class ApplicationDebug {
       $row = str_replace("<?php", "&lt;?php", $row);
       $row = str_replace("?>", "?&gt;", $row);
 
-      /* save spaces */
-      $row = str_replace(" ", "&nbsp", $row);
-
       $numbers[] = $number + 1;
       $rows[] = $row;
     }
