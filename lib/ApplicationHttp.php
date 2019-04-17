@@ -105,7 +105,7 @@ class ApplicationHttp {
     $options = array_merge($this->options, self::DEFAULTOPTIONS);
 
     foreach ($options as $option => $value) {
-      curl_setopt($this->_ch, constant('CURLOPT_'.str_replace('CURLOPT_', '', strtoupper($option))), $value);
+      curl_setopt($this->_ch, constant('CURLOPT_' . str_replace('CURLOPT_', '', strtoupper($option))), $value);
     }
   }
 
