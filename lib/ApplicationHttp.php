@@ -13,7 +13,7 @@ class ApplicationHttp {
 
   const DEFAULTOPTIONS = [
     'CURLOPT_HEADER' => true,
-    'CURLOPT_RETURNTRANSFER' => 1
+    'CURLOPT_RETURNTRANSFER' => true
   ];
 
   final public function __construct() {
