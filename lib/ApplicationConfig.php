@@ -28,7 +28,7 @@ class ApplicationConfig {
 
     }
 
-    // DEBUG: public/500.html veya hata kodlarını gösterme ayarı, hata kodlarını gösterme
+    // DEBUG: public/500.html veya yanılgı kodlarını gösterme ayarı, yanılgı kodlarını gösterme
     ApplicationDebug::init(false);
 
     // DEFAULT SETTINGS - end
