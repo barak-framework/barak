@@ -42,7 +42,7 @@ class ApplicationDebug {
   public static function shutdown() {
     $error = error_get_last();
     if ($error) {
-      ApplicationLogger::fatal("Sistem çalışmasını engelleyecek hata → " . $error["message"]);
+      ApplicationLogger::fatal("Sistem çalışmasını engelleyecek yanılgı → " . $error["message"]);
       self::error($error["type"], $error["message"], $error["file"], $error["line"]);
     }
   }
@@ -52,7 +52,7 @@ class ApplicationDebug {
     $footer = $file . " at line " . $line . PHP_EOL;
 
     $traces = self::_trace($traces);
-    // hata izleri
+    // yanılgı izleri
     ApplicationLogger::warning(implode(PHP_EOL, $traces));
 
     list($numbers, $rows) = self::_read_in_range_of_file($file, $line);
@@ -175,7 +175,7 @@ class ApplicationDebug {
 
       <div class='box'>
 
-      <div class='header'>Hata İzleri</div>
+      <div class='header'>Yanılgı İzleri</div>
       <div class='content'><div class='traces'>%s</div></div>
 
       </div>
