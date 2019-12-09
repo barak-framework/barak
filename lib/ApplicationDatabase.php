@@ -25,7 +25,6 @@ class ApplicationDatabase {
     } catch (PDOException $e) {
       throw new Exception("Veritabanı bağlantısı başarılı değil! → " . $e->getMessage());
     }
-    return self::$_connection;
   }
 
   public static function close() {
