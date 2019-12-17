@@ -16,7 +16,7 @@ class ApplicationRoutes {
     $args[2] =  ($args[2]) ? static::$_path . $args[2] : static::$_path;
     // call private method _get, _post
     $route = ApplicationRoutes::{"_$method"}(...$args);
-    self::_set_route($route);
+    self::_load_routes($route);
   }
 
   public static function draw(callable $_functions) {
@@ -80,7 +80,7 @@ class ApplicationRoutes {
     throw new Exception("Uzay çağında bizim henüz desteklemediğimiz bir method → " . $request->method);
   }
 
-  private static function _set_route(ApplicationRoute $route) {
+  private static function _load_routes(ApplicationRoute $route) {
     if (array_key_exists($route->method, static::$_routes)) {
       if (array_key_exists($route->rule, static::$_routes[$route->method])) {
         throw new Exception("Bu yönlendirme daha önceden tanımlanmış → " . $route->rule);
