@@ -50,7 +50,6 @@ class ApplicationMailer {
     $m->_action = $action;
     $m->_args = $args;
     $m->_run();
-
   }
 
   private static function _configuration() {
@@ -64,7 +63,6 @@ class ApplicationMailer {
       //    0 = diasabled
       //    1 = errors and messages
       //    2 = messages only
-      //
       self::$_configuration->SMTPDebug = 0;
 
       // Setting SMTP Protocol
