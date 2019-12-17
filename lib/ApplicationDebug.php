@@ -19,7 +19,6 @@ class ApplicationDebug {
     self::_render($exception->getMessage(), $exception->getFile(), $exception->getLine(), $exception->getTrace());
   }
 
-
   /*
   echo $a;
 
@@ -36,7 +35,6 @@ class ApplicationDebug {
   public function index() {}
   public function index() {}
   // Cannot redeclare HomeController::index()
-
   */
 
   public static function shutdown() {
