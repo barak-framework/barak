@@ -120,16 +120,17 @@ class ApplicationController {
 
   private function _send_data() {
     $response = new ApplicationResponse();
-    $response->body = $this->_send_data["options"]; // body and filename
     $response->status_code = NULL;
     $response->content_type = $this->_send_data["content_type"];
+    $response->body = $this->_send_data["options"]; // body and filename
     return $response;
   }
 
   private function _redirect_to() {
     $response = new ApplicationResponse();
-    $response->body = $this->_redirect_to;
     $response->status_code = 302;
+    $response->content_type = NULL;
+    $response->body = $this->_redirect_to;
     return $response;
   }
 
@@ -162,8 +163,8 @@ class ApplicationController {
 
     // response for body
     $response = new ApplicationResponse();
-    $response->body = $body;
     $response->set($this->_render["response_options"]);
+    $response->body = $body;
     return $response;
   }
 
