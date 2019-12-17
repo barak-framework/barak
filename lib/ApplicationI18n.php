@@ -32,11 +32,11 @@ class ApplicationI18n {
     $array_words = explode(".", $words);
     $reply_words = [];
     foreach ($array_words as $word)
-      $reply_words = ($reply_words == []) ? self::get_first_word($word) : $reply_words[$word];
+      $reply_words = ($reply_words == []) ? self::_node($word) : $reply_words[$word];
     return $reply_words;
   }
 
-  private static function get_first_word($word) {
+  private static function _node($word) {
     $words = $_SESSION[self::_storage_key()]->_words;
 
     if (!isset($words[$word]))
