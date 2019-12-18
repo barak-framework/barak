@@ -17,7 +17,7 @@ class ApplicationDispatcher {
     // İstek url ile routes'ı içinden bul ve sevk et
     if ($route = ApplicationRoutes::get_route($request)) {
 
-      ApplicationLogger::info("Processing by {$route->controller}#{$route->action} as HTML");
+      ApplicationLogger::info("Processing by " . ucfirst($route->controller) . "Controller#{$route->action} as HTML");
 
       // returned status code not including: 404, 500
       $response = ApplicationController::get_response($route);
