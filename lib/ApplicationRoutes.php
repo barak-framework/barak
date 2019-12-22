@@ -75,9 +75,13 @@ class ApplicationRoutes {
           }
         }
       }
+      // get, post methodu içerisinde bulunamayan kural
+      return NULL;
+    } else {
+      // get, post methodu haricindeki bilinmeyen kural
+      // throw new Exception("Uzay çağında bizim henüz desteklemediğimiz bir method → " . $request->method);
       return NULL;
     }
-    throw new Exception("Uzay çağında bizim henüz desteklemediğimiz bir method → " . $request->method);
   }
 
   private static function _load_routes(ApplicationRoute $route) {
