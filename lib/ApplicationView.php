@@ -5,8 +5,14 @@ class ApplicationView {
   const LAYOUTPATH = "app/views/layouts/";
   const VIEWPATH   = "app/views/";
 
+  // main template for I18n
+  public static $main_template = NULL;
+  public static $main_layout = NULL;
+  public static $main_locals = NULL;
+
+  // locals & layout
+  public $locals = NULL;
   public $layout;
-  public $locals;
 
   // (view & action) || template
   public $template;
@@ -56,10 +62,9 @@ class ApplicationView {
     } else {
       throw new Exception("Render fonksiyonun bilinmeyen değişken tipi → " . $options);
     }
-
   }
 
-  final public function run() {
+  final public function run($main_render = null) {
 
     // sets contiune - start
     if (!isset($this->template)) { // is not set ?
@@ -69,11 +74,14 @@ class ApplicationView {
     if (!isset($this->layout)) { // is not set ?
       $this->layout = $this->view;
     }
-
-    if (!isset($this->locals)) { // is not set ?
-      $this->locals = null;
-    }
     // sets contiune - end
+
+    if ($main_render) {
+      self::$main_template = $this->template;
+      self::$main_layout = $this->layout;
+      self::$main_locals = $this->locals;
+      ApplicationLogger::info("  Rendering " . self::$main_template . ".php within layouts/" . self::$main_layout . ".php");
+    }
 
     // take content!
     if (isset($this->text)) {
@@ -82,19 +90,22 @@ class ApplicationView {
 
     } elseif (isset($this->file)) {
 
-      $content = self::_render_file($this->file, $this->locals);
+      $content = self::_render_for_file($this->file, $this->locals);
 
     } elseif (isset($this->partial)) {
 
-      $content = self::_render_file(self::VIEWPATH . preg_replace("~/(?!.*/)~", "/_", $this->partial) . ".php", $this->locals);
+    $content = self::_render_for_file(self::VIEWPATH . preg_replace("~/(?!.*/)~", "/_", $this->partial) . ".php", $this->locals);
 
     } elseif ($this->layout) { // layout : is not false?
 
-      $content = self::_render_file(self::_layout_file(), ["yield" => self::_render_file(self::_template_file(), $this->locals)]);
+      $template_content = self::_render_for_file(self::_template_path(), $this->locals);
+      // $yield değişkeni atanmış ise layout'da bunu kullandırma var ise de üzerine yaz
+      $this->locals["yield"] = $template_content;
+      $content = self::_render_for_file(self::_layout_path(), $this->locals);
 
     } else { // layout : is false?
 
-      $content = self::_render_file(self::_template_file(), $this->locals);
+      $content = self::_render_for_file(self::_template_path(), $this->locals);
 
     }
 
@@ -102,7 +113,7 @@ class ApplicationView {
     return $content;
   }
 
-  private function _layout_file() {
+  private function _layout_path() {
 
     $layout_file = self::LAYOUTPATH . $this->layout . ".php";
 
@@ -112,7 +123,7 @@ class ApplicationView {
     return $layout_file;
   }
 
-  private function _template_file() {
+  private function _template_path() {
 
     $template_file = self::VIEWPATH . $this->template . ".php";
 
@@ -122,7 +133,7 @@ class ApplicationView {
     return $template_file;
   }
 
-  private function _render_file($file = null, $locals = null) {
+  private function _render_for_file($file = null, $locals = null) {
 
     // https://github.com/betephp/framework/blob/master/src/Bete/View/View.php#L100
     if (!file_exists($file))
