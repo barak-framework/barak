@@ -32,8 +32,8 @@ class ApplicationAlias {
 
     // LOCALES
 
-    function t($words) {
-      return ApplicationI18n::translate($words);
+    function t($words, $locals = NULL) {
+      return ApplicationI18n::translate($words, $locals);
     }
 
     // LAYOUT and TEMPLATE
