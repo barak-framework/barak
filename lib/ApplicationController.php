@@ -91,6 +91,7 @@ class ApplicationController {
           // her action öncesi,
           // locals yükünü boşalt
           $this->_locals = [];
+
           // methodların yüklerini boşalt
           $this->_render = NULL;
           $this->_redirect_to = NULL;
@@ -159,7 +160,7 @@ class ApplicationController {
     if ($this->_render)
       $v->set($this->_render["view_options"]);
 
-    $body = $v->run();
+    $body = $v->run(true);
 
     // response for body
     $response = new ApplicationResponse();
