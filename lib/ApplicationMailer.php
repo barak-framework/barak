@@ -148,7 +148,7 @@ class ApplicationMailer {
 
     $v = new ApplicationView();
 
-    $v->set(["layout" => "mailer", "view" => "/mail/" . $this->_view, "action" => $action]);
+    $v->set(["layout" => "mailer", "view" => "mail/" . $this->_view, "action" => $action]);
 
     // mailerin localsları
     if ($this->_locals)
