@@ -28,15 +28,26 @@ class ApplicationI18n {
     return $_SESSION[self::_storage_key()]->_locale;
   }
 
-  public static function translate($words) {
-    $array_words = explode(".", $words);
-    $reply_words = [];
-    foreach ($array_words as $word)
-      $reply_words = ($reply_words == []) ? self::_node($word) : $reply_words[$word];
-    return $reply_words;
+  public static function translate($words, $locals = null) {
+    if ($words[0] == ".") { // lazy!
+      $request_template = str_replace("/", ".", ApplicationView::$main_template);
+      $request_template_title = $request_template . $words;
+      return self::translate($request_template_title, $locals);
+    } else {
+      $array_words = explode(".", $words);
+      $reply_words = [];
+      foreach ($array_words as $word)
+        $reply_words = ($reply_words == []) ? self::_first_word($word) : $reply_words[$word];
+
+      if ($locals) {
+        foreach ($locals as $key => $value)
+          $reply_words = str_replace("{{$key}}", $value, $reply_words);
+      }
+      return $reply_words;
+    }
   }
 
-  private static function _node($word) {
+  private static function _first_word($word) {
     $words = $_SESSION[self::_storage_key()]->_words;
 
     if (!isset($words[$word]))
