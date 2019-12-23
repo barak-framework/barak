@@ -177,9 +177,7 @@ class ApplicationController {
     // before actions
     // eğer _send_data, _redirect_to, _render herhangi biri atanmışsa çalıştır ve sonlandır
     if ($this->before_actions) {
-
       if ($this->_filter($this->_route->action, $this->before_actions)) {
-
         if ($this->_send_data)   return self::_send_data();
         if ($this->_redirect_to) return self::_redirect_to();
         if ($this->_render)      return self::_render();
@@ -198,6 +196,32 @@ class ApplicationController {
     $main_send_data = $this->_send_data;
     $main_redirect_to = $this->_redirect_to;
     $main_render = $this->_render;
+    $main_content = NULL;
+
+    // main action için daha önce saklanan _send_data verisini çalıştır ve sonlandır
+    if ($main_send_data && !$main_content) {
+      $this->_send_data = $main_send_data;
+      $main_content = self::_send_data();
+    }
+
+    // main action için daha önce saklanan _redirect_to verisini çalıştır ve sonlandır
+    if ($main_redirect_to && !$main_content) {
+      $this->_redirect_to = $main_redirect_to;
+      $main_content = self::_redirect_to();
+    }
+
+    // main action için daha önce saklanan _locals ile _render verilerini çalıştır ve sonlandır
+    if ($main_render && !$main_content) {
+      $this->_locals = $main_locals;
+      $this->_render = $main_render;
+      $main_content = self::_render();
+    }
+
+    // before actions, main action, after actions içerisinde
+    // hiçbir şekilde _send_data, _redirect_to, _render için atanan veri yok ise varsayılan _render çalışmalı!
+    if (!$main_content) {
+      $main_content = $this->_render();
+    }
 
     // after actions
     // eğer _send_data, _redirect_to, _render herhangi biri atanmışsa çalıştır ve sonlandır
@@ -209,28 +233,7 @@ class ApplicationController {
       }
     }
 
-    // main action için daha önce saklanan _send_data verisini çalıştır ve sonlandır
-    if ($main_send_data) {
-      $this->_send_data = $main_send_data;
-      return self::_send_data();
-    }
-
-    // main action için daha önce saklanan _redirect_to verisini çalıştır ve sonlandır
-    if ($main_redirect_to) {
-      $this->_redirect_to = $main_redirect_to;
-      return self::_redirect_to();
-    }
-
-    // main action için daha önce saklanan _locals ile _render verilerini çalıştır ve sonlandır
-    if ($main_render) {
-      $this->_locals = $main_locals;
-      $this->_render = $main_render;
-      return self::_render();
-    }
-
-    // before actions, main action, after actions içerisinde
-    // hiçbir şekilde _redirect_to, _render için atanan veri yok ise varsayılan _render çalışmalı!
-    return $this->_render();
+    return $main_content;
   }
 
 }
