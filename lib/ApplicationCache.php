@@ -51,7 +51,7 @@ class ApplicationCache {
     return (file_exists(self::_filename_format($key))) ? true : false;
   }
 
-  public static function reset() {
+  public static function clear() {
     foreach (glob(self::CACHEDIR . "*") as $filename)
       unlink($filename);
   }
