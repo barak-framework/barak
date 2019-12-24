@@ -154,12 +154,12 @@ class ApplicationMailer {
     if ($this->_locals)
       $v->set(["locals" => $this->_locals]);
 
-    $mailer->Body = $v->run();
+    $mailer->Body = $v->run(true);
 
     if ($mailer->send())
-      ApplicationLogger::info("Mail gönderildi");
+      ApplicationLogger::info("  Mail Sended");
     else
-      ApplicationLogger::error("Mail gönderiminde sorun oluştu → " . $mailer->ErrorInfo);
+      ApplicationLogger::error("  Mail Failed → " . $mailer->ErrorInfo);
   }
 
   private function _run() {
