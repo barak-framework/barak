@@ -4,16 +4,16 @@ class ApplicationCache {
 
   const CACHEDIR = "tmp/cache/";
 
-  private static $_expiration = 600000;
+  private static $_expire = 600000;
 
-  public static function expiration($millisecond) {
-    self::$_expiration = intval($millisecond);
+  public static function expiration($second) {
+    self::$_expiration = intval($second);
   }
 
   public static function write($key, $value) {
 
     // struct of key
-    $data = [ 'time' => time(), 'expire' => self::$_expiration, 'value' => serialize($value) ];
+    $data = [ 'time' => time(), 'expire' => self::$_expire, 'value' => serialize($value) ];
 
     $filename = self::_filename_format($key);
 
