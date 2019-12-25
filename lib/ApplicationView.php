@@ -118,7 +118,7 @@ class ApplicationView {
     $layout_file = self::LAYOUTPATH . $this->layout . ".php";
 
     if (!file_exists($layout_file))
-      throw new Exception("Layout dosyası mevcut değil → " . $layout_file);
+      throw new Exception("Görünüm yerleştirme dosyası mevcut değil → " . $layout_file);
 
     return $layout_file;
   }
@@ -128,7 +128,7 @@ class ApplicationView {
     $template_file = self::VIEWPATH . $this->template . ".php";
 
     if (!file_exists($template_file))
-      throw new Exception("Template dosyası mevcut değil → " . $template_file);
+      throw new Exception("Görünüm dosyası mevcut değil → " . $template_file);
 
     return $template_file;
   }
