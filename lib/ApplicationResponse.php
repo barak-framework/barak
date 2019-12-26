@@ -169,7 +169,7 @@ class ApplicationResponse {
 
     $v = new ApplicationView();
     if ($this->body) $v->text = $this->body; else $v->file = self::ERRORPAGE;
-    $this->body = $v->run(true);
+    $this->body = $v->run();
     $this->_write();
   }
 
@@ -180,7 +180,7 @@ class ApplicationResponse {
 
     $v = new ApplicationView();
     if ($this->body) $v->text = $this->body; else $v->file = self::DEBUGPAGE;
-    $this->body = $v->run(true);
+    $this->body = $v->run();
     $this->_write();
   }
 
