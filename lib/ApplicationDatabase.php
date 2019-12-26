@@ -4,35 +4,39 @@ class ApplicationDatabase {
 
   const SEEDSFILE  = "db/seeds.php";
 
-  private static $_connection = NULL;
+  private static $_configuration = NULL;
 
   public static function connect() {
 
-    // load database.ini with check ApplicationConfig
-    extract(ApplicationConfig::database());
+    // yapılandırma dosyasını bu fonkiyon ne kadar çağrılırsa çağrılsın sadece bir defa oku!
+    if (self::$_configuration == NULL) {
 
-    if ($adapter) {
-      try {
-        if (!isset(self::$_connection)) {
-          self::$_connection = new PDO("{$adapter}:host={$hostname};dbname={$database}", $username, $password);
+      // load database.ini with check ApplicationConfig
+      extract(ApplicationConfig::database());
+
+      if ($adapter) {
+        try {
+          self::$_configuration = new PDO("{$adapter}:host={$hostname};dbname={$database}", $username, $password);
 
           // configuration database
-          self::$_connection->query("set names 'utf8'");
-          self::$_connection->query("set character set 'utf8'");
-          self::$_connection->query("set collation_connection = 'utf8_general_ci'");
-          self::$_connection->query("set collation-server = 'utf8_general_ci'");
-          self::$_connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+          self::$_configuration->query("set names 'utf8'");
+          self::$_configuration->query("set character set 'utf8'");
+          self::$_configuration->query("set collation_configuration = 'utf8_general_ci'");
+          self::$_configuration->query("set collation-server = 'utf8_general_ci'");
+          self::$_configuration->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        } catch (PDOException $e) {
+          throw new Exception("Veritabanı bağlantısı başarılı değil! → " . $e->getMessage());
         }
-      } catch (PDOException $e) {
-        throw new Exception("Veritabanı bağlantısı başarılı değil! → " . $e->getMessage());
       }
-      return self::$_connection;
     }
+
+    return self::$_configuration;
   }
 
   public static function close() {
-    if (isset(self::$_connection))
-      self::$_connection = null;
+    if (isset(self::$_configuration))
+      self::$_configuration = null;
   }
 
   public static function seed() {
