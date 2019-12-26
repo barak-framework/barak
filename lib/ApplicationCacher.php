@@ -1,6 +1,6 @@
 <?php
 
-class ApplicationCache {
+class ApplicationCacher {
 
   const CACHEDIR = "tmp/cache/";
 
