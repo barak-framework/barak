@@ -8,7 +8,7 @@
   <link href="" rel="alternate" title="" type="application/atom+xml" />
   <link rel="shortcut icon" href="/favicon.ico">
   <link rel="stylesheet" href="/app/assets/css/syntax.css" type="text/css" />
-  <link href='http://fonts.googleapis.com/css?family=Monda' rel='stylesheet' type='text/css'>
+  <link href="https://fonts.googleapis.com/css?family=Fira+Sans+Condensed" rel="stylesheet" type="text/css">
 
   <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
