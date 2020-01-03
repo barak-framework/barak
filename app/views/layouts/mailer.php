@@ -22,7 +22,7 @@
 
   <style type="text/css">
   .mailer_body {
-    width: 100% !important
+    width: 100% !important;
   }
   .mailer_content {
     padding: 0px;
