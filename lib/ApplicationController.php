@@ -88,8 +88,7 @@ class ApplicationController {
         $filter_action_name = $filter_action[0];
         if (method_exists($this, $filter_action_name)) {
 
-          // her action öncesi,
-          // locals yükünü boşalt
+          // her action öncesi, locals yükünü boşalt
           $this->_locals = [];
 
           // methodların yüklerini boşalt
