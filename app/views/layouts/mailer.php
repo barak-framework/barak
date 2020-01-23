@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Barak Framework</title>
   <link href="" rel="alternate" title="" type="application/atom+xml" />
-  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="icon" href="/favicon.ico">
   <link rel="stylesheet" href="/app/assets/css/syntax.css" type="text/css" />
   <link href="https://fonts.googleapis.com/css?family=Fira+Sans+Condensed" rel="stylesheet" type="text/css">
 
