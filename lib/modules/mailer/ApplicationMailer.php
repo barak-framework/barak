@@ -39,22 +39,21 @@ class ApplicationMailer {
 
   final public static function delivery($action = null, $args = []) { // genişletilemez fonksyion
     $mailer_class = strtolower(get_called_class());
-    list($view) = explode("mailer", $mailer_class);
-
     if (!$action)
       throw new Exception("Mailler sınıfında ilgili method belirtilmelidir → " . $mailer_class);
+    
+    list($view) = explode("mailer", $mailer_class);
 
     $m = new $mailer_class();
-    $m->_configuration = self::_configuration();
+    $m->_configuration = self::$_configuration;
     $m->_view = $view;
     $m->_action = $action;
     $m->_args = $args;
     $m->_run();
   }
 
-  private static function _configuration() {
-
-    // yapılandırma dosyasını bu fonkiyon ne kadar çağrılırrsa çağrılsın sadece bir defa oku!
+  public static function init() {
+    // yapılandırma dosyasını bu fonkiyon ne kadar çağrılırsa çağrılsın sadece bir defa oku!
     if (self::$_configuration == NULL) {
 
       self::$_configuration = new PHPMailer();
@@ -97,8 +96,6 @@ class ApplicationMailer {
         }
       }
     }
-
-    return self::$_configuration;
   }
 
   private function _filter($action, $filter_actions) {

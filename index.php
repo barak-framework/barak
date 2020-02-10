@@ -4,8 +4,8 @@
 require_once "vendor/autoload.php";
 
 // load application
-require_once "lib/Application.php";
+require_once "lib/BarakApplication.php";
 
 // kick application
-Application::run();
+BarakApplication::run();
 ?>
