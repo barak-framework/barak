@@ -2,47 +2,48 @@
 
 class Application {
 
-  public static function run() {
+  private static $_configutaion = NULL;
 
-    // system class, models, mailers
-    $directories = ['lib/', 'app/models/', 'app/mailers/'];
+  public static $options = [
 
-    foreach ($directories as $directory) {
-      foreach (glob($directory . "*.php") as $class) {
-        require_once $class;
-      }
-    }
+  // application kernel options overwrite
+  // Çekirdek uygulama ayarları zaten varsayılan olarak değerleri yüklüdür.
+  // Eğer üzerine yazmak isteniyorsa config/application.php içerisinde set fonksiyonunda belirtilmelidir.
+  "timezone" => "Europe/Istanbul",
+  "locale" => "tr",
+  "debug" => true,
+  "logger" => ["file" => "production", "level" => "info", "driver" => "weekly", "rotate" => 4, "size" => 5242880],
 
-    // Fatal error handling
-    register_shutdown_function('ApplicationDebug::shutdown');
+  // application modules default status = true/false
+  // Uygulama modül ayarlarında aşağıdaki tüm modüller, yüklenmeyecek şekilde gelecektir.
+  // Eğer gelmesi isteniyorsa config/application.php içerisinde modules fonksiyonunda belirtilmelidir.
 
-    // Exception handling
-    set_exception_handler('ApplicationDebug::exception');
+  "cacher" => false,
+  "mailer" => false,
+  "model" => false,
+  "http" => false
+  ];
 
-    // Error handling
-    set_error_handler('ApplicationDebug::error');
+  public static function set($key, $value) {
 
-    // Configuration : sets
-    ApplicationConfig::sets();
+    if (!array_key_exists($key, self::$options))
+      throw new Exception("Application yapılandırma dosyasında bilinmeyen parametre → " . $key);
 
-    // Database : connect
-    ApplicationDatabase::connect();
-
-    // Database : seed
-    ApplicationDatabase::seed();
-
-    // Alias : get global functions
-    ApplicationAlias::extract();
-
-    // Route : load routes in configuration file
-    ApplicationConfig::route();
-
-    // Dispatcher : request dispatch to controller
-    ApplicationDispatcher::dispatch();
-
-    // Database : close
-    ApplicationDatabase::close();
+    self::$options[$key] = $value;
   }
-}
 
+  public static function config(callable $_functions) {
+    // yapılandırma dosyasını bu fonkiyon ne kadar çağrılırsa çağrılsın sadece bir defa oku!
+    if (self::$_configutaion == NULL) {
+
+      // config processing
+      $_functions();
+      // config processed
+
+      // bir daha ::config fonksiyonu çağrılmaması için
+      self::$_configutaion = TRUE;
+    }
+  }
+
+}
 ?>

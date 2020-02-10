@@ -10,10 +10,10 @@ class ApplicationHelper {
   public static function load($helpers) {
     if (is_array($helpers)) {
       foreach ($helpers as $helper) {
-        $helper_path = self::HELPERPATH . $helper . self::HELPERSUBNAME . ".php";
-        if (!file_exists($helper_path))
-          throw new Exception("Helper dosyası mevcut değil → " . $helper_path);
-        require_once $helper_path;
+        $helper_file_path = self::HELPERPATH . $helper . self::HELPERSUBNAME . ".php";
+        if (!file_exists($helper_file_path))
+          throw new Exception("Helper dosyası mevcut değil → " . $helper_file_path);
+        require_once $helper_file_path;
       }
     } elseif ($helpers == self::HELPERALLFILE) {
       foreach (glob($self::HELPERPATH . "*" . self::HELPERSUBNAME . ".php") as $class) {

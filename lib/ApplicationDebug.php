@@ -1,10 +1,22 @@
 <?php
 class ApplicationDebug {
 
-  private static $_debug = false;
+  private static $_configuration = NULL;
+
+  // $_debug
+  // true  : show error line and codes
+  // false : show public/500.html
+  private static $_debug;
 
   public static function init($debug) {
-    self::$_debug = $debug;
+  	// yapılandırma dosyasını bu fonkiyon ne kadar çağrılırsa çağrılsın sadece bir defa oku!
+    if (self::$_configuration == NULL) {
+
+      self::$_debug = $debug;
+
+      // bir daha ::init fonksiyonu çağrılmaması için
+      self::$_configuration = TRUE;
+    }
   }
 
   /*
@@ -16,7 +28,7 @@ class ApplicationDebug {
   */
 
   public static function exception($exception) {
-    self::_render($exception->getMessage(), $exception->getFile(), $exception->getLine(), $exception->getTrace());
+    self::_run($exception->getMessage(), $exception->getFile(), $exception->getLine(), $exception->getTrace());
   }
 
   /*
@@ -28,7 +40,7 @@ class ApplicationDebug {
   */
 
   public static function error($errno, $message, $file, $line) {
-    self::_render($message, $file, $line, debug_backtrace());
+    self::_run($message, $file, $line, debug_backtrace());
   }
 
   /*
@@ -45,24 +57,33 @@ class ApplicationDebug {
     }
   }
 
-  private static function _render($message, $file, $line, $traces) {
+  private static function _run($message, $file, $line, $traces) {
     $header = $message;
     $footer = $file . " at line " . $line . PHP_EOL;
 
-    $traces = self::_trace($traces);
-    // yanılgı izleri
+    // yanılgı izlerinin formatını değiştir.
+    // [[], [], ...] → ["", "", ...]
+    $traces = self::_traces_array_array_to_array_string($traces);
+
+    // yanılgı izlerini log dosyasına yaz.
+    // birleştirici PHP_EOF = \n
     ApplicationLogger::warning(implode(PHP_EOL, $traces));
 
+    // yanılgı alınan dosya içerisinden, yanılan satırı özet olarak (yukarı-aşağı satırlarla) getir.
     list($numbers, $rows) = self::_read_in_range_of_file($file, $line);
 
+    // yanılgı gösterme modu aktif ise body'e layout içeriğini ata.
     $body = (self::$_debug) ? self::_layout($header, $numbers, $rows, $footer, $line, $traces) : NULL;
 
+    // yanıt verme işlemini başlat.
     $response = new ApplicationResponse();
     $response->status_code = 500;
     $response->body = $body;
     $response->run();
+
     // show response status
     ApplicationDispatcher::completed($response->status());
+
     // write error detail for log
     ApplicationLogger::error("$header → $footer");
     ApplicationLogger::warning(implode(PHP_EOL, $rows));
@@ -94,22 +115,23 @@ class ApplicationDebug {
     return [$numbers, $rows];
   }
 
-  private static function _trace($trace) {
-    $traces = [];
-    foreach ($trace as $key => $value) {
+  private static function _traces_array_array_to_array_string($traces) {
 
-      $file = isset($value["file"]) ? $value["file"] : "";
-      $line = isset($value["line"]) ? $value["line"] : "";
-      $class = isset($value["class"]) ? $value["class"] : "";
-      $type = isset($value["type"]) ? $value["type"] : "";
-      $function = isset($value["function"]) ? $value["function"] : "";
-      // args is a array, but values object or string
-      // $args = isset($value["args"]) ? $value["args"] : "";
+    $_traces = [];
+    foreach ($traces as $key => $trace) {
 
-      $traces[] = "{$file}:{$line} in {$class}{$type}{$function}";
+      $file = isset($trace["file"]) ? $trace["file"] : "";
+      $line = isset($trace["line"]) ? $trace["line"] : "";
+      $class = isset($trace["class"]) ? $trace["class"] : "";
+      $type = isset($trace["type"]) ? $trace["type"] : "";
+      $function = isset($trace["function"]) ? $trace["function"] : "";
+      // args is a array, but traces object or string
+      // $args = isset($trace["args"]) ? $trace["args"] : "";
+
+      $_traces[] = "{$file}:{$line} in {$class}{$type}{$function}";
     }
 
-    return $traces;
+    return $_traces;
   }
 
   private static function _layout($header, $numbers, $rows, $footer, $line, $traces) {
@@ -143,7 +165,7 @@ class ApplicationDebug {
         background-color: #f4f2f8;
       }
       .header { padding: 1em; }
-      .footer { padding: 1em; clear:both; }
+      .footer { padding: 1em; clear: both; }
       .content {
         border-top: 2px solid #d9d2e8;
         border-bottom: 2px solid #d9d2e8;

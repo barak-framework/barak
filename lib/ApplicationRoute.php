@@ -45,7 +45,6 @@ class ApplicationRoute {
         // Ör.: get("users/index"); // controller: users, action:index
 
         list($controller, $action) = self::_spliter_struct($rule, "/");
-
         $this->_set($method, "", "/{$path}{$rule}", $controller, $action, $path);
 
       }

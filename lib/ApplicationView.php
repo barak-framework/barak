@@ -77,6 +77,7 @@ class ApplicationView {
     // sets contiune - end
 
     if ($main_render) {
+      $this->locals["flash"] = ApplicationFlash::gets();
       self::$main_template = $this->template;
       self::$main_layout = $this->layout;
       self::$main_locals = $this->locals;
@@ -94,18 +95,18 @@ class ApplicationView {
 
     } elseif (isset($this->partial)) {
 
-    $content = self::_render_for_file(self::VIEWPATH . preg_replace("~/(?!.*/)~", "/_", $this->partial) . ".php", $this->locals);
+      $content = self::_render_for_file(self::VIEWPATH . preg_replace("~/(?!.*/)~", "/_", $this->partial) . ".php", $this->locals);
 
     } elseif ($this->layout) { // layout : is not false?
 
-      $template_content = self::_render_for_file(self::_template_file(), $this->locals);
+      $template_content = self::_render_for_file(self::_template_file_path(), $this->locals);
       // $yield değişkeni atanmış ise layout'da bunu kullandırma var ise de üzerine yaz
       $this->locals["yield"] = $template_content;
-      $content = self::_render_for_file(self::_layout_file(), $this->locals);
+      $content = self::_render_for_file(self::_layout_file_path(), $this->locals);
 
     } else { // layout : is false?
 
-      $content = self::_render_for_file(self::_template_file(), $this->locals);
+      $content = self::_render_for_file(self::_template_file_path(), $this->locals);
 
     }
 
@@ -113,22 +114,22 @@ class ApplicationView {
     return $content;
   }
 
-  private function _layout_file() {
+  private function _layout_file_path() {
 
     $layout_file = self::LAYOUTPATH . $this->layout . ".php";
 
     if (!file_exists($layout_file))
-      throw new Exception("Görünüm yerleştirme dosyası mevcut değil → " . $layout_file);
+      throw new Exception("Layout dosyası mevcut değil → " . $layout_file);
 
     return $layout_file;
   }
 
-  private function _template_file() {
+  private function _template_file_path() {
 
     $template_file = self::VIEWPATH . $this->template . ".php";
 
     if (!file_exists($template_file))
-      throw new Exception("Görünüm dosyası mevcut değil → " . $template_file);
+      throw new Exception("Template dosyası mevcut değil → " . $template_file);
 
     return $template_file;
   }

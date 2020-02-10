@@ -29,7 +29,7 @@ class ApplicationI18n {
   }
 
   public static function translate($words, $locals = null) {
-    if ($words[0] == ".") { // lazy!
+    if ($words[0] == ".") { // lazy! tembel!
       $request_template = str_replace("/", ".", ApplicationView::$main_template);
       $request_template_title = $request_template . $words;
       return self::translate($request_template_title, $locals);
@@ -51,12 +51,12 @@ class ApplicationI18n {
     $words = $_SESSION[self::_storage_key()]->_words;
 
     if (!isset($words[$word]))
-      throw new Exception("Yerel ayar dosyasında böyle bir kelime mevcut değil → " . $word);
+      throw new Exception("Yerel dil ayar dosyasında böyle bir kelime mevcut değil → " . $word);
     return $words[$word];
   }
 
   private static function _storage_key() {
-    return '_i18n';
+    return '_session_i18n';
   }
 
 }
