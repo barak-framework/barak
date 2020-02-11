@@ -12,7 +12,7 @@ class ApplicationConfig {
   const CACHERFILE   = "config/cacher.ini";
   const MAILERFILE   = "config/mailer.ini";
 
-  // genel yapılandırma ayarlarını dahil et
+  // uygulama yapılandırma ayarlarını dahil et
   public static function application() {
 
     if (!file_exists(self::APPFILE))
