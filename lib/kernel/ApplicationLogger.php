@@ -119,7 +119,7 @@ class ApplicationLogger {
 
       if (preg_match("/^(.*?)_([0-9]{4}-[0-9]{2}-[0-9]{2}).log$/si", $_file, $_match)) {
         if ($_match[1] == $file) {
-          $_matchs[] = [self::LOGGERPATH . $_match[0], $_match[2]];
+          $_matchs[] = [$_SERVER["DOCUMENT_ROOT"] . "/" . self::LOGGERPATH . $_match[0], $_match[2]];
         }
       }
     }
@@ -151,7 +151,7 @@ class ApplicationLogger {
         if (array_key_exists($_match[1], $_file_path_backups))
           throw new Exception("Yedek Log dosyasının benzerleri mevcut → " . $file);
         else
-          $_file_path_backups[$_match[1]] = self::LOGGERPATH . $_match[0];
+          $_file_path_backups[$_match[1]] = $_SERVER["DOCUMENT_ROOT"] . "/" . self::LOGGERPATH . $_match[0];
       }
     }
 
