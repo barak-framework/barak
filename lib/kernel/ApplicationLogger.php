@@ -67,12 +67,6 @@ class ApplicationLogger {
     if (self::$_level <= self::LEVELNAMES[$level]) {
 
       if (self::$_driver <= self::_expire()) {
-        echo self::$_driver;
-        echo self::$_file_created_at;
-        echo self::_expire();
-
-        echo "buradayız";
-        exit();
 
         // sürücü süresi dolmuşsa log dosyasını döndür
         self::_rotate();
