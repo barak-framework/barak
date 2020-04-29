@@ -41,11 +41,10 @@ class ApplicationMailer {
     $mailer_class = strtolower(get_called_class());
     if (!$action)
       throw new Exception("Mailler sınıfında ilgili method belirtilmelidir → " . $mailer_class);
-    
+
     list($view) = explode("mailer", $mailer_class);
 
     $m = new $mailer_class();
-    $m->_configuration = self::$_configuration;
     $m->_view = $view;
     $m->_action = $action;
     $m->_args = $args;
@@ -129,7 +128,7 @@ class ApplicationMailer {
   }
 
   private function _mail($action) {
-    $main_mailer = $this->_configuration;
+    $main_mailer = self::$_configuration;
 
     $mailer = clone $main_mailer;
 
