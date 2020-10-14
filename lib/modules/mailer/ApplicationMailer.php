@@ -58,9 +58,11 @@ class ApplicationMailer {
       self::$_configuration = new PHPMailer();
 
       // Enables SMTP debug information (for testing)
-      //    0 = diasabled
-      //    1 = errors and messages
-      //    2 = messages only
+      //    0 = debug diasabled
+      //    1 = client, server debugs
+      //    2 = client, server, connection debugs
+      //    3 = client, server, connection debugs
+      //    4 = low-info debugs
       self::$_configuration->SMTPDebug = 0;
 
       // Setting SMTP Protocol
