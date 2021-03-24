@@ -96,6 +96,14 @@ class BarakApplication {
     }
   }
 
+  private static function _close_option_modules() { // ok
+    // Cacher : close
+    if (Application::$options["cacher"]) ApplicationCacher::close();
+
+    // Database : close
+    if (Application::$options["model"]) ApplicationDatabase::close();
+  }
+
   private static function _import_dirs($directories) { // ok
     foreach ($directories as $directory)
       self::_import_dir($directory);
@@ -104,14 +112,6 @@ class BarakApplication {
   private static function _import_dir($directory) { // ok
     foreach (glob($directory . "*.php") as $class)
       require_once $class;
-  }
-
-  private static function _close_option_modules() { // ok
-    // Cacher : close
-    if (Application::$options["cacher"]) ApplicationCacher::close();
-
-    // Database : close
-    if (Application::$options["model"]) ApplicationDatabase::close();
   }
 
   private static function _alias_extract_configs_of_application() { // ok
