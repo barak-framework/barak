@@ -115,6 +115,7 @@ class ApplicationController {
 
     // Response - start
     $response = new ApplicationResponse();
+    $response->status_code = 200;
 
     // controllerin renderi (main action içerisinde manuel olarak render yazılmışsa)
     if ($this->_render)
