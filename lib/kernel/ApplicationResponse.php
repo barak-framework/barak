@@ -11,7 +11,7 @@ class ApplicationResponse {
 
   const STATUS =
   [
-  0   => "",
+  NULL => "",
   100 => "Continue",
   101 => "Switching Protocols",
   102 => "Processing",
@@ -124,10 +124,10 @@ class ApplicationResponse {
     $this->headers = array_merge($this->headers, self::DEFAULTHEADERS);
 
     switch ($this->status_code) {
-      case 0:   $this->_attachment(); break;
-      case 302: $this->_location();   break; // exit
-      case 404: $this->_write_404();  break;
-      case 500: $this->_write_500();  break;
+      case NULL: $this->_attachment(); break;
+      case 302:  $this->_location();   break; // exit
+      case 404:  $this->_write_404();  break;
+      case 500:  $this->_write_500();  break;
       default:
 
       // content_type set
