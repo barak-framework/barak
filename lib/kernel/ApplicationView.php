@@ -77,7 +77,6 @@ class ApplicationView {
     // sets contiune - end
 
     if ($main_render) {
-      $this->locals["flash"] = ApplicationFlash::gets();
       self::$main_template = $this->template;
       self::$main_layout = $this->layout;
       self::$main_locals = $this->locals;
