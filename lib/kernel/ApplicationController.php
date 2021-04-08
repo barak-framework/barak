@@ -15,7 +15,6 @@ class ApplicationController {
   private $_send_data = NULL;
 
   // options
-  protected $flash = [];
   protected $helpers = NULL;
   protected $before_actions = NULL;
   protected $after_actions = NULL;
@@ -168,9 +167,6 @@ class ApplicationController {
           $this->{$filter_action_name}();
         }
 
-        // _localsda flash varsa çalıştıralım
-        if (!empty($this->flash)) ApplicationFlash::sets($this->flash);
-
         // Before/After Actions için tanımlanan method(filter_action_name) çalıştıysa ve bir kesinti olduysa?
         if ($this->_redirect_to || $this->_render || $this->_send_data) return TRUE;
 
@@ -207,9 +203,6 @@ class ApplicationController {
     // main action çalışma sonrası
     // içeriğin ne ile döneceğini bilmedğimizi varsayalım
     $main_content = NULL;
-
-    // _localsda flash varsa çalıştıralım
-    if (!empty($this->flash)) ApplicationFlash::sets($this->flash);
 
     // main action için daha önce saklanan _send_data verisini çalıştır ve beklet
     if (!$main_content && $this->_send_data) {
