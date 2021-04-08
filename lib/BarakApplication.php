@@ -47,8 +47,6 @@ class BarakApplication {
     // Config close - modules
     self::_close_option_modules();
 
-    // Config close - options
-    self::_close_option_kernel();
   }
 
   private static function _init_option_kernel() {
@@ -68,11 +66,6 @@ class BarakApplication {
     ApplicationLogger::init(Application::$options["logger"]);
     ApplicationDebug::init(Application::$options["debug"]);
     ApplicationI18n::init(Application::$options["locale"]);
-    ApplicationFlash::init();
-  }
-
-  private static function _close_option_kernel() {
-    ApplicationFlash::close();
   }
 
   private static function _init_option_modules() { // ok
