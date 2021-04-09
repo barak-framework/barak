@@ -19,8 +19,17 @@ class ApplicationDispatcher {
 
       ApplicationLogger::info("Processing by " . ucfirst($route->controller) . "Controller#{$route->action} as HTML");
 
-      // returned status code | including : 200, 302 | not including: 404, 500
+      // returned status code | not including: 404, 500
       $response = ApplicationController::get_response($route);
+
+      if ($response->status_code == 302) { // only 302
+        $response->set_status();
+        self::completed($response->status());
+        $response->run();
+      } else { // not including : 302, 404, 500
+        $response->run();
+        self::completed($response->status());
+      }
 
     } else {
 
@@ -28,16 +37,13 @@ class ApplicationDispatcher {
 
       $response = new ApplicationResponse();
       $response->status_code = 404;
+      $response->run();
+      self::completed($response->status());
+
     }
-
-    // run!
-    $response->run();
-
-    // show response status
-    self::completed($response->status());
   }
 
-  // for ApplicationDebug access
+  // for ApplicationDebug access(500)
   public static function completed($status) {
     ApplicationLogger::info("Completed {$status} in " . sprintf ("(%.2f ms)", (microtime(true) - self::$time) * 1000));
   }
