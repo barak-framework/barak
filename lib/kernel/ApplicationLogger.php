@@ -66,17 +66,10 @@ class ApplicationLogger {
     // level yazmaya uygun mu bak
     if (self::$_level <= self::LEVELNAMES[$level]) {
 
-      if (self::$_driver <= self::_expire()) {
-
-        // sürücü süresi dolmuşsa log dosyasını döndür
+      // ana log dosyasının süresi dolmuş veya boyut aşılmışsa log dosyasını döndür
+      if ((self::$_driver <= self::_expire()) || (self::$_size < filesize(self::$_file_path)))
+        // log dosyalarını döndürme sonrası, yeni log dosyası oluşacaktır
         self::_rotate();
-
-      } else if (self::$_size < filesize(self::$_file_path)) {
-
-        // boyut aşılmışsa da log dosyasını döndür
-        self::_rotate();
-
-      }
 
       // ana log dosyasının içine yaz
       if (!($fh = fopen(self::$_file_path, 'a')))
@@ -105,8 +98,8 @@ class ApplicationLogger {
       fwrite($fh, ""); // boş yaz yani sadece dokun, geç.
       fclose($fh);
     } else {
-    	self::$_file_created_at = $_file_created_at;
-    	self::$_file_path = $_file_path;
+      self::$_file_created_at = $_file_created_at;
+      self::$_file_path = $_file_path;
     }
   }
 
