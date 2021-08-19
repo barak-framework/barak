@@ -146,6 +146,7 @@ class ApplicationLogger {
   // [
   //   "1" => "/tmp/var/log/FILE@1_YYYY-MM-DD.log",
   //   "2" => "/tmp/var/log/FILE@2_YYYY-MM-DD.log"
+  //   "3" => "/tmp/var/log/FILE@3_YYYY-MM-DD.log"
   // ]
 
   private static function _backups() {
@@ -193,8 +194,9 @@ class ApplicationLogger {
     // yedek dosya numarasına göre ters sırala
     // son yedekten(keyden) başlamak üzere taşımaya başla ki birbirinin üzerine yazma olmasın
     // [
-    //   "2" => "/tmp/var/log/FILE@2_YYYY-MM-DD.log"
-    //   "1" => "/tmp/var/log/FILE@1_YYYY-MM-DD.log",
+    //   "3" => "/tmp/var/log/FILE@3_YYYY-MM-DD.log",
+    //   "2" => "/tmp/var/log/FILE@2_YYYY-MM-DD.log",
+    //   "1" => "/tmp/var/log/FILE@1_YYYY-MM-DD.log"
     // ]
 
     krsort($_file_path_backups);
