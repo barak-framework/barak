@@ -180,6 +180,10 @@ class ApplicationLogger {
     return $_diff_day;
   }
 
+  // son numaralı yedek dosyayı sil
+  // kalan yedek dosyaları sondan başlamak üzere numaralarına "+1" ekleyerek güncelle (yedek dosya kaydırma işlemi)
+  // ana log dosyasını, 1 numaralı log dosyası olarak kaydet
+  // yeni log dosyası oluştur
   private static function _rotate() {
 
     // en son yedek varsa sil
