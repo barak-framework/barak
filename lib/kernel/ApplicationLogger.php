@@ -142,12 +142,11 @@ class ApplicationLogger {
   }
 
   // self::$_file = FILE
-  // $_files =
-  // FILE@1_YYYY-MM-DD.log
-  // FILE@2_YYYY-MM-DD.log
   // returned
-  // ["/tmp/var/log/FILE@1_YYYY-MM-DD.log", "YYYY-MM-DD"];
-  // ["/tmp/var/log/FILE@2_YYYY-MM-DD.log", "YYYY-MM-DD"];
+  // [
+  //   "1" => "/tmp/var/log/FILE@1_YYYY-MM-DD.log",
+  //   "2" => "/tmp/var/log/FILE@2_YYYY-MM-DD.log"
+  // ]
 
   private static function _backups() {
 
@@ -191,8 +190,13 @@ class ApplicationLogger {
     // yedekleri al
     $_file_path_backups = self::_backups();
 
-    // taşıma yapacağından keye göre ters sırala (2 → production@2_2020-01-01.log, 1 → production@1_2020-01-01.log gibi)
+    // yedek dosya numarasına göre ters sırala
     // son yedekten(keyden) başlamak üzere taşımaya başla ki birbirinin üzerine yazma olmasın
+    // [
+    //   "2" => "/tmp/var/log/FILE@2_YYYY-MM-DD.log"
+    //   "1" => "/tmp/var/log/FILE@1_YYYY-MM-DD.log",
+    // ]
+
     krsort($_file_path_backups);
     foreach ($_file_path_backups as $_file_index => $_file_path_backup) {
 
