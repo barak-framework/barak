@@ -78,6 +78,7 @@ class ApplicationLogger {
 
       }
 
+      // ana log dosyasının içine yaz
       if (!($fh = fopen(self::$_file_path, 'a')))
         throw new Exception("Log dosyası ekleme yapılmak için açılamadı → " . self::$_file_path);
 
