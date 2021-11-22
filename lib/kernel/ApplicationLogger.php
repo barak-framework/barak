@@ -5,7 +5,7 @@ class ApplicationLogger {
   const LOGGERPATH = "tmp/log/";
 
   const LEVELNAMES = ["info" => 1, "warning" => 2, "error" => 3, "fatal" => 4, "debug" => 5];
-  const DRIVERNAMES = ["daily" => 1, "weekly" => 7, "montly" => 30, "yearly" => 365];
+  const DRIVERNAMES = ["daily" => 1, "weekly" => 7, "mountly" => 30, "yearly" => 365];
 
   private static $_configuration = NULL;
 
