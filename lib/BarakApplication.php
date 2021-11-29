@@ -2,13 +2,13 @@
 
 class BarakApplication {
 
-  const KERNELPATH = "lib/kernel/";
+  const COREPATH = "lib/core/";
   const MODULESPATH = "lib/modules/";
 
   public static function run() {
 
-    // Kernel classes load
-    self::_import_dir(self::KERNELPATH);
+    // core classes load
+    self::_import_dir(self::COREPATH);
 
     // Fatal error handling
     register_shutdown_function('ApplicationDebug::shutdown');
@@ -29,7 +29,7 @@ class BarakApplication {
     ApplicationConfig::application();
 
     // Config init - options
-    self::_init_option_kernel();
+    self::_init_option_core();
 
     // Config init - modules
     self::_init_option_modules();
@@ -49,7 +49,7 @@ class BarakApplication {
 
   }
 
-  private static function _init_option_kernel() {
+  private static function _init_option_core() {
 
     // Session options
     if (!strlen(session_id())) {
