@@ -7,6 +7,8 @@ class ApplicationMailer {
   private static $_configuration = NULL; // for PHPMailer
 
   private $_locals = [];
+  private $_errors = [];
+
   private $_mail;
 
   private $_view;
@@ -48,7 +50,7 @@ class ApplicationMailer {
     $m->_view = $view;
     $m->_action = $action;
     $m->_args = $args;
-    $m->_run();
+    return $m->_run();
   }
 
   public static function init() {
@@ -157,8 +159,10 @@ class ApplicationMailer {
 
     if ($mailer->send())
       ApplicationLogger::info("  Mail Sended");
-    else
+    else {
+      $this->_errors[] = "Mail Failed: " . $mailer->ErrorInfo;
       ApplicationLogger::error("  Mail Failed → " . $mailer->ErrorInfo);
+    }
   }
 
   private function _run() {
@@ -177,6 +181,7 @@ class ApplicationMailer {
     // after actions
     if (isset($this->after_actions)) $this->_filter($this->_action, $this->after_actions);
 
+    return $this->_errors;
   }
 
 }
