@@ -23,7 +23,6 @@ class ApplicationDispatcher {
       $response = ApplicationController::get_response($route);
 
       if ($response->status_code == 302) { // only 302
-        $response->set_status();
         self::completed($response->status());
         $response->run();
       } else { // not including : 302, 404, 500
