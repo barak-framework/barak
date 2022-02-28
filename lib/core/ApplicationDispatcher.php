@@ -25,12 +25,12 @@ class ApplicationDispatcher {
       if ($response->status_code == 302) { // only 302
         self::completed($response->status());
         $response->run();
-      } else { // not including : 302, 404, 500
+      } else { // not including : 302, 404, 500 | including : 200, 201, 202, ... etc.
         $response->run();
         self::completed($response->status());
       }
 
-    } else {
+    } else { // only 404
 
       ApplicationLogger::error("No route matches [{$request->method}] {$request->rule}");
 
