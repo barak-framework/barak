@@ -174,7 +174,7 @@ class ApplicationDebug {
       }
       .numbers { float: left; width: 4%%; text-align: center; }
       .rows { float: right;  width: 96%%; border-radius: 5px; background-color: white; }
-      .debugrow { background-color: #30D5C8; color: #ffffff; display: inline-block; width:100%%; }
+      .debugrow { background-color: #ef9141; color: #ffffff; display: inline-block; width:100%%; }
       .otherrow { background-color: #ffffff; color: #665f75; display: inline-block; width:100%%; }
 
       .traces { float: right;  width: 96%%; border-radius: 5px; background-color: #f4f2f8; }
