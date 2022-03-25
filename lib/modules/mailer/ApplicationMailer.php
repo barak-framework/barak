@@ -160,14 +160,16 @@ class ApplicationMailer {
     if ($mailer->send())
       ApplicationLogger::info("  Mail Sended");
     else {
-      $this->_errors[$action] = "Mail Failed: " . $mailer->ErrorInfo;
-      ApplicationLogger::error("  Mail Failed → " . $mailer->ErrorInfo);
+      $this->_errors[$action] = $mailer->ErrorInfo;
+      ApplicationLogger::error("  Mail Failed → $action : " . $mailer->ErrorInfo);
     }
   }
 
   private function _run() {
 
     if (isset($this->helpers)) ApplicationHelper::load($this->helpers);
+
+     ApplicationLogger::info("  Mail Sending " . $this->_action);
 
     // before actions
     if (isset($this->before_actions)) $this->_filter($this->_action, $this->before_actions);
