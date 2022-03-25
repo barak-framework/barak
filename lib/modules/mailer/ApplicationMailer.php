@@ -160,7 +160,7 @@ class ApplicationMailer {
     if ($mailer->send())
       ApplicationLogger::info("  Mail Sended");
     else {
-      $this->_errors[] = "Mail Failed: " . $mailer->ErrorInfo;
+      $this->_errors[$action] = "Mail Failed: " . $mailer->ErrorInfo;
       ApplicationLogger::error("  Mail Failed → " . $mailer->ErrorInfo);
     }
   }
