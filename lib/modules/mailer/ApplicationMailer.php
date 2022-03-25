@@ -158,7 +158,7 @@ class ApplicationMailer {
     $mailer->Body = $v->run(true);
 
     if ($mailer->send())
-      ApplicationLogger::info("  Mail Sended");
+      ApplicationLogger::info("  Mail Sended " . $action);
     else {
       $this->_errors[$action] = $mailer->ErrorInfo;
       ApplicationLogger::error("  Mail Failed → $action : " . $mailer->ErrorInfo);
@@ -169,7 +169,7 @@ class ApplicationMailer {
 
     if (isset($this->helpers)) ApplicationHelper::load($this->helpers);
 
-     ApplicationLogger::info("  Mail Sending " . $this->_action);
+    ApplicationLogger::info("  Mail Sending by " . $this->_action);
 
     // before actions
     if (isset($this->before_actions)) $this->_filter($this->_action, $this->before_actions);
