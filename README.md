@@ -16,13 +16,13 @@ Barak Framework PHP diliyle yazılmış, açık kaynak kodlu bir web uygulama ge
 
 Barak Framework için gerekli olan paketler yukarıda verilmiştir. Bu paketlerin nasıl kurulacağına ilişkin aşağıdaki bağlantıları inceleyebilirsiniz.
 
-> Linux, Apache, MySQL, Php Kurulum : [LAMP](http://gdemir.github.io/categories/linux/lamp/)
+> Linux, Apache, MySQL, Php Kurulum : [LAMP](https://barak-framework.github.io/blog/categories/linux/lamp/)
 
-> Linux, Nginx, MySQL, Php Kurulum : [LEMP](http://gdemir.github.io/categories/linux/lemp/)
+> Linux, Nginx, MySQL, Php Kurulum : [LEMP](https://barak-framework.github.io/blog/categories/linux/lemp/)
 
 > Web Sunucu Ayarları : [apache2-settings](https://github.com/barak-framework/barak/blob/master/.htaccess.sample) veya [nginx-settings](https://github.com/barak-framework/barak/blob/master/nginx.config.sample) veya [iss-settings](https://github.com/barak-framework/barak/blob/master/web.config.sample)
 
-> Paket Yönetici Kurulumu : [composer-installation](http://gdemir.github.io/categories/php/composer/)
+> Paket Yönetici Kurulumu : [composer-installation](https://barak-framework.github.io/blog/categories/php/composer/)
 
 ### Barak Kurulum
 
