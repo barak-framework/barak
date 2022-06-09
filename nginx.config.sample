@@ -8,6 +8,12 @@ server {
 	index index.html index.htm index.php;
 	root /var/www/html;
 
+        # blocked /config/database.ini and *.php all file
+	location ~\.(html|php|ini|log|cache)$ {
+		deny all;
+		error_page 403 =404 / ;
+	}
+
 	location / {
 		autoindex off;
 
@@ -15,4 +21,5 @@ server {
 			rewrite ^/(.*)$ /index.php?$1;
 		}
 	}
+
 }
