@@ -20,7 +20,7 @@ class ApplicationLogger {
   private static $_file_path = null;
   private static $_file_created_at = null;
 
-  private static function _loggerpath() {
+  private static function _logger_path() {
     return $_SERVER["DOCUMENT_ROOT"] . "/" . self::LOGGERPATH;
   }
 
@@ -90,7 +90,7 @@ class ApplicationLogger {
       // self::$_file_created_at → oluşturma tarihi
       self::$_file_created_at = date("Y-m-d");
       // self::$_file_path → path, open_basedir sorunu yüzünden $_SERVER["DOCUMENT_ROOT"] yazılmak zorunda
-      self::$_file_path = self::_loggerpath() . self::$_file . "_" . self::$_file_created_at . ".log";
+      self::$_file_path = self::_logger_path() . self::$_file . "_" . self::$_file_created_at . ".log";
 
       if (!($fh = fopen(self::$_file_path, 'w')))
         throw new Exception("Log dosyası oluşturulmak için açılamadı → " . self::$_file_path);
@@ -115,14 +115,14 @@ class ApplicationLogger {
 
   private static function _exists($file) {
 
-    $_files = scandir(self::_loggerpath());
+    $_files = scandir(self::_logger_path());
 
     $_matchs = [];
     foreach ($_files as $_file) {
 
       if (preg_match("/^(.*?)_([0-9]{4}-[0-9]{2}-[0-9]{2}).log$/si", $_file, $_match)) {
         if ($_match[1] == $file) {
-          $_matchs[] = [self::_loggerpath() . $_match[0], $_match[2]];
+          $_matchs[] = [self::_logger_path() . $_match[0], $_match[2]];
         }
       }
     }
@@ -145,7 +145,7 @@ class ApplicationLogger {
 
   private static function _backups() {
 
-    $_files = scandir(self::_loggerpath());
+    $_files = scandir(self::_logger_path());
 
     $_file_path_backups = [];
     foreach ($_files as $_file) {
@@ -154,7 +154,7 @@ class ApplicationLogger {
         if (array_key_exists($_match[1], $_file_path_backups))
           throw new Exception("Yedek Log dosyasının benzerleri mevcut → " . $file);
         else
-          $_file_path_backups[$_match[1]] = self::_loggerpath() . $_match[0];
+          $_file_path_backups[$_match[1]] = self::_logger_path() . $_match[0];
       }
     }
 
@@ -212,7 +212,7 @@ class ApplicationLogger {
       throw new Exception("Ana Log dosyası mevcut değil → " . self::$_file);
 
     // ana log dosyayı(şu an log yazılan dosyayı), 1 nolu yedek dosya olarak taşı
-    rename(self::$_file_path, self::_loggerpath() . self::$_file . "@1_" . self::$_file_created_at . ".log");
+    rename(self::$_file_path, self::_logger_path() . self::$_file . "@1_" . self::$_file_created_at . ".log");
 
     // yeni log dosyası oluştur ve self::$_file_path, self::$_file_created_at değişkenlerini ata
     self::_create();
