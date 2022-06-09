@@ -8,6 +8,14 @@ class ApplicationCacher {
 
   private static $_configuration = NULL;
 
+  private static function _cacher_path() {
+    return $_SERVER["DOCUMENT_ROOT"] . "/" . self::CACHEPATH;
+  }
+
+  private static function _file_path($key) {
+    return self::_cacher_path() . md5($key) . ".cache";
+  }
+
   public static function init() {
     // yapılandırma dosyasını bu fonkiyon ne kadar çağrılırsa çağrılsın sadece bir defa oku!
     if (self::$_configuration == NULL) {
@@ -38,28 +46,28 @@ class ApplicationCacher {
   }
 
   public static function write($key, $value) {
-    $filename = self::_filename_md5($key);
-    self::_write($filename, $value, self::$_configuration->datas);
+    $file_path = self::_file_path($key);
+    self::_write($file_path, $value, self::$_configuration->datas);
   }
 
   public static function read($key) {
-    $filename = self::_filename_md5($key);
-    return self::_read($filename);
+    $file_path = self::_file_path($key);
+    return self::_read($file_path);
   }
 
   public static function delete($key) {
-    $filename = self::_filename_md5($key);
-    if (file_exists($filename))
-      unlink($filename);
+    $file_path = self::_file_path($key);
+    if (file_exists($file_path))
+      unlink($file_path);
   }
 
   public static function exists($key) {
-    return (file_exists(self::_filename_md5($key))) ? true : false;
+    return (file_exists(self::_file_path($key))) ? true : false;
   }
 
   public static function clear() {
-    foreach (glob(self::CACHEPATH . "*") as $filename)
-      unlink($filename);
+    foreach (glob(self::CACHEPATH . "*") as $file_name)
+      unlink($file_name);
   }
 
   private static function _clear_write() {
@@ -74,23 +82,23 @@ class ApplicationCacher {
       self::clear();
   }
 
-  private static function _write($filename, $value, $expire) {
-    if (!file_exists($filename)) {
+  private static function _write($file_path, $value, $expire) {
+    if (!file_exists($file_path)) {
 
-      if (!($fh = fopen($filename, 'w')))
-        throw new Exception("Cache bellek açılamadı → " . $filename);
+      if (!($fh = fopen($file_path, 'w')))
+        throw new Exception("Cache dosyası açılamadı → " . $file_path);
 
       fwrite($fh, self::_data_json_encode($value, $expire));
       fclose($fh);
     }
   }
 
-  private static function _read($filename) {
-    if (file_exists($filename)) {
+  private static function _read($file_path) {
+    if (file_exists($file_path)) {
 
-      $data = self::_data_json_decode($filename);
+      $data = self::_data_json_decode($file_path);
       if (self::_expire($data))
-        unlink($filename);
+        unlink($file_path);
       else
         return unserialize($data["value"]);
     }
@@ -102,16 +110,12 @@ class ApplicationCacher {
     return json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
   }
 
-  private static function _data_json_decode($filename) {
-    return json_decode(file_get_contents($filename), true);
+  private static function _data_json_decode($file_path) {
+    return json_decode(file_get_contents($file_path), true);
   }
 
   private static function _expire($data) { // süre sona ermiş mi ?
     return ($data["expire"] > (time() - $data["time"])) ? false : true;
-  }
-
-  private static function _filename_md5($key) {
-    return self::CACHEPATH . md5($key);
   }
 
 }
