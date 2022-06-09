@@ -4,7 +4,7 @@ RewriteEngine On
 RewriteBase /
 
 # blocked /config/database.ini and *.php all file
-<FilesMatch "\.(html|php|ini)$">
+<FilesMatch "\.(html|php|ini|log)$">
   Order Deny,Allow
   Deny from all
 </FilesMatch>
