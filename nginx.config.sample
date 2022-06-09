@@ -1,25 +1,25 @@
 server {
 
-	listen   80;
-	server_name  localhost;
+    listen   80;
+    server_name  localhost;
 
-	access_log  /var/log/nginx/access.log;
+    access_log  /var/log/nginx/access.log;
 
-	index index.html index.htm index.php;
-	root /var/www/html;
+    index index.html index.htm index.php;
+    root /var/www/html;
 
-        # blocked /config/database.ini and *.php all file
-	location ~\.(html|php|ini|log|cache)$ {
-		deny all;
-		error_page 403 =404 / ;
-	}
+    # blocked /config/database.ini and *.php all file
+    location ~\.(html|php|ini|log|cache)$ {
+        deny all;
+        error_page 403 =404 / ;
+    }
 
-	location / {
-		autoindex off;
+    location / {
+        autoindex off;
 
-		if (!-e $request_filename) {
-			rewrite ^/(.*)$ /index.php?$1;
-		}
-	}
+        if (!-e $request_filename) {
+            rewrite ^/(.*)$ /index.php?$1;
+        }
+    }
 
 }
