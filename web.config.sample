@@ -1,28 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <system.webServer>
+
+        <!-- blocked /config/database.ini and *.php all file -->
         <security>
             <requestFiltering>
-              <fileExtensions applyToWebDAV="false">
-               <add fileExtension=".html" allowed="false" />
-               <add fileExtension=".php" allowed="false" />
-               <add fileExtension=".ini" allowed="false" />
-               <add fileExtension=".log" allowed="false" />
-               <add fileExtension=".cache" allowed="false" />
-           </fileExtensions>
-       </requestFiltering>
-   </security>
-   <rewrite>
-    <rules>
-        <rule name="Imported Rule 1" stopProcessing="true">
-            <match url="^(.*)$" ignoreCase="false" />
-            <conditions logicalGrouping="MatchAll">
-                <add input="{REQUEST_FILENAME}" matchType="IsDirectory" ignoreCase="false" negate="true" />
-                <add input="{REQUEST_FILENAME}" matchType="IsFile" ignoreCase="false" negate="true" />
-            </conditions>
-            <action type="Rewrite" url="index.php?{R:1}" appendQueryString="true" />
-        </rule>
-    </rules>
-</rewrite>
-</system.webServer>
+                <fileExtensions applyToWebDAV="false">
+                    <add fileExtension=".html" allowed="false" />
+                    <add fileExtension=".php" allowed="false" />
+                    <add fileExtension=".ini" allowed="false" />
+                    <add fileExtension=".log" allowed="false" />
+                    <add fileExtension=".cache" allowed="false" />
+                </fileExtensions>
+            </requestFiltering>
+        </security>
+
+        <rewrite>
+            <rules>
+                <rule name="Imported Rule 1" stopProcessing="true">
+                    <match url="^(.*)$" ignoreCase="false" />
+                    <conditions logicalGrouping="MatchAll">
+                        <add input="{REQUEST_FILENAME}" matchType="IsDirectory" ignoreCase="false" negate="true" />
+                        <add input="{REQUEST_FILENAME}" matchType="IsFile" ignoreCase="false" negate="true" />
+                    </conditions>
+                    <action type="Rewrite" url="index.php?{R:1}" appendQueryString="true" />
+                </rule>
+            </rules>
+        </rewrite>
+    </system.webServer>
 </configuration>
