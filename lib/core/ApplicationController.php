@@ -55,7 +55,7 @@ class ApplicationController {
       $_paths = explode("/", trim($route->path, "/"));
       foreach ($_paths as $_path) {
         self::_load($_path, $_before_path);
-        $_before_path = "{$_path}/";
+        $_before_path = $_before_path . "{$_path}/";
       }
     }
     // main class
